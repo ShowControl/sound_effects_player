@@ -1,0 +1,228 @@
+Version 0.67, October 26, 2016
+  Add an offered sound to The Perils of Pauline.
+  Make offered sound and looping sounds work.
+  
+Version 0.66, October 23, 2016
+  Display the remaining time for a sound.
+  
+Version 0.65, October 20, 2016
+  Let the sequencer handle the release of a sound.
+  
+Version 0.64, October 12, 2016
+  Update the documentation, and move it to ShowControlDocs.
+  
+Version 0.63, October 12, 2016
+  Make telephone ringing more robust by fixing race conditions between
+  the sequencer and the pipeline.
+  
+Version 0.62, June 1, 2016
+  Add a Mute button.
+  
+Version 0.61, June 1, 2016
+  Fix the initial value of the operator volume controls after the first.
+  
+Version 0.60, May 24, 2016
+  Add some dependency information to the README file, based on copying the
+  program to my laptop.
+  
+Version 0.59, January 1, 2016
+  Start support of gtk-doc.
+  
+Version 0.58, December 29, 2015
+  Display the running time of the current sound.
+  
+Version 0.57, December 22, 2015
+  Display text for the operator when called for in the sequence.
+  
+Version 0.56, November 10, 2015
+  Allow writing a copy of the sound output on a file by specifying
+  --monitor-file on the command line.
+  
+Version 0.55, October 27, 2015
+  Allow more flexibility in the format of wave files.
+  
+Version 0.54, October 20, 2015
+  Implement Pause and Continue buttons.
+  
+Version 0.53, October 14, 2015
+  Implement the Wait sequence item.
+  
+Version 0.52, September 30, 2015
+  Add signal handling, so the editor can shut down the player.  When starting
+  the player, use --process-id-file to name a file where the process ID is
+  written, and place the project file on the command line.  Then the editor
+  can do the equivalent of kill -s term `cat process-id-file.txt` to send
+  SIGTERM to the player, causing it to shut down.  Planned for the future is
+  SIGHUP, to make the player re-read its project file.
+  
+Version 0.51, September 7, 2015
+  Improve the startup time by having the looper read the WAV file directly.
+  
+Version 0.50, August 16, 2015
+  Add a background sound to the telephone ringing demo.
+  
+Version 0.49, July 12, 2015
+  Improve the telephone ringing demo.
+  
+Version 0.48, July 9, 2015
+  Add .gitignore files
+  
+Version 0.47, June 28, 2015
+  Enough of the sequencer works to do a telephone ring.
+  
+Version 0.46, June 27, 2015
+  The Offer Sound, Start Sound and Stop sequence items are implemented.
+  Using the Pauline project, sending cue 1 from CuePlayer starts a
+  440Hz tone, and cue 2 stops it.
+  
+Version 0.45, June 21, 2015
+  Network UDP messages are datagrams, not streams of text.
+  
+Version 0.44, June 21, 2015
+  Add /cue network command, so we can be driven by CueEngine.
+  
+Version 0.43, June 14, 2015
+  Implement start-time in the looper.
+  
+Version 0.42, June 7, 2015
+  Only accept a sound's restart command after it has started release.
+  
+Version 0.41, June 6, 2015
+  Use a status bar to display messages.
+
+Version 0.40, June 5, 2015
+  Implement max-duration in the looper.
+
+Version 0.39, June 4, 2015
+  Add a shutdown message to the looper element.  This lets us send an
+  EOS through the pipeline before shutting it down, resulting in
+  greater reliability.
+  
+Version 0.38, May 22, 2015
+  Connect the buttons to the terminated and completed messages from the
+  gstremer pipeline.  We are now running the pipeline continuously,
+  using the looper to drive it and the envelope plugin to shape the
+  sound.
+  
+Version 0.37, May 21, 2015
+  Add the looper plugin.
+  
+Version 0.36, May 5, 2015
+  Add support for the release message to the envelope plugin.
+  
+Version 0.35, May 4, 2015
+  Add a volume parameter to the envelope gstreamer plugin.
+  
+Version 0.34, May 3, 2015
+  Add an early version of the envelope plugin.  It doesn't accept release
+  messages yet, which will help with EOS handling, but it can do attack,
+  decay, sustain, and pre-specified release.
+  
+Version 0.33, April 5, 2015
+  Stop the pipeline when no sounds are playing, and avoid running
+  each sound effect's pipeline when it is not playing.  This will reduce the
+  normal CPU load, though not the maximum.  Use this to handle EOS.
+  
+Version 0.32, March 31, 2015
+  Play the sounds specified in the project XML file.  This is clumsy because
+  we don't have our customer gstreamer plugin, which will allow the pipeline
+  to run continuously.  As a result, if the pipeline is allowed to reach
+  End of Stream, sounds stop working.
+  
+Version 0.31, March 26, 2015
+  Make the file parameter optional.
+  
+Version 0.30, March 25, 2015
+  Read sound information from an XML file.  We don't do anything with it yet.
+  
+Version 0.29, March 17, 2015
+  Move xml file parsing to its own module.
+  
+Version 0.28, March 14, 2015
+  Read show_control XML files.
+  
+Version 0.27, February 28, 2015
+  Add a preferences dialog.
+  
+Version 0.26, February 27, 2015
+  Add the ability to write the project file.
+  
+Version 0.25, February 27, 2015
+  Convert the project file to XML, and use libxml2 to read it.
+  
+Version 0.24, February 24, 2015
+  Create a better icon.
+  
+Version 0.23, February 24, 2015
+  Rename play_sound to sound_effects_player.
+  
+Version 0.22, February 24, 2015
+  Add some documentation and move to consistent names and idioms in the
+  source files.
+  
+Version 0.21, February 23, 2015
+  Listen for UDP datagrams rather than for TCP streams.
+  
+Version 0.20, February 21, 2015
+  Add desktop and icon files to make the application launchable
+  from the desktop GUI.
+  
+Version 0.19, February 19, 2015
+  Use the project file to specify the network port.
+    
+Version 0.18, February 16, 2015
+  Make the dependence on GTK+-3.0 version 3.14 clearer.
+  Begin work on the Open menu item.
+    
+Version 0.17, February 15, 2015
+  Add a menu bar
+  
+Version 0.16, February 15, 2015
+  Update to current Autoconfigure best practices.
+  
+Version 0.15, January 27, 2015
+  Require version 3.14 of GTK+, due to gtk_application_set_accels_for_action.
+  
+Version 0.14, January 22, 2015
+  Parse and execute start, stop and quit commands received over the network.
+
+Version 0.13, January 18, 2015
+  Add the ability to receive text over the network.
+  
+Version 0.12, January 7, 2015
+  Add a menu.  It just contains an empty preferences and Quit.
+  
+Version 0.11, January 4, 2015
+  Add a VU meter.
+  
+Version 0.10, January 4, 2015
+  Provide more than one sound.
+
+Version 0.9, January 3, 2015
+  Add scroll bars to the cluster section.
+
+Version 0.8, January 2, 2015
+  Have a cluster play only its own sound.  Make the GUI prettier.
+
+Version 0.7, January 1, 2015
+  Continue work on multiple clusters.
+  
+Version 0.6, January 1, 2015
+  Start work on multiple clusters.
+  
+Version 0.5, January 1, 2015
+  Update the copyright date, show the linked version of gtk, some minor
+  cleanups.
+  
+Version 0.4, December 31, 2014
+  Some minor improvements in comments, and some declarations in support of
+  eventually handling files instead of just a test tone.
+
+Version 0.3, December 29, 2014
+  Added pan control
+
+Version 0.2, December 28, 2014
+  Improved comments, connected volume control.
+	
+Version 0.1, December 28, 2014
+  Initial version, little more than a default project.
