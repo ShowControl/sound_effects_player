@@ -1,0 +1,17 @@
+sudo: required
+language: c
+compiler: gcc
+dist: trusty
+addons:
+  apt:
+    packages:
+    - autoconf
+    - automake
+    - autotools-dev
+    - intltool
+    - libgstreamer1.0-dev
+    - libgstreamer-plugins-base1.0-dev
+    - libgtk-3-dev
+    - gtk-doc-tools
+script: 
+ - ./configure && make
