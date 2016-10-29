@@ -25,6 +25,13 @@ EXTRA_DIST = \
 	sound_effects_player.desktop \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
+	sample/440Hz.wav \
+	sample/Sample_cues.xml \
+	sample/Sample_equipment.xml \
+	sample/Sample_project.xml \
+	sample/Sample_sounds.xml \
+	sample/Sample_sound_sequence.xml
+	sample/try_player.sh \
 	$(INTLTOOL_FILES)
 
 iconsdir=${datadir}/icons/hicolor/48x48/apps
@@ -43,9 +50,3 @@ DISTCLEANFILES = intltool-extract \
 uninstall-local:
 	-rm -r $(docdir)
 
-# Rules to create pdf and rtf files from odt files
-doc/sound_effects_player_overview.pdf : doc/sound_effects_player_overview.odt
-	libreoffice --headless --convert-to pdf doc/sound_effects_player_overview.odt --outdir doc
-
-doc/sound_effects_player_overview.rtf : doc/sound_effects_player_overview.odt
-	libreoffice --headless --convert-to rtf doc/sound_effects_player_overview.odt --outdir doc

@@ -37,7 +37,7 @@ struct sound_info
   gchar *wav_file_name_full;    /* absolute path to the file */
   guint64 attack_duration_time; /* attack time, in nanoseconds */
   gdouble attack_level;         /* 1.0 means 100% of volume */
-  gdouble decay_duration_time;  /* decay time, in nanoseconds */
+  guint64 decay_duration_time;  /* decay time, in nanoseconds */
   gdouble sustain_level;        /* 1.0 means 100% of volume */
   guint64 release_start_time;   /* release start time, in nanoseconds */
   guint64 release_duration_time;        /* release duration time, 

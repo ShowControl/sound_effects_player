@@ -1,3 +1,8 @@
+Version 0.68, October 28, 2016
+  Exit when the sequencer has nothing to do.
+  Fix decay duration time.
+  Add a sample project.
+  
 Version 0.67, October 26, 2016
   Add an offered sound to The Perils of Pauline.
   Make offered sound and looping sounds work.

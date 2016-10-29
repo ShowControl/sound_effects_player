@@ -215,6 +215,18 @@ execute_items (struct sequence_info *sequence_data, GApplication * app)
       execute_item (next_item, sequence_data, app);
     }
 
+  /* There are no more items to execute.  If nothing is waiting to
+   * execute later, we are done.  */
+  if ((sequence_data->offering == NULL) && (sequence_data->running == NULL)
+      && (sequence_data->current_operator_wait == NULL)
+      && (sequence_data->operator_waiting == NULL)
+      && (sequence_data->waiting == NULL))
+    {
+      /* Signal the application to quit.  This first shuts down the
+       * Gstreamer pipeline, then exits.  */
+      g_application_quit (app);
+    }
+
   return;
 }
 
