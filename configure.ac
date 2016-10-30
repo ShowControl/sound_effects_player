@@ -69,7 +69,7 @@ PKG_CHECK_MODULES(GST, [
   ])
 ])
 
-PKG_CHECK_MODULES(SOUND_EFFECTS_PLAYER, [gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0])
+PKG_CHECK_MODULES(SOUND_EFFECTS_PLAYER, [gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0])
 
 dnl check if compiler understands -Wall (if yes, add -Wall to GST_CFLAGS)
 AC_MSG_CHECKING([to see if compiler understands -Wall])

@@ -13810,12 +13810,12 @@ if test -n "$SOUND_EFFECTS_PLAYER_CFLAGS"; then
     pkg_cv_SOUND_EFFECTS_PLAYER_CFLAGS="$SOUND_EFFECTS_PLAYER_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SOUND_EFFECTS_PLAYER_CFLAGS=`$PKG_CONFIG --cflags "gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0" 2>/dev/null`
+  pkg_cv_SOUND_EFFECTS_PLAYER_CFLAGS=`$PKG_CONFIG --cflags "gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -13827,12 +13827,12 @@ if test -n "$SOUND_EFFECTS_PLAYER_LIBS"; then
     pkg_cv_SOUND_EFFECTS_PLAYER_LIBS="$SOUND_EFFECTS_PLAYER_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SOUND_EFFECTS_PLAYER_LIBS=`$PKG_CONFIG --libs "gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0" 2>/dev/null`
+  pkg_cv_SOUND_EFFECTS_PLAYER_LIBS=`$PKG_CONFIG --libs "gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -13853,14 +13853,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        SOUND_EFFECTS_PLAYER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0" 2>&1`
+	        SOUND_EFFECTS_PLAYER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0" 2>&1`
         else
-	        SOUND_EFFECTS_PLAYER_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0" 2>&1`
+	        SOUND_EFFECTS_PLAYER_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$SOUND_EFFECTS_PLAYER_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0) were not met:
+	as_fn_error $? "Package requirements (gtk+-3.0 >= 3.10 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0) were not met:
 
 $SOUND_EFFECTS_PLAYER_PKG_ERRORS
 
