@@ -24,11 +24,12 @@
 
 /* Persistent data.  */
 gchar *monitor_file_name = NULL;
+gchar *audio_output_string = NULL;
+gchar *device_name_string = NULL;
 
 /* The entry point for the sound_effects_player application.  
  * This is a GTK application, so much of what is done here is standard 
- * boilerplate.  See sound_effects_player.c for the beginning of actual 
- * application-specific code.
+ * boilerplate and command-line argument processing.  
  */
 int
 main (int argc, char *argv[])
@@ -42,8 +43,12 @@ main (int argc, char *argv[])
   const GOptionEntry entries[] = {
     {"process-id-file", 'p', 0, G_OPTION_ARG_FILENAME, &pid_file_name,
      "name of the file written with the process id, for signaling"},
-    {"monitor-file", 'p', 0, G_OPTION_ARG_FILENAME, &monitor_file_name,
+    {"monitor-file", 'm', 0, G_OPTION_ARG_FILENAME, &monitor_file_name,
      "name of the file which monitors output"},
+    {"audio-output", 'a', 0, G_OPTION_ARG_STRING, &audio_output_string,
+     "type of audio output: ALSA, none, jack, pulse"},
+    {"device-name", 'd', 0, G_OPTION_ARG_STRING, &device_name_string,
+     "for ALSA output, name of the device"},
     /* add more command line options here */
     {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &filenames,
      "Special option that collects any remaining arguments for us"},
@@ -76,7 +81,7 @@ main (int argc, char *argv[])
   g_option_context_add_group (ctx, gtk_get_option_group (TRUE));
   g_option_context_add_group (ctx, gst_init_get_option_group ());
   g_option_context_add_main_entries (ctx, entries, NULL);
-  g_option_context_set_summary (ctx, "Play sound effects for show_control.");
+  g_option_context_set_summary (ctx, "Play sound effects for ShowControl.");
 
   if (!g_option_context_parse (ctx, &argc, &argv, &err))
     {
@@ -162,16 +167,32 @@ main (int argc, char *argv[])
     remove (pid_file_name);
   free (pid_file_name);
   pid_file_name = NULL;
-  
-  free(monitor_file_name);
+
+  free (monitor_file_name);
   monitor_file_name = NULL;
-  
+  free (audio_output_string);
+  audio_output_string = NULL;
+  free (device_name_string);
+  device_name_string = NULL;
+
   return status;
 }
 
-/* Fetch the name of the monitor file.  */
+/* Fetch the command line options.  */
 gchar *
 main_get_monitor_file_name ()
 {
   return monitor_file_name;
+}
+
+gchar *
+main_get_audio_output_string ()
+{
+  return audio_output_string;
+}
+
+gchar *
+main_get_device_name_string ()
+{
+  return device_name_string;
 }

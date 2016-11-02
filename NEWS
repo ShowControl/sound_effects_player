@@ -1,3 +1,6 @@
+Version 0.69, November 2, 2016
+  Add command line arguments to control audio output.
+  
 Version 0.68, October 28, 2016
   Exit when the sequencer has nothing to do.
   Fix decay duration time.

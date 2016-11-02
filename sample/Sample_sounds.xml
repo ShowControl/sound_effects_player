@@ -23,7 +23,7 @@
       <!-- upon release, volume ramps down to 0 in release duration time -->
       <release_duration_time>2.000000000</release_duration_time>
       <!-- sound loops between loop times; from=0 means no looping -->
-      <loop_from_time>0.000000000</loop_from_time>
+      <loop_from_time>1.000000000</loop_from_time>
       <loop_to_time>0.000000000</loop_to_time>
       <!-- automatically stop looping after loop_limit loops -->
       <loop_limit>0</loop_limit>

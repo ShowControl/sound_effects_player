@@ -22,5 +22,7 @@
 /* Subroutines defined in main.c */
 
 gchar *main_get_monitor_file_name ();
+gchar *main_get_audio_output_string ();
+gchar *main_get_device_name_string ();
 
 /* End of file main.h */

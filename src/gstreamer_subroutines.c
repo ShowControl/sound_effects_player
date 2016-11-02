@@ -51,6 +51,8 @@ gstreamer_init (int sound_count, GApplication * app)
   gint i;
   GstPad *sink_pad;
   gchar *monitor_file_name;
+  gchar *audio_output_string;
+  gchar *device_name_string;
   gboolean monitor_enabled;
   gboolean output_enabled;
 
@@ -62,8 +64,26 @@ gstreamer_init (int sound_count, GApplication * app)
       monitor_enabled = TRUE;
     }
 
-  /* We always send sound to the default sound output device.  */
-  output_enabled = TRUE;
+  /* Check to see if --audio-output was specified on the command line.  */
+  audio_output_string = main_get_audio_output_string ();
+  output_enabled = FALSE;
+  if (audio_output_string == NULL)
+    {
+      /* Default is ALSA on default device */
+      output_enabled = TRUE;
+    }
+  else
+    {
+      if (g_strcmp0 (audio_output_string, (gchar *) "none") == 0)
+        {
+          output_enabled = FALSE;
+        }
+      if (g_strcmp0 (audio_output_string, (gchar *) "ALSA") == 0)
+        {
+          output_enabled = TRUE;
+        }
+      /* TODO: add support for Jack and Pulseaudio */
+    }
 
   /* Create the top-level pipeline.  */
   pipeline_element = GST_PIPELINE (gst_pipeline_new ("sound_effects"));
@@ -93,14 +113,16 @@ gstreamer_init (int sound_count, GApplication * app)
       return NULL;
     }
 
+  tee_element = NULL;
+  queue_file_element = NULL;
+  queue_output_element = NULL;
+  sink_element = NULL;
+  wavenc_element = NULL;
+  filesink_element = NULL;
+
   if ((monitor_enabled == FALSE) && (output_enabled == TRUE))
     {                           /* audio only */
-      tee_element = NULL;
-      queue_file_element = NULL;
-      queue_output_element = NULL;
       sink_element = gst_element_factory_make ("alsasink", "final/sink");
-      wavenc_element = NULL;
-      filesink_element = NULL;
       if (sink_element == NULL)
         {
           GST_ERROR ("Unable to create the final sink gstreamer element.\n");
@@ -108,10 +130,6 @@ gstreamer_init (int sound_count, GApplication * app)
     }
   if ((monitor_enabled == TRUE) && (output_enabled == FALSE))
     {                           /* file output only */
-      tee_element = NULL;
-      queue_file_element = NULL;
-      queue_output_element = NULL;
-      sink_element = NULL;
       wavenc_element = gst_element_factory_make ("wavenc", "final/wavenc");
       filesink_element =
         gst_element_factory_make ("filesink", "final/filesink");
@@ -164,6 +182,16 @@ gstreamer_init (int sound_count, GApplication * app)
     {
       /* Set the file name for monitoring the output.  */
       g_object_set (filesink_element, "location", monitor_file_name, NULL);
+    }
+
+  /* Set the device name for ALSA output, if specified.  */
+  if (output_enabled == TRUE)
+    {
+      device_name_string = main_get_device_name_string ();
+      if (device_name_string != NULL)
+        {
+          g_object_set (sink_element, "device", device_name_string, NULL);
+        }
     }
 
   /* Watch for messages from the pipeline.  */
