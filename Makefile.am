@@ -3,7 +3,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src po doc icons
+SUBDIRS = src man po doc icons sample
 
 dist_doc_DATA = \
 	README \
@@ -12,7 +12,6 @@ dist_doc_DATA = \
 	ChangeLog \
 	INSTALL \
 	NEWS \
-	listing/code.tex \
 	listing/code.pdf
 
 

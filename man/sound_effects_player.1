@@ -1,0 +1,109 @@
+.TH SOUND_EFFECTS_PLAYER 1 2016-11-06 ShowControl
+.SH NAME
+sound_effects_player \- play sound effects for a live stage play
+.SH SYNOPSIS
+.B sound_effects_player 
+[\fIoptions\fR] [\fIinput_file\fR] 
+
+.SH DESCRIPTION
+Community theatre often needs miscellaneous sounds to accompany a
+performance.  This program provides a convenient and flexible way
+to make those sounds.  It reads an XML file prepared by the
+sound effects designer which describes all of the sounds for
+the performance, then interacts with the sound effects operator
+to make those sounds at the appropriate times.
+.P
+The input file is an XML file that describes the sounds and when 
+to make them.  See the README file for details.  If the file
+is not specified it can be read using the graphic user interface.
+
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Prints a brief description of the program and how to invoke it.
+To see all of the options used by GTK and Gstreamer, type
+\fB\-\-help-all\fR.
+.TP
+.BR \-p ", " \-\-process\-id\-file =\fIpid\-file\fR
+Writes the process ID on the specified file.  This lets a script
+find the process of a copy of sound_effects_player that it has
+just launched, so it can send signals to it.
+.TP
+.BR \-m ", " \-\-monitor\-file =\fIoutput\-file\fR
+Writes the sound produced into a WAV file.  This option adds a 
+lot of latency, and so is mainly useful for debugging.  
+The default is not to write the sound into a WAV file.
+.TP
+.BR \-a ", " \-\-audio\-output =\fBnone\fR | \fBALSA\fR | \fBJack\fR | \fBPulse\fR
+Controls the audio output.  None means do no audio output, 
+but the WAV file specified by \-\-monitor_output will still 
+be written.
+\fBALSA\fR means output using the Advanced Linux Sound Architecture, 
+which is the default.  
+\fBJack\fR and \fBPulse\fR are not yet implemented.
+.TP
+.BR \-d ", " \-\-device\-name =\fIname\fR
+If audio_output is ALSA (either explicitly or by default) do 
+output to this ALSA device.  To see the list of ALSA devices, 
+type \fBaplay \-L\fR.
+The default is device \(aqdefault\(aq.
+.TP
+.BR \-\-display =\fIdisplay\fR
+X display to use for sound effects operator interaction.
+
+.SH ENVIRONMENT
+This program makes heavy use of Gstreamer version 1, and provides
+two custom elements: gstlooper and gstenvelope.  When you install 
+sound_effects_player, these elements are stored on
+\fI/usr/local/lib/gstreamer-1.0\fR.
+Therefore, to run sound_effects_player you will first have to type
+
+$ \fBexport GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0 \fR 
+
+Messages to the sound effects operator are displayed using 
+GTK version 3.
+
+.SH SIGNALS
+.IP SIGTERM
+On receipt ot this signal, sound_effects_player stops making
+sound and exits.
+.IP SIGHUP
+On receipt of this signal, sound_effects_player stops making
+sound, re-reads its project file, and starts over.  This
+is useful if an external editor is modifying the sound
+effects.  It is not yet implemented.
+
+.SH FILES
+The input file is an XML file which describes the complete
+production.  Sound_effects_player extracts only the sound
+effects from this file.  The project XML file can refer to
+other XML files.
+All of the XML files are expected to be created using an XML 
+editor such as EMACS.
+See the README file for details.
+
+.SH NOTES
+Sound_effects_player interacts with the sound effects operator 
+until all sounds have been played, at which time it exits.  
+
+Sound_effects_player is still under active development; 
+many features planned for version 1 are not yet implemented.
+
+Sound_effects_player is a component of ShowControl, which also
+contains components for handling microphones and lights for
+community theatre.  However, like the other components, it 
+can be used on its own.
+
+.SH EXAMPLE
+.IP "sound_effects_player sample/Sample_project.xml"
+Read file Sample_project.xml in the sample directory,
+extract the sound effects from the description of the project,
+and play them under the interactive control of the sound effects
+operator on the default ALSA output device.
+.IP "sound_effects_player -d hdmi:CARD=NVidia,DEV=0 sample/Sample_project.xml"
+The same except the sound is sent to the speakers on one
+of the video monitors.
+.SH "SEE ALSO"
+.BR CuePlayer (1),
+.BR ShowControl (1)
+
