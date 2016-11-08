@@ -728,7 +728,7 @@ update_operator_display (struct sequence_info *sequence_data,
   gboolean found_item;
   guint most_importance;
   GList *item_list;
-  gchar *elapsed_time, *remaining_time;
+  guint64 elapsed_time, remaining_time;
   gchar *display_text;
 
   /* For debugging, optionally don't update the operator display.  */
@@ -787,12 +787,22 @@ update_operator_display (struct sequence_info *sequence_data,
       sequence_item = most_important->sequence_item;
       sound_effect = most_important->sound_effect;
       /* Prepend the elapsed time to the operator message, and append
-       * the remaining time.  */
+       * the remaining time, if known.  */
       elapsed_time = sound_get_elapsed_time (sound_effect, app);
       remaining_time = sound_get_remaining_time (sound_effect, app);
-      display_text =
-        g_strdup_printf ("%s %s (%s)", elapsed_time,
-                         sequence_item->text_to_display, remaining_time);
+      if (remaining_time == G_MAXUINT64)
+	{
+	  display_text = g_strdup_printf ("%4.1f %s",
+					  (gdouble) elapsed_time / 1e9,
+					  sequence_item->text_to_display);
+	}
+      else
+	{
+	display_text =
+	  g_strdup_printf ("%4.1f %s (%4.1f)", (gdouble) elapsed_time / 1e9,
+                         sequence_item->text_to_display,
+			   (gdouble) remaining_time / 1e9);
+	}
       /* If there is a message already being displayed by the sequencer,
        * remove it.  */
       if (sequence_data->message_displaying)
@@ -805,8 +815,6 @@ update_operator_display (struct sequence_info *sequence_data,
       sequence_data->message_displaying = TRUE;
       g_free (display_text);
       display_text = NULL;
-      g_free (elapsed_time);
-      elapsed_time = NULL;
 
       /* Mark the most important item as the one currently being displayed.  */
       if (current_display != NULL)

@@ -156,7 +156,7 @@ static void gst_looper_set_property (GObject * object, guint prop_id,
                                      const GValue * value,
                                      GParamSpec * pspec);
 /* Compute the remaining running time of the sound.  */
-static gint64 compute_remaining_time (GstLooper * object);
+static guint64 compute_remaining_time (GstLooper * object);
 /* fetch the value of a property */
 static void gst_looper_get_property (GObject * object, guint prop_id,
                                      GValue * value, GParamSpec * pspec);
@@ -280,16 +280,16 @@ gst_looper_class_init (GstLooperClass * klass)
                                    param_spec);
 
   param_spec =
-    g_param_spec_string ("elapsed-time", "elapsed_time",
-                         "Time in seconds since the sound was started",
-                         string_default, G_PARAM_READABLE);
+    g_param_spec_uint64 ("elapsed-time", "elapsed_time",
+                         "Time in nanoseconds since the sound was started", 0,
+                         G_MAXUINT64, 0, G_PARAM_READABLE);
   g_object_class_install_property (gobject_class, PROP_ELAPSED_TIME,
                                    param_spec);
 
   param_spec =
-    g_param_spec_string ("remaining-time", "remaining_time",
-                         "Time in seconds until the sound stops",
-                         string_default, G_PARAM_READABLE);
+    g_param_spec_uint64 ("remaining-time", "remaining_time",
+                         "Time in nanoseconds until the sound stops", 0,
+                         G_MAXUINT64, 0, G_PARAM_READABLE);
   g_object_class_install_property (gobject_class, PROP_REMAINING_TIME,
                                    param_spec);
 
@@ -2388,9 +2388,9 @@ gst_looper_set_property (GObject * object, guint prop_id,
   g_rec_mutex_unlock (&self->interlock);
 }
 
-/* Compute the remaining run time of the sound, in nanoseconds.  -1 means
- * infinity.  */
-static gint64
+/* Compute the remaining run time of the sound, in nanoseconds.  
+ * G_MAXUNIT64 means infinity.  */
+static guint64
 compute_remaining_time (GstLooper * object)
 {
   GstLooper *self = GST_LOOPER (object);
@@ -2413,7 +2413,7 @@ compute_remaining_time (GstLooper * object)
   if ((self->loop_limit == 0) && (!self->released))
     {
       /* If we will loop forever, the time is also simple to compute.  */
-      return -1;
+      return G_MAXUINT64;
     }
 
   if (self->released)
@@ -2442,9 +2442,7 @@ gst_looper_get_property (GObject * object, guint prop_id, GValue * value,
                          GParamSpec * pspec)
 {
   GstLooper *self = GST_LOOPER (object);
-  gchar *string_value;
-  gdouble double_value;
-  gint64 remaining_time;
+  guint64 remaining_time;
 
   g_rec_mutex_lock (&self->interlock);
   switch (prop_id)
@@ -2499,31 +2497,14 @@ gst_looper_get_property (GObject * object, guint prop_id, GValue * value,
 
     case PROP_ELAPSED_TIME:
       GST_OBJECT_LOCK (self);
-      double_value = (gdouble) self->elapsed_time / (gdouble) 1e9;
-      string_value = g_strdup_printf ("%4.1f", double_value);
-      g_value_set_string (value, string_value);
-      g_free (string_value);
-      string_value = NULL;
+      g_value_set_uint64 (value, self->elapsed_time);
       GST_OBJECT_UNLOCK (self);
       break;
 
     case PROP_REMAINING_TIME:
       GST_OBJECT_LOCK (self);
       remaining_time = compute_remaining_time (self);
-      if (remaining_time == -1)
-        {
-          /* Remaining time is infinite.  */
-          string_value = g_strdup ("∞");
-        }
-      else
-        {
-          double_value = (gdouble) (remaining_time) / (gdouble) 1e9;
-          string_value = g_strdup_printf ("%4.1f", double_value);
-        }
-
-      g_value_set_string (value, string_value);
-      g_free (string_value);
-      string_value = NULL;
+      g_value_set_uint64 (value, remaining_time);
       GST_OBJECT_UNLOCK (self);
       break;
 

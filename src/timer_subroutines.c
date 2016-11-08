@@ -61,7 +61,7 @@ timer_init (GApplication * app)
 
   if (TRACE_TIMER)
     {
-      timer_data->last_trace_time = g_get_monotonic_time () / 1e6;
+      timer_data->last_trace_time = (gdouble) g_get_monotonic_time () / 1e6;
     }
 
   /* The list of timer entries is empty.  */
@@ -116,9 +116,9 @@ timer_create_entry (void (*subroutine) (void *, GApplication *),
   if (TRACE_TIMER)
     {
       g_print ("create timer entry at %p for %4.1f seconds from now.\n",
-	       subroutine, interval);
+               subroutine, interval);
     }
-  current_time = g_get_monotonic_time () / 1e6;
+  current_time = (gdouble) g_get_monotonic_time () / 1e6;
 
   /* Construct the timer entry.  */
   timer_entry_data = g_malloc (sizeof (struct timer_entry_info));
@@ -146,7 +146,7 @@ timer_tick (gpointer user_data)
   timer_data = sep_get_timer_data (app);
 
   /* Calculate the current time in seconds since the last reboot.  */
-  current_time = g_get_monotonic_time () / 1e6;
+  current_time = (gdouble) g_get_monotonic_time () / 1e6;
 
   /* Don't print the trace message oftener than once a second.  */
   if (TRACE_TIMER && ((current_time - timer_data->last_trace_time) >= 1.0))

@@ -227,6 +227,7 @@ sound_start_playing (struct sound_info *sound_data, GApplication * app)
    * The looper element will start sending its local buffer
    * and the envelope element will start to shape the volume.  */
   sound_data->running = TRUE;
+  sound_data->starting_time = g_get_monotonic_time () * 1e3;
   sound_data->release_sent = FALSE;
   sound_data->release_has_started = FALSE;
   structure = gst_structure_new_empty ((gchar *) "start");
@@ -261,29 +262,89 @@ sound_stop_playing (struct sound_info *sound_data, GApplication * app)
 }
 
 /* Get the elapsed time of a playing sound.  */
-gchar *
+guint64
 sound_get_elapsed_time (struct sound_info * sound_data, GApplication * app)
 {
   GstElement *looper_element;
-  gchar *string_value;
+  guint64 elapsed_time;
 
   looper_element = gstreamer_get_looper (sound_data->sound_control);
-  g_object_get (looper_element, (gchar *) "elapsed-time", &string_value,
+  g_object_get (looper_element, (gchar *) "elapsed-time", &elapsed_time,
                 NULL);
-  return string_value;
+  return elapsed_time;
 }
 
-/* Get the remaining run time of a playing sound.  */
-gchar *
+/* Calculate the amount of time allowed by the envelope.
+ * G_MAXUINT64 means no limit.  */
+static guint64
+calculate_envelope_duration_time (struct sound_info *sound_data,
+                                  GApplication * app)
+{
+  /* If the release duration is infinite, the envelope does not limit
+   * the duration of the sound.  */
+  if (sound_data->release_duration_infinite)
+    return G_MAXUINT64;
+
+  /* Otherwise, if the release is scheduled for a particular time, 
+   * the envelope duration time is the release start time plus the 
+   * release duration time.  */
+  if (sound_data->release_start_time > 0)
+    {
+      return (sound_data->release_start_time +
+              sound_data->release_duration_time);
+    }
+
+  /* Otherwise, if the release has started, the envelope time is the 
+   * amount of time the sound ran until release, plus the release 
+   * duration time.  */
+  if (sound_data->release_has_started)
+    {
+      return (sound_data->releasing_time - sound_data->starting_time +
+              sound_data->release_duration_time);
+    }
+
+  /* The release has not yet started and is not scheduled to start.
+   * We won't know the envelope duration until an external signal
+   * triggers the release (and not even then if the release duration is 
+   * infinite).  Until the trigger arrives, the envelope does not limit 
+   * the amount of time for the sound.  */
+  return G_MAXUINT64;
+}
+
+/* Get the remaining run time of a playing sound.  
+ * G_MAXUINT64 means infinity.  */
+guint64
 sound_get_remaining_time (struct sound_info * sound_data, GApplication * app)
 {
   GstElement *looper_element;
-  gchar *string_value;
+  guint64 looper_remaining_time;
+  guint64 envelope_duration_time, envelope_remaining_time, current_time;
 
+  /* Calculate the amount of time left in the looper element.  */
   looper_element = gstreamer_get_looper (sound_data->sound_control);
-  g_object_get (looper_element, (gchar *) "remaining-time", &string_value,
-		NULL);
-  return string_value;
+  g_object_get (looper_element, (gchar *) "remaining-time",
+                &looper_remaining_time, NULL);
+
+  /* Calculate how long the envelope will allow the sound to run.  */
+  envelope_duration_time = calculate_envelope_duration_time (sound_data, app);
+
+  /* If the envelope doesn't limit the duration of the sound, return
+   * the looper's limit, which might also not be limited due to indefinite
+   * looping.  */
+  if (envelope_duration_time == G_MAXUINT64)
+    {
+      return looper_remaining_time;
+    }
+
+  /* Calculate how long until the envelope ends the sound.  */
+  current_time = g_get_monotonic_time () * 1e3;
+  envelope_remaining_time =
+    sound_data->starting_time + envelope_duration_time - current_time;
+
+  /* Return the limit that will end the sound sooner.  */
+  if (envelope_remaining_time < looper_remaining_time)
+    return envelope_remaining_time;
+  return looper_remaining_time;
 }
 
 /* Receive a completed message, which indicates that a sound has finished.  */
@@ -349,6 +410,7 @@ sound_release_started (const gchar * sound_name, GApplication * app)
     return;
 
   /* Remember that the sound is in its release stage.  */
+  sound_effect->releasing_time = g_get_monotonic_time () * 1e3;
   sound_effect->release_has_started = TRUE;
 
   /* Let the internal sequencer handle it.  */

@@ -60,13 +60,17 @@ struct sound_info
   gboolean OSC_name_specified;  /* TRUE if not empty */
   gchar *function_key;          /* name of function key */
   gboolean function_key_specified;      /* TRUE if not empty */
+  gboolean omit_panning;        /* Do not let the operator pan this sound.  */
+
+  guint64 starting_time;        /* the time that the sound started playing.  */
+  guint64 releasing_time;       /* the time that the sound entered the
+                                 * release segment of its envelope.  */
   GtkWidget *cluster_widget;    /* The cluster this sound is in.  */
   GstBin *sound_control;        /* The Gstreamer bin for this sound effect */
   gint cluster_number;          /* The number of the cluster the sound is in */
   gboolean running;             /* The sound is playing.  */
   gboolean release_sent;        /* A Release command was given.  */
   gboolean release_has_started; /* The sound has started its release stage.  */
-  gboolean omit_panning;        /* Do not let the operator pan this sound.  */
 };
 
 #endif /* ifndef SOUND_STRUCTURE_H */
