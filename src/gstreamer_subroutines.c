@@ -157,6 +157,15 @@ gstreamer_init (int sound_count, GApplication * app)
         }
     }
 
+  if ((monitor_enabled == FALSE) && (output_enabled == FALSE))
+    {                           /* neither */
+      sink_element = gst_element_factory_make ("fakesink", "final/sink");
+      if (sink_element == NULL)
+        {
+          GST_ERROR ("Unable to create the final sink gstreamer element.\n");
+        }
+    }
+
   /* Put the needed elements into the final bin.  */
   gst_bin_add_many (GST_BIN (final_bin_element), adder_element, level_element,
                     convert_element, resample_element, volume_element, NULL);
@@ -173,6 +182,10 @@ gstreamer_init (int sound_count, GApplication * app)
     {
       gst_bin_add_many (GST_BIN (final_bin_element), tee_element,
                         queue_file_element, queue_output_element, NULL);
+    }
+  if ((output_enabled == FALSE) && (monitor_enabled == FALSE))
+    {
+      gst_bin_add_many (GST_BIN (final_bin_element), sink_element, NULL);
     }
 
   /* Make sure we will get level messages. */
@@ -231,6 +244,10 @@ gstreamer_init (int sound_count, GApplication * app)
       gst_element_link (queue_output_element, sink_element);
       gst_element_link (queue_file_element, wavenc_element);
       gst_element_link (wavenc_element, filesink_element);
+    }
+  if ((output_enabled == FALSE) && (monitor_enabled == FALSE))
+    {
+      gst_element_link (volume_element, sink_element);
     }
 
   /* Place the final bin in the pipeline. */

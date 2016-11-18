@@ -1,3 +1,6 @@
+Version 0.72, November 18, 2016
+  Fix the no output and no monitor case.
+  
 Version 0.71, November 8, 2016
   Improve the remaining time display.
   
