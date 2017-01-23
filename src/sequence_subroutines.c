@@ -1,7 +1,7 @@
 /*
  * sequence_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -791,18 +791,18 @@ update_operator_display (struct sequence_info *sequence_data,
       elapsed_time = sound_get_elapsed_time (sound_effect, app);
       remaining_time = sound_get_remaining_time (sound_effect, app);
       if (remaining_time == G_MAXUINT64)
-	{
-	  display_text = g_strdup_printf ("%4.1f %s",
-					  (gdouble) elapsed_time / 1e9,
-					  sequence_item->text_to_display);
-	}
+        {
+          display_text =
+            g_strdup_printf ("%4.1f %s", (gdouble) elapsed_time / 1e9,
+                             sequence_item->text_to_display);
+        }
       else
-	{
-	display_text =
-	  g_strdup_printf ("%4.1f %s (%4.1f)", (gdouble) elapsed_time / 1e9,
-                         sequence_item->text_to_display,
-			   (gdouble) remaining_time / 1e9);
-	}
+        {
+          display_text =
+            g_strdup_printf ("%4.1f %s (%4.1f)", (gdouble) elapsed_time / 1e9,
+                             sequence_item->text_to_display,
+                             (gdouble) remaining_time / 1e9);
+        }
       /* If there is a message already being displayed by the sequencer,
        * remove it.  */
       if (sequence_data->message_displaying)
@@ -893,6 +893,18 @@ sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app)
         {
           found_item = TRUE;
           break;
+        }
+    }
+
+  /* If no cluster has been marked by Offer Sound with that
+   * sequence item, check for "quit" as a special case.  */
+  if (!found_item)
+    {
+      if (g_strcmp0 (Q_number, (gchar *) "quit") == 0)
+        {
+          /* Terminate the sound effects player.  */
+          g_application_quit (app);
+          return;
         }
     }
 

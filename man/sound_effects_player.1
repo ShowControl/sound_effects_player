@@ -1,4 +1,4 @@
-.TH SOUND_EFFECTS_PLAYER 1 2016-11-06 ShowControl
+.TH SOUND_EFFECTS_PLAYER 1 2017-01-22 ShowControl
 .SH NAME
 sound_effects_player \- play sound effects for a live stage play
 .SH SYNOPSIS
@@ -16,7 +16,10 @@ to make those sounds at the appropriate times.
 The input file is an XML file that describes the sounds and when 
 to make them.  See the README file for details.  If the file
 is not specified it can be read using the graphic user interface.
-
+.P
+This program can be used interactively and can also be run by an
+external sequencer which sends commands to it.  Both interactive
+and remote commands can be used together.
 .SH OPTIONS
 .TP
 .BR \-h ", " \-\-help
@@ -26,8 +29,8 @@ To see all of the options used by GTK and Gstreamer, type
 .TP
 .BR \-p ", " \-\-process\-id\-file =\fIpid\-file\fR
 Writes the process ID on the specified file.  This lets a script
-find the process of a copy of sound_effects_player that it has
-just launched, so it can send signals to it.
+find the process of the instance of sound_effects_player that it has
+just launched, so the script can send signals to it.
 .TP
 .BR \-m ", " \-\-monitor\-file =\fIoutput\-file\fR
 Writes the sound produced into a WAV file.  This option adds a 
@@ -36,7 +39,7 @@ The default is not to write the sound into a WAV file.
 .TP
 .BR \-a ", " \-\-audio\-output =\fBnone\fR | \fBALSA\fR | \fBJack\fR | \fBPulse\fR
 Controls the audio output.  None means do no audio output, 
-but the WAV file specified by \-\-monitor_output will still 
+but the WAV file specified by \-\-monitor\-file will still 
 be written.
 \fBALSA\fR means output using the Advanced Linux Sound Architecture, 
 which is the default.  

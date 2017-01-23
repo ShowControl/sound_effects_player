@@ -1,7 +1,7 @@
 /*
  * parse_net_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,6 +102,7 @@ parse_net_text (gchar * text, GApplication * app)
   gpointer *p;
   enum keyword_codes keyword_value;
   gchar *extra_text;
+  gchar *parameter_text = NULL;
   long int cluster_no;
 
   parse_net_data = sep_get_parse_net_data (app);
@@ -156,7 +157,11 @@ parse_net_text (gchar * text, GApplication * app)
 
         case keyword_cue:
           /* The cue command is treated as the 
-           * MIDI Show Control command Go.  */
+           * MIDI Show Control command Go.
+           * We must isolate the text parameter, since
+           * extra_text may end with a line break.  */
+          g_strdelimit (extra_text, (gchar *) "\n", (gchar) ' ');
+          g_strstrip (extra_text);
           sequence_MIDI_show_control_go (extra_text, app);
           break;
 
@@ -167,6 +172,7 @@ parse_net_text (gchar * text, GApplication * app)
 
       g_free (keyword_string);
       g_free (extra_text);
+      g_free (parameter_text);
     }
 
   return;

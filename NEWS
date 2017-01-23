@@ -1,3 +1,7 @@
+Version 0.73, January 22, 2017
+  Add /cue quit to let an external sequencer
+  shut down sound_effects_player
+  
 Version 0.72, November 18, 2016
   Fix the no output and no monitor case.
   
