@@ -1,7 +1,7 @@
 /*
  * sequence_subroutines.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,9 @@ void sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app);
 
 /* Execute the MIDI Show Control command Go_off.  */
 void sequence_MIDI_show_control_go_off (gchar * Q_number, GApplication * app);
+
+/* Execute an Open Sound Control (OSC) cue command.  */
+void sequence_OSC_cue (guint osc_cue, GApplication * app);
 
 /* Start the sound offered on a cluster.  */
 void sequence_cluster_start (guint cluster_number, GApplication * app);

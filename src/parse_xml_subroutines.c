@@ -1,7 +1,7 @@
 /*
  * parse_xml_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,8 +96,6 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
           sound_data->MIDI_program_number_specified = FALSE;
           sound_data->MIDI_note_number = 0;
           sound_data->MIDI_note_number_specified = FALSE;
-          sound_data->OSC_name = NULL;
-          sound_data->OSC_name_specified = FALSE;
           sound_data->function_key = NULL;
           sound_data->function_key_specified = FALSE;
           sound_data->omit_panning = FALSE;
@@ -108,7 +106,7 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
           sound_data->cluster_number = 0;
           sound_data->running = FALSE;
           sound_data->release_sent = FALSE;
-	  sound_data->release_has_started = FALSE;
+          sound_data->release_has_started = FALSE;
 
           /* Collect information from the XML file.  */
           while (sound_loc != NULL)
@@ -280,7 +278,7 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
               if (xmlStrEqual (name, (const xmlChar *) "loop_from_time"))
                 {
                   /* If we are looping, the end time of the loop.  
-		  * 0, the default, means do not loop.  */
+                   * 0, the default, means do not loop.  */
                   name_data =
                     xmlNodeListGetString (sounds_file,
                                           sound_loc->xmlChildrenNode, 1);
@@ -434,23 +432,6 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
                     }
                 }
 
-              if (xmlStrEqual (name, (const xmlChar *) "OSC_name"))
-                {
-                  /* If we are not using the internal sequencer, this is the
-                   * name by which this sound effect is activated using
-                   * Open Sound Control.  */
-                  name_data =
-                    xmlNodeListGetString (sounds_file,
-                                          sound_loc->xmlChildrenNode, 1);
-                  if (name_data != NULL)
-                    {
-                      sound_data->OSC_name = g_strdup ((gchar *) name_data);
-                      sound_data->OSC_name_specified = TRUE;
-                      xmlFree (name_data);
-                      name_data = NULL;
-                    }
-                }
-
               if (xmlStrEqual (name, (const xmlChar *) "function_key"))
                 {
                   /* If we are not using the internal sequencer, this is the
@@ -562,6 +543,8 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
           sequence_item_data->next_release_started = NULL;
           sequence_item_data->importance = 1;
           sequence_item_data->Q_number = NULL;
+          sequence_item_data->OSC_cue = 0;
+          sequence_item_data->OSC_cue_specified = FALSE;
           sequence_item_data->text_to_display = NULL;
 
           /* Fields used in the Stop sequence item but not mentioned above.  */
@@ -576,7 +559,6 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
           sequence_item_data->MIDI_program_number = 0;
           sequence_item_data->MIDI_note_number = 0;
           sequence_item_data->MIDI_note_number_specified = FALSE;
-          sequence_item_data->OSC_name = NULL;
           sequence_item_data->macro_number = 0;
           sequence_item_data->function_key = NULL;
 
@@ -905,6 +887,21 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                   name_data = NULL;
                 }
 
+              if (xmlStrEqual (name, (const xmlChar *) "OSC_cue"))
+                {
+                  /* The cue number of this sound, for Open Sound Control.
+                   */
+                  name_data =
+                    xmlNodeListGetString (sequence_file,
+                                          sequence_item_loc->xmlChildrenNode,
+                                          1);
+                  long_data = g_ascii_strtoll ((gchar *) name_data, NULL, 10);
+                  xmlFree (name_data);
+                  name_data = NULL;
+                  sequence_item_data->OSC_cue = long_data;
+                  sequence_item_data->OSC_cue_specified = TRUE;
+                }
+
               if (xmlStrEqual (name, (const xmlChar *) "text_to_display"))
                 {
                   /* The text to display to the sound effects operator when
@@ -1008,21 +1005,6 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                       sequence_item_data->MIDI_note_number_specified = TRUE;
                       name_data = NULL;
                     }
-                }
-
-              if (xmlStrEqual (name, (const xmlChar *) "OSC_name"))
-                {
-                  /* In the Offer Sound sequence item, the Open Show Control
-                   * (OSC) name used to trigger the specified sequence item
-                   * remotely.  */
-                  name_data =
-                    xmlNodeListGetString (sequence_file,
-                                          sequence_item_loc->xmlChildrenNode,
-                                          1);
-                  sequence_item_data->OSC_name =
-                    g_strdup ((gchar *) name_data);
-                  xmlFree (name_data);
-                  name_data = NULL;
                 }
 
               if (xmlStrEqual (name, (const xmlChar *) "macro_number"))

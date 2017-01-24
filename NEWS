@@ -1,3 +1,10 @@
+Version 0.74, January 24, 2017
+  Support the /cue command of OSC.
+  Simplify The Perils of Pauline and add text files for ncat to send.
+  These are cue_next, cue_quit and cue_1, which starts the saw.
+  To stop the saw use the Stop button on cluster 3.  It may take
+  a while to come to a complete stop.
+  
 Version 0.73, January 22, 2017
   Add /cue quit to let an external sequencer
   shut down sound_effects_player

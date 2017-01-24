@@ -1,7 +1,7 @@
 /*
  * sound_structure.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,8 +56,6 @@ struct sound_info
   gboolean MIDI_program_number_specified;       /* TRUE if not empty */
   gint MIDI_note_number;        /* MIDI note number, if specified */
   gboolean MIDI_note_number_specified;  /* TRUE if not empty */
-  gchar *OSC_name;              /* name used by OSC to activate */
-  gboolean OSC_name_specified;  /* TRUE if not empty */
   gchar *function_key;          /* name of function key */
   gboolean function_key_specified;      /* TRUE if not empty */
   gboolean omit_panning;        /* Do not let the operator pan this sound.  */

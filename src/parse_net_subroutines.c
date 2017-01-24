@@ -29,6 +29,8 @@
  * a command we perform the action specified by the keyword.
  */
 
+#define TRACE_PARSE_NET FALSE
+
 /* The persistent data used by the parser.  It is allocated when the
  * parser is initialized, and deallocated when the program terminates.
  * It is accessible from the application.
@@ -42,10 +44,10 @@ struct parse_net_info
 
 /* The keyword hash table. */
 enum keyword_codes
-{ keyword_start = 1, keyword_stop, keyword_quit, keyword_cue };
+{ keyword_start = 1, keyword_stop, keyword_quit, keyword_go };
 
 static enum keyword_codes keyword_values[] =
-{ keyword_start, keyword_stop, keyword_quit, keyword_cue };
+{ keyword_start, keyword_stop, keyword_quit, keyword_go };
 
 struct keyword_value_pairs
 {
@@ -57,7 +59,7 @@ static struct keyword_value_pairs keywords_with_values[] = {
   {"start", &keyword_values[0]},
   {"stop", &keyword_values[1]},
   {"quit", &keyword_values[2]},
-  {"/cue", &keyword_values[3]}
+  {"go", &keyword_values[3]}
 };
 
 /* Initialize the network messages parser */
@@ -93,7 +95,7 @@ parse_net_init (GApplication * app)
 /* Receive a datagram from the network.  Parse and execute the command.
  */
 void
-parse_net_text (gchar * text, GApplication * app)
+parse_net_text (guint nread, gchar * text, GApplication * app)
 {
   struct parse_net_info *parse_net_data;
   int command_length;
@@ -104,10 +106,73 @@ parse_net_text (gchar * text, GApplication * app)
   gchar *extra_text;
   gchar *parameter_text = NULL;
   long int cluster_no;
+  long long int cue_number;
+
+  if (TRACE_PARSE_NET)
+    {
+      printf ("network message, length %d, contents (in hexadecimal): ",
+              nread);
+      for (int i = 0; i < nread; i++)
+        {
+          printf ("%02x", text[i]);
+        }
+      printf (".\n");
+    }
 
   parse_net_data = sep_get_parse_net_data (app);
 
-  command_length = strlen (text);
+  /* If the datagram starts with "/", this is an OSC message.
+   * All OSC messages are 16 bytes long.  Ignore data after
+   * byte 16 to make testing with ncat easier.  */
+  if ((text[0] == '/') && (nread >= 16))
+    {
+      /* The only OSC command we implement at this time
+       * is cue.  The three forms we handle are "/cue/next/",
+       * "/cue/quit/" and "/cue/#,i <cue number>".  */
+      if (memcmp (text, (gchar *) "/cue/quit\0\0\0,\0\0\0", 16) == 0)
+        {
+          /* This is "/cue/quit".  */
+          g_application_quit (app);
+          return;
+        }
+      if (memcmp (text, (gchar *) "/cue/next\0\0\0,\0\0\0", 16) == 0)
+        {
+          /* This is "/cue/next".  Treat it like pressing the Play
+           * button.  */
+          sequence_button_play (app);
+          return;
+        }
+      if (memcmp (text, (gchar *) "/cue/#\0\0,i\0\0", 12) == 0)
+        {
+          /* This is "/cue/#,i <cue number>".
+           * Bytes 12-15 are the cue number in binary,
+           * high-order byte first.  */
+          cue_number = text[12];
+          cue_number = cue_number * 256;
+          cue_number = cue_number + text[13];
+          cue_number = cue_number * 256;
+          cue_number = cue_number + text[14];
+          cue_number = cue_number * 256;
+          cue_number = cue_number + text[15];
+
+          /* Tell the sequencer to perform the cue.  */
+          sequence_OSC_cue (cue_number, app);
+          return;
+        }
+
+      /* The datagram starts with "/" but is not recognized.  */
+      g_print ("Unknown message (in hexadecimal): ");
+      for (int i = 0; i < nread; i++)
+        {
+          printf ("%02x", text[i]);
+        }
+      printf (".\n");
+      return;
+    }
+
+  /* Absent a slash, this is a simple text command.  */
+  command_length = nread;
+  text[nread] = '\0';
   /* Isolate the keyword that starts the command. The keyword will be
    * terminated by white space or the end of the string.  */
   for (kl = 0; kl < command_length; kl++)
@@ -155,8 +220,8 @@ parse_net_text (gchar * text, GApplication * app)
           g_application_quit (app);
           break;
 
-        case keyword_cue:
-          /* The cue command is treated as the 
+        case keyword_go:
+          /* The go command is treated as the 
            * MIDI Show Control command Go.
            * We must isolate the text parameter, since
            * extra_text may end with a line break.  */

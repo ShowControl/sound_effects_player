@@ -64,11 +64,8 @@ receive_data_callback (GSocket * socket, GIOCondition condition,
         }
       if (nread != 0)
         {
-          network_buffer[nread] = '\0';
-          /* Data may be received in arbitrary-sized chunks.  
-           * Processing a chunk might range from just adding it to a buffer to 
-           * executing several commands that arrived all at once. */
-          parse_net_text (network_buffer, user_data);
+          /* Parse the received datagram.  */
+          parse_net_text (nread, network_buffer, user_data);
         }
 
     }

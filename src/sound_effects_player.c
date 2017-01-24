@@ -1,7 +1,7 @@
 /*
  * sound_effects_player.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  * 
  * Sound_effects_player is free software: you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by the
@@ -307,7 +307,6 @@ sound_effects_player_finalize (GObject * object)
       g_free (sound_effect->name);
       g_free (sound_effect->wav_file_name);
       g_free (sound_effect->wav_file_name_full);
-      g_free (sound_effect->OSC_name);
       g_free (sound_effect->function_key);
       g_free (sound_effect);
       self->priv->sound_list =

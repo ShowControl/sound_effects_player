@@ -1,7 +1,7 @@
 /*
  * sequence_structure.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -78,8 +78,9 @@ struct sequence_item_info
   gint MIDI_program_number;     /* The MIDI program number and */
   gint MIDI_note_number;        /* note number which trigger this cluster */
   gboolean MIDI_note_number_specified;  /* They may be omitted.  */
-  gchar *OSC_name;              /* The Open Show Control (OSC) name which 
-                                 * triggers this cluster */
+  guint OSC_cue;                /* The Open Show Control (OSC) cue number
+                                 * which triggers this sound. */
+  gboolean OSC_cue_specified;   /* TRUE if OSC_cue has been specified.  */
   guint macro_number;           /* Used by MIDI Show Control's Fire command
                                  * to trigger this cluster.  */
   gchar *function_key;          /* The function key which triggers this 

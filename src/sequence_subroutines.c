@@ -955,6 +955,54 @@ sequence_MIDI_show_control_go_off (gchar * Q_number, GApplication * app)
   return;
 }
 
+/* Execute the Open Sound Control (OSC) cue command.  */
+void
+sequence_OSC_cue (guint osc_cue, GApplication * app)
+{
+  struct sequence_info *sequence_data;
+  struct remember_info *remember_data;
+  struct sequence_item_info *sequence_item;
+  gboolean found_item;
+  GList *item_list;
+
+  sequence_data = sep_get_sequence_data (app);
+
+  if (TRACE_SEQUENCER)
+    {
+      g_print ("OSC cue, cue number = %d.\n", osc_cue);
+    }
+
+  /* Find the cluster whose Offer Sound sequence item has the specified
+   * OSC_cue number.  */
+  found_item = FALSE;
+  for (item_list = sequence_data->offering; item_list != NULL;
+       item_list = item_list->next)
+    {
+      remember_data = item_list->data;
+      sequence_item = remember_data->sequence_item;
+      if (sequence_item->OSC_cue_specified
+          && (sequence_item->OSC_cue == osc_cue) && (remember_data->active))
+        {
+          found_item = TRUE;
+          break;
+        }
+    }
+
+  if (!found_item)
+    {
+      display_show_message ("No matching OSC_cue", app);
+      return;
+    }
+
+  /* Run the sequencer.  A subsequent Start Sound sequence item
+   * which names this same cluster will take posession of the cluster
+   * until it completes or is terminated.  */
+  sequence_data->next_item_name = sequence_item->next_to_start;
+  execute_items (sequence_data, app);
+
+  return;
+}
+
 /* Process the Start button on a cluster.  */
 void
 sequence_cluster_start (guint cluster_number, GApplication * app)
