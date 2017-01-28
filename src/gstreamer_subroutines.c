@@ -1,7 +1,7 @@
 /*
  * gstreamer_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -262,8 +262,9 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
                       GstPipeline * pipeline_element, GApplication * app)
 {
   GstElement *source_element, *parse_element, *convert_element;
-  GstElement *resample_element, *looper_element;
+  GstElement *resample1_element, *looper_element;
   GstElement *envelope_element, *pan_element, *volume_element;
+  GstElement *resample2_element;
   GstElement *bin_element, *final_bin_element;
   gchar *sound_name, *pad_name, *element_name;
   GstPad *last_source_pad, *sink_pad;
@@ -280,6 +281,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
       GST_ERROR ("Unable to create the bin element.\n");
       return NULL;
     }
+
   element_name = g_strconcat (sound_name, (gchar *) "/source", NULL);
   source_element = gst_element_factory_make ("filesrc", element_name);
   if (source_element == NULL)
@@ -288,6 +290,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
       return NULL;
     }
   g_free (element_name);
+
   element_name = g_strconcat (sound_name, (gchar *) "/parse", NULL);
   parse_element = gst_element_factory_make ("wavparse", element_name);
   if (parse_element == NULL)
@@ -296,6 +299,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
       return NULL;
     }
   g_free (element_name);
+
   element_name = g_strconcat (sound_name, (gchar *) "/looper", NULL);
   looper_element = gst_element_factory_make ("looper", element_name);
   if (looper_element == NULL)
@@ -304,6 +308,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
       return NULL;
     }
   g_free (element_name);
+
   element_name = g_strconcat (sound_name, (gchar *) "/convert", NULL);
   convert_element = gst_element_factory_make ("audioconvert", element_name);
   if (convert_element == NULL)
@@ -312,14 +317,17 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
       return NULL;
     }
   g_free (element_name);
-  element_name = g_strconcat (sound_name, (gchar *) "/resample", NULL);
-  resample_element = gst_element_factory_make ("audioresample", element_name);
-  if (resample_element == NULL)
+
+  element_name = g_strconcat (sound_name, (gchar *) "/resample1", NULL);
+  resample1_element =
+    gst_element_factory_make ("audioresample", element_name);
+  if (resample1_element == NULL)
     {
-      GST_ERROR ("Unable to create the resample element.\n");
+      GST_ERROR ("Unable to create the resample1 element.\n");
       return NULL;
     }
   g_free (element_name);
+
   element_name = g_strconcat (sound_name, (gchar *) "/envelope", NULL);
   envelope_element = gst_element_factory_make ("envelope", element_name);
   if (envelope_element == NULL)
@@ -328,6 +336,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
       return NULL;
     }
   g_free (element_name);
+
   if (!sound_data->omit_panning)
     {
       element_name = g_strconcat (sound_name, (gchar *) "/pan", NULL);
@@ -349,6 +358,16 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   if (volume_element == NULL)
     {
       GST_ERROR ("Unable to create the volume element.\n");
+      return NULL;
+    }
+  g_free (element_name);
+
+  element_name = g_strconcat (sound_name, (gchar *) "/resample2", NULL);
+  resample2_element =
+    gst_element_factory_make ("audioresample", element_name);
+  if (resample2_element == NULL)
+    {
+      GST_ERROR ("Unable to create the resample2 element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -407,15 +426,17 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
 
   /* Place the various elements in the bin. */
   gst_bin_add_many (GST_BIN (bin_element), source_element, parse_element,
-                    looper_element, convert_element, resample_element,
-                    envelope_element, volume_element, NULL);
+                    looper_element, convert_element, resample1_element,
+                    envelope_element, volume_element, resample2_element,
+                    NULL);
   if (!sound_data->omit_panning)
     {
       gst_bin_add_many (GST_BIN (bin_element), pan_element, NULL);
     }
 
   /* Link them together in this order: 
-   * source->parse->looper->convert->resample->envelope->pan->volume.
+   * source->parse->looper->convert->resample1->envelope->pan->
+   * volume->resample2.
    * Note that because the looper reads the wave file directly, as well
    * as getting it through the pipeline, the audio converter must be
    * after it.  It is for this reason that the looper handles a variety
@@ -423,8 +444,8 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   gst_element_link (source_element, parse_element);
   gst_element_link (parse_element, looper_element);
   gst_element_link (looper_element, convert_element);
-  gst_element_link (convert_element, resample_element);
-  gst_element_link (resample_element, envelope_element);
+  gst_element_link (convert_element, resample1_element);
+  gst_element_link (resample1_element, envelope_element);
   if (!sound_data->omit_panning)
     {
       gst_element_link (envelope_element, pan_element);
@@ -434,9 +455,10 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
     {
       gst_element_link (envelope_element, volume_element);
     }
+  gst_element_link (volume_element, resample2_element);
 
   /* The output of the bin is the output of the last element. */
-  last_source_pad = gst_element_get_static_pad (volume_element, "src");
+  last_source_pad = gst_element_get_static_pad (resample2_element, "src");
   gst_element_add_pad (bin_element,
                        gst_ghost_pad_new ("src", last_source_pad));
 
@@ -446,6 +468,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
     {
       GST_ERROR ("Failed to add sound effect %s bin to pipeline.\n",
                  sound_data->name);
+      return NULL;
     }
 
   /* Link the output of the sound effect bin to the final bin. */
@@ -459,6 +482,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
     {
       GST_ERROR ("Failed to link sound effect %s to final bin: %d, %d.\n",
                  sound_data->name, sound_number, link_status);
+      return NULL;
     }
   g_free (pad_name);
 

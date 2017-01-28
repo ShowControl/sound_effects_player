@@ -1,3 +1,9 @@
+Version 0.75, January 28, 2017
+  Add an extra resample element to try to work around what appears
+  to be a gstreamer bug.  The symptom is that the pipeline does not
+  converge on a sample rate.  That didn't work, so make all of the
+  WAV files use the same sample rate.
+  
 Version 0.74, January 24, 2017
   Support the /cue command of OSC.
   Simplify The Perils of Pauline and add text files for ncat to send.
