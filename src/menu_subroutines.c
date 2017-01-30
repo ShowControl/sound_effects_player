@@ -1,7 +1,7 @@
 /*
  * menu_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -130,6 +130,7 @@ quit_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 {
   /* Shut down the gstreamer pipeline, then terminate the application.  */
   gstreamer_shutdown (app);
+  return;
 }
 
 /* Subroutine called when the top-level window is closed.  */
@@ -193,6 +194,10 @@ open_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
       /* Parse the file as an XML file and create the gstreamer pipeline.  */
       sep_create_pipeline (project_file_name, (GApplication *) app);
     }
+  else
+    {
+      gtk_widget_destroy (dialog);
+    }
 
   return;
 }
@@ -204,7 +209,7 @@ save_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 
 /* Write the project information to an XML file. */
 static void
-save_as_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
+saveas_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 {
 
   GtkWidget *dialog;
@@ -275,7 +280,7 @@ static GActionEntry app_entries[] = {
   {"new", new_activated, NULL, NULL, NULL},
   {"open", open_activated, NULL, NULL, NULL},
   {"save", save_activated, NULL, NULL, NULL},
-  {"save_as", save_as_activated, NULL, NULL, NULL},
+  {"saveas", saveas_activated, NULL, NULL, NULL},
   {"copy", copy_activated, NULL, NULL, NULL},
   {"cut", cut_activated, NULL, NULL, NULL},
   {"paste", paste_activated, NULL, NULL, NULL}

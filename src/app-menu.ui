@@ -37,7 +37,7 @@
         </item>
 	<item>
 	  <attribute name="label" translatable="yes">Save _As</attribute>
-	  <attribute name="action">app.save_as</attribute>
+	  <attribute name="action">app.saveas</attribute>
 	  <attribute name="accel">&lt;Primary&gt;a</attribute>
         </item>
       </section>
