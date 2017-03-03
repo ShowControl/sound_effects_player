@@ -1,5 +1,9 @@
+Version 0.77, March 3, 2017
+  Work around Gstreamer bug 777915 so we can again use
+  sound effects WAV files with different rates and formats.
+  
 Version 0.76, January 29, 2017
-  Understores are no longer allowed in accelerator names.
+  Underscores are no longer allowed in accelerator names.
   Change save_as to saveas.  This change is not externally
   visible except it removes an ugly error message on startup.
 

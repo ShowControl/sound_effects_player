@@ -55,6 +55,8 @@ gstreamer_init (int sound_count, GApplication * app)
   gchar *device_name_string;
   gboolean monitor_enabled;
   gboolean output_enabled;
+  gboolean link_ok;
+  GstCaps *caps_filter;
 
   /* Check to see if --monitor-file was specified on the command line.  */
   monitor_file_name = main_get_monitor_file_name ();
@@ -100,14 +102,14 @@ gstreamer_init (int sound_count, GApplication * app)
   /* Create the elements that will go in the final bin.  */
   adder_element = gst_element_factory_make ("adder", "final/adder");
   level_element = gst_element_factory_make ("level", "final/master_level");
-  convert_element =
-    gst_element_factory_make ("audioconvert", "final/convert");
   resample_element =
     gst_element_factory_make ("audioresample", "final/resample");
+  convert_element =
+    gst_element_factory_make ("audioconvert", "final/convert");
   volume_element = gst_element_factory_make ("volume", "final/volume");
   if ((final_bin_element == NULL) || (adder_element == NULL)
-      || (level_element == NULL) || (convert_element == NULL)
-      || (resample_element == NULL) || (volume_element == NULL))
+      || (level_element == NULL) || (resample_element == NULL)
+      || (convert_element == NULL) || (volume_element == NULL))
     {
       GST_ERROR ("Unable to create the final gstreamer elements.\n");
       return NULL;
@@ -126,6 +128,7 @@ gstreamer_init (int sound_count, GApplication * app)
       if (sink_element == NULL)
         {
           GST_ERROR ("Unable to create the final sink gstreamer element.\n");
+          return NULL;
         }
     }
   if ((monitor_enabled == TRUE) && (output_enabled == FALSE))
@@ -136,6 +139,7 @@ gstreamer_init (int sound_count, GApplication * app)
       if ((wavenc_element == NULL) || (filesink_element == NULL))
         {
           GST_ERROR ("Unable to create the final sink gstreamer elements.\n");
+          return NULL;
         }
     }
   if ((monitor_enabled == TRUE) && (output_enabled == TRUE))
@@ -154,6 +158,7 @@ gstreamer_init (int sound_count, GApplication * app)
           || (wavenc_element == NULL) || (filesink_element == NULL))
         {
           GST_ERROR ("Unable to create the final sink gstreamer elements.\n");
+          return NULL;
         }
     }
 
@@ -168,7 +173,7 @@ gstreamer_init (int sound_count, GApplication * app)
 
   /* Put the needed elements into the final bin.  */
   gst_bin_add_many (GST_BIN (final_bin_element), adder_element, level_element,
-                    convert_element, resample_element, volume_element, NULL);
+                    resample_element, convert_element, volume_element, NULL);
   if (output_enabled == TRUE)
     {
       gst_bin_add_many (GST_BIN (final_bin_element), sink_element, NULL);
@@ -222,32 +227,125 @@ gstreamer_init (int sound_count, GApplication * app)
       g_free (pad_name);
     }
 
-  /* Link the various elements in the final bin together.  */
-  gst_element_link (adder_element, level_element);
-  gst_element_link (level_element, convert_element);
-  gst_element_link (convert_element, resample_element);
-  gst_element_link (resample_element, volume_element);
+  /* Link the various elements in the final bin together.
+   * We must work around a bug in gstreamer 1.10 by adding a caps filter
+   * after the adder, forcing the choice of audio format and rate.
+   * We choose F32LE and 96,000 samples per second.
+   * See Gnome bug 777915 at https://bugzilla.gnome.org/show_bug.cgi?id=777915 
+   */
+  caps_filter =
+    gst_caps_new_simple ("audio/x-raw", "format", G_TYPE_STRING, "F32LE",
+                         "rate", G_TYPE_INT, 96000, NULL);
+  link_ok =
+    gst_element_link_filtered (adder_element, level_element, caps_filter);
+  if (!link_ok)
+    {
+      g_warning ("Failed to link final adder to level.");
+      return NULL;
+    }
+
+  link_ok = gst_element_link (level_element, resample_element);
+  if (!link_ok)
+    {
+      g_warning ("Failed to link final level to resample.");
+      return NULL;
+    }
+
+  link_ok = gst_element_link (resample_element, convert_element);
+  if (!link_ok)
+    {
+      g_warning ("Failed to link final resample to convert.");
+      return NULL;
+    }
+
+  link_ok = gst_element_link (convert_element, volume_element);
+  if (!link_ok)
+    {
+      g_warning ("Failed to link final convert to volume.");
+      return NULL;
+    }
+
   if ((output_enabled == TRUE) && (monitor_enabled == FALSE))
     {
-      gst_element_link (volume_element, sink_element);
+      link_ok = gst_element_link (volume_element, sink_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final volume to sink.");
+          return NULL;
+        }
+
     }
   if ((output_enabled == FALSE) && (monitor_enabled == TRUE))
     {
-      gst_element_link (volume_element, wavenc_element);
-      gst_element_link (wavenc_element, filesink_element);
+      link_ok = gst_element_link (volume_element, wavenc_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final volume to wavenc.");
+          return NULL;
+        }
+
+      link_ok = gst_element_link (wavenc_element, filesink_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final wavenc to filesink.");
+          return NULL;
+        }
+
     }
   if ((output_enabled == TRUE) && (monitor_enabled == TRUE))
     {
-      gst_element_link (volume_element, tee_element);
-      gst_element_link (tee_element, queue_file_element);
-      gst_element_link (tee_element, queue_output_element);
-      gst_element_link (queue_output_element, sink_element);
-      gst_element_link (queue_file_element, wavenc_element);
-      gst_element_link (wavenc_element, filesink_element);
+      link_ok = gst_element_link (volume_element, tee_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final volume to tee.");
+          return NULL;
+        }
+
+      link_ok = gst_element_link (tee_element, queue_file_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final tee to queue_file.");
+          return NULL;
+        }
+
+      link_ok = gst_element_link (tee_element, queue_output_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final tee to queue_output.");
+          return NULL;
+        }
+
+      link_ok = gst_element_link (queue_output_element, sink_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final queue_output to sink.");
+          return NULL;
+        }
+
+      link_ok = gst_element_link (queue_file_element, wavenc_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final queue_file to wavenc.");
+          return NULL;
+        }
+
+      link_ok = gst_element_link (wavenc_element, filesink_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final wavenc to filesink.");
+          return NULL;
+        }
+
     }
   if ((output_enabled == FALSE) && (monitor_enabled == FALSE))
     {
-      gst_element_link (volume_element, sink_element);
+      link_ok = gst_element_link (volume_element, sink_element);
+      if (!link_ok)
+        {
+          g_warning ("Failed to link final volume to sink.");
+          return NULL;
+        }
+
     }
 
   /* Place the final bin in the pipeline. */
