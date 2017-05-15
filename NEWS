@@ -1,3 +1,6 @@
+Version 0.78, May 15, 2017
+  Work on freeing heap storage during exit.
+  
 Version 0.77, March 3, 2017
   Work around Gstreamer bug 777915 so we can again use
   sound effects WAV files with different rates and formats.

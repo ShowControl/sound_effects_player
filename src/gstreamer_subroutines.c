@@ -667,6 +667,53 @@ gstreamer_shutdown (GApplication * app)
   return;
 }
 
+/* We are exiting: free the gstreamer resources.  */
+GstPipeline *
+gstreamer_dispose (GApplication * app)
+{
+  GstPipeline *pipeline_element;
+  GstBin *bin_element;
+  GstElement *this_element;
+  GstIterator *bin_iterator;
+  gboolean done;
+
+  /* Go through all of the elements of the pipeline, freeing them.  */
+  GValue item = G_VALUE_INIT;
+  this_element = NULL;
+  pipeline_element = sep_get_pipeline_from_app (app);
+  bin_element = GST_BIN (pipeline_element);
+  bin_iterator = gst_bin_iterate_recurse (bin_element);
+  done = FALSE;
+
+  while (!done)
+    {
+      switch (gst_iterator_next (bin_iterator, &item))
+        {
+        case GST_ITERATOR_OK:
+          this_element = GST_ELEMENT (gst_value_get_structure (&item));
+          gst_bin_remove (bin_element, this_element);
+          this_element = NULL;
+          g_value_reset (&item);
+          break;
+        case GST_ITERATOR_RESYNC:
+          gst_iterator_resync (bin_iterator);
+          break;
+        case GST_ITERATOR_ERROR:
+          /* Wrong parameters were given... */
+          done = TRUE;
+          break;
+        case GST_ITERATOR_DONE:
+          done = TRUE;
+          break;
+        }
+    }
+  g_value_unset (&item);
+  gst_iterator_free (bin_iterator);
+
+  gst_object_unref (pipeline_element);
+  return NULL;
+}
+
 /* Handle the async-done event from the gstreamer pipeline.  
 The first such event means that the gstreamer pipeline has finished
 its initialization.  */

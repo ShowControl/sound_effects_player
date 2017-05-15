@@ -1,7 +1,7 @@
 /*
  * gstreamer_subroutines.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ GstBin *gstreamer_create_bin (struct sound_info *sound_data, int sound_number,
 void gstreamer_complete_pipeline (GstPipeline * pipeline_element,
                                   GApplication * app);
 void gstreamer_shutdown (GApplication * app);
+GstPipeline *gstreamer_dispose (GApplication * app);
 void gstreamer_async_done (GApplication * app);
 void gstreamer_process_eos (GApplication * app);
 GstElement *gstreamer_get_volume (GstBin * bin_element);

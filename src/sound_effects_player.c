@@ -283,18 +283,18 @@ sound_effects_player_init (Sound_Effects_Player * object)
 }
 
 static void
-sound_effects_player_finalize (GObject * object)
+sound_effects_player_dispose (GObject * object)
 {
+  GApplication *app = (GApplication *) object;
+  Sound_Effects_Player *self = (Sound_Effects_Player *) object;
   GList *sound_effect_list;
   GList *next_sound_effect;
   struct sound_info *sound_effect;
-  Sound_Effects_Player *self = (Sound_Effects_Player *) object;
 
   /* Deallocate the gstreamer pipeline.  */
   if (self->priv->gstreamer_pipeline != NULL)
     {
-      g_object_unref (self->priv->gstreamer_pipeline);
-      self->priv->gstreamer_pipeline = NULL;
+      self->priv->gstreamer_pipeline = gstreamer_dispose (app);
     }
 
   /* Deallocate the list of sound effects. */
@@ -314,7 +314,28 @@ sound_effects_player_finalize (GObject * object)
       sound_effect_list = next_sound_effect;
     }
 
+  /* Deallocate the project file.  */
+  if (self->priv->project_file != NULL)
+    {
+      xmlFree (self->priv->project_file);
+      self->priv->project_file = NULL;
+    }
+
+  if (self->priv->project_filename != NULL)
+    {
+      g_free (self->priv->project_filename);
+      self->priv->project_filename = NULL;
+    }
+
+  G_OBJECT_CLASS (sound_effects_player_parent_class)->dispose (object);
+  return;
+}
+
+static void
+sound_effects_player_finalize (GObject * object)
+{
   G_OBJECT_CLASS (sound_effects_player_parent_class)->finalize (object);
+  return;
 }
 
 static void
@@ -325,6 +346,7 @@ sound_effects_player_class_init (Sound_Effects_PlayerClass * klass)
 
   g_type_class_add_private (klass, sizeof (Sound_Effects_PlayerPrivate));
 
+  G_OBJECT_CLASS (klass)->dispose = sound_effects_player_dispose;
   G_OBJECT_CLASS (klass)->finalize = sound_effects_player_finalize;
 }
 

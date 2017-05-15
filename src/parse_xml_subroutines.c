@@ -1223,6 +1223,7 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
                               absolute_file_name, sounds_name);
                 }
               xmlFree (sounds_file);
+              sounds_file = NULL;
             }
           /* Now process the content of the sounds section. */
           parse_sounds_info (equipment_file, equipment_file_name,
@@ -1329,6 +1330,7 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
                               absolute_file_name, sequence_name);
                 }
               xmlFree (sequence_file);
+              sequence_file = NULL;
             }
           /* Now process the content of the sound sequence section. */
           parse_sequence_info (equipment_file, equipment_file_name,
@@ -1631,6 +1633,7 @@ parse_xml_read_project_file (gchar * project_file_name, GApplication * app)
       g_printerr ("Not a project file: %s.\n", name);
     }
 
+  xmlCleanupParser ();
   return;
 }
 
@@ -1752,5 +1755,6 @@ parse_xml_write_project_file (gchar * project_file_name, GApplication * app)
     }
   g_free (prop_name);
 
+  xmlCleanupParser ();
   return;
 }
