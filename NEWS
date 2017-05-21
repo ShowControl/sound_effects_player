@@ -1,3 +1,6 @@
+Version 0.79, May 21, 2017
+  Increase the number of clusters to 16.
+  
 Version 0.78, May 15, 2017
   Work on freeing heap storage during exit.
   

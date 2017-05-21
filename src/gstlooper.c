@@ -3,7 +3,7 @@
  * which is a Gstreamer application.  Much of the code in this file is based
  * on Gstreamer examples and tutorials.
  *
- * Copyright © 2016 John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -74,12 +74,21 @@
  * must be a WAV file.  Default is that file-location is not specified, so
  * no file is read.
  *
+ * #GstLooper:elapsed-time.  The number of nanoseconds since the sound was
+ * last started.  This is a read-only parameter.
+ *
+ * #GstLooper:remaining-time.  The number of nanoseconds left in this
+ * sound.  If the sound will run forever, the value is G_MAXUINT64.
+ * This is a read-only parameter.
+ *
  * Receipt of a Release message causes looping to terminate, which means 
  * reaching the end of the loop no longer causes sound to be sent from the 
  * beginning of the loop.  The amount of sound sent after a Release message can 
  * be as little as 0, if the looper element was about to loop, and there is no 
  * sound after the loop-from time.  Therefore, if you need sound after the 
  * Release message, leave enough sound after loop-from to handle the worst case.
+ *
+ * The Release message can cause the value of remaining-time to become finite.
  *
  * <refsect2>
  * <title>Example launch line</title>
@@ -357,6 +366,7 @@ gst_looper_init (GstLooper * self)
   self->seen_incoming_data = FALSE;
   g_rec_mutex_init (&self->interlock);
   self->silence_byte = 0;
+  self->gap_time = G_MAXUINT64; /* Disable gaps: some sort of bug.  */
 
   /* create the pads */
   self->sinkpad = gst_pad_new_from_static_template (&sinktemplate, "sink");
@@ -691,7 +701,7 @@ gst_looper_push_data_downstream (GstPad * pad)
   gboolean send_silence;
   gboolean buffer_complete;
   gboolean exiting = FALSE;
-  guint64 loop_from_position, loop_to_position;
+  guint64 duration, loop_from_position, loop_to_position;
 
   /* We have a recursive mutex which prevents this task from running
    * while some other part of this plugin is running on a different task.  
@@ -819,47 +829,90 @@ gst_looper_push_data_downstream (GstPad * pad)
 
   if (send_silence)
     {
-      GST_DEBUG_OBJECT (self, "sending silence downstream");
-      /* Compute the number of bytes required to hold 40 milliseconds
-       * of silence.  */
-      data_size =
-        self->width * self->data_rate * self->channel_count / (8000 / 40);
-      /* Allocate that much memory, and place it in our output buffer.  */
-      memory_out = gst_allocator_alloc (NULL, data_size, NULL);
-      buffer = gst_buffer_new ();
-      gst_buffer_append_memory (buffer, memory_out);
-      /* Fill the buffer with the silence byte.  */
-      gst_buffer_map (buffer, &memory_out_info, GST_MAP_WRITE);
-      gst_buffer_memset (buffer, 0, self->silence_byte, memory_out_info.size);
-      /* Set the time stamps in the buffer.  */
-      GST_BUFFER_PTS (buffer) = self->local_clock;
-      GST_BUFFER_DTS (buffer) = self->local_clock;
-      GST_BUFFER_DURATION (buffer) =
-        memory_out_info.size / self->bytes_per_ns;
-      /* Advance our clock.  */
-      self->local_clock =
-        self->local_clock + (memory_out_info.size / self->bytes_per_ns);
-      GST_BUFFER_OFFSET (buffer) = self->local_buffer_drain_level;
-      GST_BUFFER_OFFSET_END (buffer) =
-        self->local_buffer_drain_level + memory_out_info.size;
-      gst_buffer_unmap (buffer, &memory_out_info);
-      /* Send the buffer downstream.  */
       GST_DEBUG_OBJECT (self,
-                        "pushing %" G_GUINT64_FORMAT " bytes of silence.",
-                        data_size);
-      /* We must unlock before we push, since pushing can cause a query to 
-       * come back upstream on a different task before it completes.  */
-      g_rec_mutex_unlock (&self->interlock);
+                        "sending silence downstream at time %"
+                        G_GUINT64_FORMAT ".", self->local_clock);
 
-      flow_result = gst_pad_push (self->srcpad, buffer);
-      if (flow_result != GST_FLOW_OK)
+      /* construct silence as either a buffer or a gap.  */
+
+      if (self->local_clock > self->gap_time)
         {
-          GST_DEBUG_OBJECT (self, "pad push of silence returned %s",
-                            gst_flow_get_name (flow_result));
+          /* We implement silence as a gap event.  Using a gap rather than
+           * a buffer full of silence decreases the processing load when
+           * the pipeline contains a large number of looper elements,
+           * very few of which are sending sound downstream at any one time.  */
+
+          /* The gap is for 40 milliseconds.  */
+          duration = 40000000;
+          event = gst_event_new_gap (self->local_clock, duration);
+
+          GST_DEBUG_OBJECT (self,
+                            "pushing a gap event at time %" G_GUINT64_FORMAT
+                            " duration %" G_GUINT64_FORMAT ".",
+                            self->local_clock, duration);
+
+          /* Advance our clock.  */
+          self->local_clock = self->local_clock + duration;
+
+          /* We must unlock before we push, since pushing can cause a query to 
+           * come back upstream on a different task before it completes.  */
+          g_rec_mutex_unlock (&self->interlock);
+
+          /* Send the event downstream.  */
+          result = gst_pad_push_event (self->srcpad, event);
+          if (!result)
+            {
+              GST_DEBUG_OBJECT (self, "pad push of silence failed.");
+            }
+
+          GST_DEBUG_OBJECT (self, "push of silence completed");
+          return;
+        }
+      else
+        {
+          /* We cannot use a gap, so compute the number of bytes required 
+           * to hold 40 milliseconds of silence.  */
+          data_size =
+            self->width * self->data_rate * self->channel_count / (8000 / 40);
+          /* Allocate that much memory, and place it in our output buffer.  */
+          memory_out = gst_allocator_alloc (NULL, data_size, NULL);
+          buffer = gst_buffer_new ();
+          gst_buffer_append_memory (buffer, memory_out);
+          /* Fill the buffer with the silence byte.  */
+          gst_buffer_map (buffer, &memory_out_info, GST_MAP_WRITE);
+          gst_buffer_memset (buffer, 0, self->silence_byte,
+                             memory_out_info.size);
+          /* Set the time stamps in the buffer.  */
+          GST_BUFFER_PTS (buffer) = self->local_clock;
+          GST_BUFFER_DTS (buffer) = self->local_clock;
+          GST_BUFFER_DURATION (buffer) =
+            memory_out_info.size / self->bytes_per_ns;
+          /* Advance our clock.  */
+          self->local_clock =
+            self->local_clock + (memory_out_info.size / self->bytes_per_ns);
+          GST_BUFFER_OFFSET (buffer) = self->local_buffer_drain_level;
+          GST_BUFFER_OFFSET_END (buffer) =
+            self->local_buffer_drain_level + memory_out_info.size;
+          gst_buffer_unmap (buffer, &memory_out_info);
+          /* Send the buffer downstream.  */
+          GST_DEBUG_OBJECT (self,
+                            "pushing %" G_GUINT64_FORMAT " bytes of silence.",
+                            data_size);
+          /* We must unlock before we push, since pushing can cause a query to 
+           * come back upstream on a different task before it completes.  */
+          g_rec_mutex_unlock (&self->interlock);
+
+          flow_result = gst_pad_push (self->srcpad, buffer);
+          if (flow_result != GST_FLOW_OK)
+            {
+              GST_DEBUG_OBJECT (self, "pad push of silence returned %s",
+                                gst_flow_get_name (flow_result));
+            }
+
+          GST_DEBUG_OBJECT (self, "push of silence completed");
+          return;
         }
 
-      GST_DEBUG_OBJECT (self, "push of silence completed");
-      return;
     }
 
   /* There is more data to send.  Allocate a new buffer to send downstream, 
@@ -1604,7 +1657,11 @@ gst_looper_handle_sink_event (GstPad * pad, GstObject * parent,
        * the format can be used to determine the width.  */
       format_code_pointer = self->format;
       format_code_0 = format_code_pointer[0];
+      GST_LOG_OBJECT (self, "first character of format is %c.",
+                      format_code_0);
       format_code_1 = format_code_pointer[1];
+      GST_LOG_OBJECT (self, "second character of format is %c.",
+                      format_code_1);
       switch (format_code_1)
         {
         case '8':
@@ -1626,8 +1683,6 @@ gst_looper_handle_sink_event (GstPad * pad, GstObject * parent,
           self->width = 32;
           break;
         }
-      GST_LOG_OBJECT (self, "second character of format is %c.",
-                      format_code_1);
       GST_DEBUG_OBJECT (self, "each sample has %" G_GUINT64_FORMAT " bits.",
                         self->width);
 

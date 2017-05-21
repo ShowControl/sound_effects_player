@@ -2,7 +2,7 @@
  * gstlooper.h, a file in sound_effects_player, a component of show_control, 
  * which is a GStreamer application.
  *
- * Copyright © 2016 John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -83,6 +83,8 @@ struct _GstLooper
                                  * Stereo has two.  A frame consists of
                                  * channel_count samples, each of width bits. */
   guint64 data_rate;            /* the data rate, in frames per second.  */
+  guint64 gap_time;             /* The time after which we can use gaps
+				 * to represent silence.  */
   GstPadMode src_pad_mode;      /* The mode of the source pad: push or pull. */
   GstPadMode sink_pad_mode;     /* The mode of the sink pad: push or pull.  */
   gboolean started;             /* We have received a Start signal.  */
@@ -118,8 +120,8 @@ struct _GstLooper
                                          */
   gboolean seen_incoming_data;  /* Sound data has been seen on the source pad.  
                                  */
-  guint8 silence_byte;          /* The byte value of silence for this format.
-                                 */
+  guint8 silence_byte;          /* The byte value of silence for this
+				 * format.  */
 };
 
 /* The number of bytes of data requested from upstream in each pull */
