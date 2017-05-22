@@ -29,6 +29,7 @@
       <type>offer_sound</type>
       <next_to_start>play_00</next_to_start>
       <cluster_number>0</cluster_number>
+      <tag>1</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_01</next>
     </sequence_item>
@@ -36,11 +37,10 @@
     <sequence_item>
       <name>play_00</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>1</sound_name>
       <cluster_number>0</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>1</tag>
+      <text_to_display>one</text_to_display>
       <importance>1</importance>
     </sequence_item>
     
@@ -49,6 +49,7 @@
       <type>offer_sound</type>
       <next_to_start>play_01</next_to_start>
       <cluster_number>1</cluster_number>
+      <tag>2</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_02</next>
     </sequence_item>
@@ -56,11 +57,10 @@
     <sequence_item>
       <name>play_01</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>2</sound_name>
       <cluster_number>1</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>2</tag>
+      <text_to_display>two</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -69,6 +69,7 @@
       <type>offer_sound</type>
       <next_to_start>play_02</next_to_start>
       <cluster_number>2</cluster_number>
+      <tag>3</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_03</next>
     </sequence_item>
@@ -76,11 +77,10 @@
     <sequence_item>
       <name>play_02</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>3</sound_name>
       <cluster_number>2</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>3</tag>
+      <text_to_display>three</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -89,6 +89,7 @@
       <type>offer_sound</type>
       <next_to_start>play_03</next_to_start>
       <cluster_number>3</cluster_number>
+      <tag>4</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_04</next>
     </sequence_item>
@@ -96,11 +97,10 @@
     <sequence_item>
       <name>play_03</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>4</sound_name>
       <cluster_number>3</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>4</tag>
+      <text_to_display>four</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -109,6 +109,7 @@
       <type>offer_sound</type>
       <next_to_start>play_04</next_to_start>
       <cluster_number>4</cluster_number>
+      <tag>5</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_05</next>
     </sequence_item>
@@ -116,11 +117,10 @@
     <sequence_item>
       <name>play_04</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>5</sound_name>
       <cluster_number>4</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>5</tag>
+      <text_to_display>five</text_to_display>
       <importance>1</importance>
     </sequence_item>
     
@@ -129,6 +129,7 @@
       <type>offer_sound</type>
       <next_to_start>play_05</next_to_start>
       <cluster_number>5</cluster_number>
+      <tag>6</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_06</next>
     </sequence_item>
@@ -136,11 +137,10 @@
     <sequence_item>
       <name>play_05</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>6</sound_name>
       <cluster_number>5</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>6</tag>
+      <text_to_display>six</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -149,6 +149,7 @@
       <type>offer_sound</type>
       <next_to_start>play_06</next_to_start>
       <cluster_number>6</cluster_number>
+      <tag>7</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_07</next>
     </sequence_item>
@@ -156,11 +157,10 @@
     <sequence_item>
       <name>play_06</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>7</sound_name>
       <cluster_number>6</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>7</tag>
+      <text_to_display>seven</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -169,6 +169,7 @@
       <type>offer_sound</type>
       <next_to_start>play_07</next_to_start>
       <cluster_number>7</cluster_number>
+      <tag>8</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_08</next>
     </sequence_item>
@@ -176,11 +177,10 @@
     <sequence_item>
       <name>play_07</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>8</sound_name>
       <cluster_number>7</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>8</tag>
+      <text_to_display>eight</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -189,6 +189,7 @@
       <type>offer_sound</type>
       <next_to_start>play_08</next_to_start>
       <cluster_number>8</cluster_number>
+      <tag>9</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_09</next>
     </sequence_item>
@@ -196,11 +197,10 @@
     <sequence_item>
       <name>play_08</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>9</sound_name>
       <cluster_number>8</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>9</tag>
+      <text_to_display>nine</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -209,6 +209,7 @@
       <type>offer_sound</type>
       <next_to_start>play_09</next_to_start>
       <cluster_number>9</cluster_number>
+      <tag>10</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_10</next>
     </sequence_item>
@@ -216,11 +217,10 @@
     <sequence_item>
       <name>play_09</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>10</sound_name>
       <cluster_number>9</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>10</tag>
+      <text_to_display>ten</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -229,6 +229,7 @@
       <type>offer_sound</type>
       <next_to_start>play_10</next_to_start>
       <cluster_number>10</cluster_number>
+      <tag>11</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_11</next>
     </sequence_item>
@@ -236,11 +237,10 @@
     <sequence_item>
       <name>play_10</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>11</sound_name>
       <cluster_number>10</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>11</tag>
+      <text_to_display>eleven</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -249,6 +249,7 @@
       <type>offer_sound</type>
       <next_to_start>play_11</next_to_start>
       <cluster_number>11</cluster_number>
+      <tag>12</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_12</next>
     </sequence_item>
@@ -256,11 +257,10 @@
     <sequence_item>
       <name>play_11</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>12</sound_name>
       <cluster_number>11</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>12</tag>
+      <text_to_display>twelve</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -269,6 +269,7 @@
       <type>offer_sound</type>
       <next_to_start>play_12</next_to_start>
       <cluster_number>12</cluster_number>
+      <tag>13</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_13</next>
     </sequence_item>
@@ -276,11 +277,10 @@
     <sequence_item>
       <name>play_12</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>13</sound_name>
       <cluster_number>12</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>13</tag>
+      <text_to_display>thirteen</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -289,6 +289,7 @@
       <type>offer_sound</type>
       <next_to_start>play_13</next_to_start>
       <cluster_number>13</cluster_number>
+      <tag>14</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_14</next>
     </sequence_item>
@@ -296,11 +297,10 @@
     <sequence_item>
       <name>play_13</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>14</sound_name>
       <cluster_number>13</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>14</tag>
+      <text_to_display>fourteen</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -309,6 +309,7 @@
       <type>offer_sound</type>
       <next_to_start>play_14</next_to_start>
       <cluster_number>14</cluster_number>
+      <tag>15</tag>
       <text_to_display>press to play</text_to_display>
       <next>pop_15</next>
     </sequence_item>
@@ -316,11 +317,10 @@
     <sequence_item>
       <name>play_14</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>15</sound_name>
       <cluster_number>14</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>15</tag>
+      <text_to_display>fifteen</text_to_display>
       <importance>1</importance>
     </sequence_item>
 
@@ -329,18 +329,145 @@
       <type>offer_sound</type>
       <next_to_start>play_15</next_to_start>
       <cluster_number>15</cluster_number>
+      <tag>16</tag>
       <text_to_display>press to play</text_to_display>
+      <next>do_wait</next>
     </sequence_item>
 
     <sequence_item>
       <name>play_15</name>
       <type>start_sound</type>
-      <sound_name>440Hz</sound_name>
-      <MIDI_note_number>69</MIDI_note_number>
+      <sound_name>16</sound_name>
       <cluster_number>15</cluster_number>
-      <tag>A6</tag>
-      <text_to_display>A in octave 6</text_to_display>
+      <tag>16</tag>
+      <text_to_display>sixteen</text_to_display>
       <importance>1</importance>
+    </sequence_item>
+
+    <sequence_item>
+      <name>do_wait</name>
+      <type>operator_wait</type>
+      <text_to_display>Press a Start key to hear a number, Play to exit</text_to_display>
+      <next_play>clean_01</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_01</name>
+      <type>cease_offering_sound</type>
+      <tag>1</tag>
+      <next>clean_02</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_02</name>
+      <type>cease_offering_sound</type>
+      <tag>2</tag>
+      <next>clean_03</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_03</name>
+      <type>cease_offering_sound</type>
+      <tag>3</tag>
+      <next>clean_04</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_04</name>
+      <type>cease_offering_sound</type>
+      <tag>4</tag>
+      <next>clean_05</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_05</name>
+      <type>cease_offering_sound</type>
+      <tag>5</tag>
+      <next>clean_06</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_06</name>
+      <type>cease_offering_sound</type>
+      <tag>6</tag>
+      <next>clean_07</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_07</name>
+      <type>cease_offering_sound</type>
+      <tag>7</tag>
+      <next>clean_08</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_08</name>
+      <type>cease_offering_sound</type>
+      <tag>8</tag>
+      <next>clean_09</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_09</name>
+      <type>cease_offering_sound</type>
+      <tag>9</tag>
+      <next>clean_10</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_10</name>
+      <type>cease_offering_sound</type>
+      <tag>10</tag>
+      <next>clean_11</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_11</name>
+      <type>cease_offering_sound</type>
+      <tag>11</tag>
+      <next>clean_12</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_12</name>
+      <type>cease_offering_sound</type>
+      <tag>12</tag>
+      <next>clean_13</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_13</name>
+      <type>cease_offering_sound</type>
+      <tag>13</tag>
+      <next>clean_14</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_14</name>
+      <type>cease_offering_sound</type>
+      <tag>14</tag>
+      <next>clean_15</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_15</name>
+      <type>cease_offering_sound</type>
+      <tag>15</tag>
+      <next>clean_16</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>clean_16</name>
+      <type>cease_offering_sound</type>
+      <tag>16</tag>
+      <next>exiting</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>exiting</name>
+      <type>wait</type>
+      <time_to_wait>2.0</time_to_wait>
+      <text_to_display>exiting...</text_to_display>
     </sequence_item>
 
   </sound_sequence>

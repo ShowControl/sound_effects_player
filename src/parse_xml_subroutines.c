@@ -935,17 +935,17 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
               if (xmlStrEqual (name, (const xmlChar *) "time_to_wait"))
                 {
                   /* In the Wait sequence item, the length of time to wait,
-                   * in nanoseconds.  */
+                   * in seconds.  */
                   name_data =
                     xmlNodeListGetString (sequence_file,
                                           sequence_item_loc->xmlChildrenNode,
                                           1);
                   if (name_data != NULL)
                     {
-                      long_data =
-                        g_ascii_strtoll ((gchar *) name_data, NULL, 10);
+                      double_data =
+                        g_ascii_strtod ((gchar *) name_data, NULL);
                       xmlFree (name_data);
-                      sequence_item_data->time_to_wait = long_data;
+                      sequence_item_data->time_to_wait = double_data * 1E9;
                       name_data = NULL;
                     }
                 }

@@ -579,10 +579,10 @@ execute_offer_sound (struct sequence_item_info *the_item,
   if (TRACE_SEQUENCER)
     {
       g_print ("Offer sound, name = %s, cluster = %d, Q number = %s, "
-               "next = %s,\n   next_to_start = %s, offering = %p.\n",
-               the_item->name, the_item->cluster_number, the_item->Q_number,
-               the_item->next, the_item->next_to_start,
-               sequence_data->offering);
+               "next = %s,\n   next_to_start = %s, tag = %s, "
+               "offering = %p.\n", the_item->name, the_item->cluster_number,
+               the_item->Q_number, the_item->next, the_item->next_to_start,
+               the_item->tag, sequence_data->offering);
     }
 
   /* Set the name of the cluster to the specified text.  */
