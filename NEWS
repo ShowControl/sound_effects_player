@@ -1,3 +1,7 @@
+Version 0.80, May 22, 2017
+  Use a proper level bar instead of a row of asterisks
+  to indicate volume.
+
 Version 0.79, May 21, 2017
   Increase the number of clusters to 16.
   

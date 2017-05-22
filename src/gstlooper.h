@@ -72,7 +72,7 @@ struct _GstLooper
   guint64 local_clock;          /* The current time, in nanoseconds.  
                                  * This counts continuously through loops.  */
   guint64 elapsed_time;         /* The amount of time, in nanoseconds, that
-				 * we have been sending sound.  */
+                                 * we have been sending sound.  */
   gdouble bytes_per_ns;         /* data rate in bytes per nanosecond */
   gchar *format;                /* The format of incoming data--for example,
                                  * F32LE.  */
@@ -84,7 +84,7 @@ struct _GstLooper
                                  * channel_count samples, each of width bits. */
   guint64 data_rate;            /* the data rate, in frames per second.  */
   guint64 gap_time;             /* The time after which we can use gaps
-				 * to represent silence.  */
+                                 * to represent silence.  */
   GstPadMode src_pad_mode;      /* The mode of the source pad: push or pull. */
   GstPadMode sink_pad_mode;     /* The mode of the sink pad: push or pull.  */
   gboolean started;             /* We have received a Start signal.  */
@@ -121,7 +121,7 @@ struct _GstLooper
   gboolean seen_incoming_data;  /* Sound data has been seen on the source pad.  
                                  */
   guint8 silence_byte;          /* The byte value of silence for this
-				 * format.  */
+                                 * format.  */
 };
 
 /* The number of bytes of data requested from upstream in each pull */

@@ -1,7 +1,7 @@
 /*
  * display_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,11 +30,9 @@ display_update_vu_meter (gpointer * user_data, gint channel,
   GList *children_list;
   const gchar *child_name;
   GtkWidget *VU_meter = NULL;
-  gint VU_level;
-  gint64 VU_led_number;
-  GtkLabel *VU_lamp;
-  GtkBox *channel_row = NULL;
+  GtkLevelBar *channel_level_bar = NULL;
   gint64 channel_number;
+  gdouble channel_value;
 
   common_area = sep_get_common_area (G_APPLICATION (user_data));
 
@@ -55,47 +53,29 @@ display_update_vu_meter (gpointer * user_data, gint channel,
   if (VU_meter == NULL)
     return;
 
-  /* Within the VU_meter box is a box for each channel.  Find the box
-   * for this channel. */
+  /* Within the VU_meter box is a level bar for each channel.  
+   * Find the level bar for this channel. */
   children_list = gtk_container_get_children (GTK_CONTAINER (VU_meter));
   while (children_list != NULL)
     {
-      channel_row = GTK_BOX (children_list->data);
-      child_name = gtk_widget_get_name (GTK_WIDGET (channel_row));
+      channel_level_bar = GTK_LEVEL_BAR (children_list->data);
+      child_name = gtk_widget_get_name (GTK_WIDGET (channel_level_bar));
       channel_number = g_ascii_strtoll (child_name, NULL, 10);
       if (channel_number == channel)
         break;
       children_list = children_list->next;
     }
   g_list_free (children_list);
-  if (channel_row == NULL)
+  if (channel_level_bar == NULL)
     return;
 
-  /* Within the VU_meter's channel box is a bunch of labels, each with a name
-   * indicating its position on the line.  Light those to the left
-   * of the desired value. */
-  VU_level = new_value * 50.0;
-  if (VU_level > 50)
-    VU_level = 50;
-  if (VU_level < 1)
-    VU_level = 0;
-  children_list = gtk_container_get_children (GTK_CONTAINER (channel_row));
-  while (children_list != NULL)
-    {
-      VU_lamp = GTK_LABEL (children_list->data);
-      child_name = gtk_widget_get_name (GTK_WIDGET (VU_lamp));
-      VU_led_number = g_ascii_strtoll (child_name, NULL, 10);
-      if (VU_led_number < VU_level)
-        {
-          gtk_label_set_text (VU_lamp, "*");
-        }
-      else
-        {
-          gtk_label_set_text (VU_lamp, " ");
-        }
-      children_list = children_list->next;
-    }
-  g_list_free (children_list);
+  /* Set the value of the level bar, between 0 and 1.  
+   * Due to what appears to be a bug in level_bar, do not set it very small.  
+   */
+  channel_value = new_value;
+  if (channel_value < 0.002)
+    channel_value = 0.002;
+  gtk_level_bar_set_value (channel_level_bar, channel_value);
 
   return;
 }
@@ -142,10 +122,10 @@ display_remove_message (guint message_id, GApplication * app)
 
 /* Display a message to the operator.  */
 void
-display_set_operator_text (gchar * text_to_display, GApplication *app)
+display_set_operator_text (gchar * text_to_display, GApplication * app)
 {
   GtkLabel *text_label;
-  
+
   /* Find the GUI's operator text area.  */
   text_label = sep_get_operator_text (app);
 
@@ -157,7 +137,7 @@ display_set_operator_text (gchar * text_to_display, GApplication *app)
 
 /* Erase any operator message.  */
 void
-display_clear_operator_text (GApplication *app)
+display_clear_operator_text (GApplication * app)
 {
   GtkLabel *text_label;
 
