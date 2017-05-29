@@ -257,6 +257,14 @@ find_item_by_name (gchar * item_name, struct sequence_info *sequence_data)
         }
     }
 
+  if (TRACE_SEQUENCER)
+    {
+      if (found_item == NULL)
+        {
+          g_print ("Not found.\n");
+        }
+    }
+
   return (found_item);
 }
 
@@ -265,6 +273,12 @@ void
 execute_item (struct sequence_item_info *the_item,
               struct sequence_info *sequence_data, GApplication * app)
 {
+
+  if (TRACE_SEQUENCER)
+    {
+      g_print ("Executing item named %s, of type %d.\n", the_item->name,
+               the_item->type);
+    }
 
   switch (the_item->type)
     {
@@ -276,7 +290,7 @@ execute_item (struct sequence_item_info *the_item,
       execute_start_sound (the_item, sequence_data, app);
       break;
 
-    case stop:
+    case stop_sound:
       execute_stop_sound (the_item, sequence_data, app);
       break;
 
@@ -405,7 +419,7 @@ execute_start_sound (struct sequence_item_info *the_item,
   return;
 }
 
-/* Execute a Stop sequence item.  */
+/* Execute a Stop Sound sequence item.  */
 void
 execute_stop_sound (struct sequence_item_info *the_item,
                     struct sequence_info *sequence_data, GApplication * app)
@@ -418,7 +432,7 @@ execute_stop_sound (struct sequence_item_info *the_item,
 
   if (TRACE_SEQUENCER)
     {
-      g_print ("stop sound, tag = %s, next = %s.\n", the_item->tag,
+      g_print ("Stop Sound, tag = %s, next = %s.\n", the_item->tag,
                the_item->next);
     }
 
@@ -644,6 +658,11 @@ execute_cease_offering_sound (struct sequence_item_info *the_item,
           && (remember_data->active))
         {
           /* We have a match.  */
+          if (TRACE_SEQUENCER)
+            {
+              g_print ("Canceling Offer Sound on cluster %d.\n",
+                       remember_data->cluster_number);
+            }
           remember_data->active = FALSE;
 
           /* Remove the Offer Sound from the cluster.  */

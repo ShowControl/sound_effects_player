@@ -547,7 +547,8 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
           sequence_item_data->OSC_cue_specified = FALSE;
           sequence_item_data->text_to_display = NULL;
 
-          /* Fields used in the Stop sequence item but not mentioned above.  */
+          /* Fields used in the Stop Sound sequence item but not mentioned 
+           * above.  */
           sequence_item_data->next = NULL;
 
           /* Fields used in the Wait sequence item but not mentioned above.  */
@@ -602,9 +603,9 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                     {
                       item_type = start_sound;
                     }
-                  if (xmlStrEqual (name_data, (const xmlChar *) "stop"))
+                  if (xmlStrEqual (name_data, (const xmlChar *) "stop_sound"))
                     {
-                      item_type = stop;
+                      item_type = stop_sound;
                     }
                   if (xmlStrEqual (name_data, (const xmlChar *) "wait"))
                     {

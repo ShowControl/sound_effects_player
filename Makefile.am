@@ -56,6 +56,15 @@ EXTRA_DIST = \
 	example_01/Example_01_sound_sequence.xml \
 	example_01/Example_01_sounds.xml \
 	example_01/run_example_01.sh \
+	example_02/car.wav \
+	example_02/circular_saw.wav \
+	example_02/Example_02_cues.xml \
+	example_02/Example_02_equipment.xml \
+	example_02/Example_02_project.xml \
+	example_02/Example_02_script.xml \
+	example_02/Example_02_sound_sequence.xml \
+	example_02/Example_02_sounds.xml \
+	example_02/run_example_02.xml \
 	$(INTLTOOL_FILES)
 
 iconsdir=${datadir}/icons/hicolor/48x48/apps

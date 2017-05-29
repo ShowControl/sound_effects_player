@@ -30,7 +30,7 @@
 
 /* There are several types of sequence item, as follows:  */
 enum sequence_item_type
-{ unknown, start_sound, stop, wait, offer_sound, cease_offering_sound,
+{ unknown, start_sound, stop_sound, wait, offer_sound, cease_offering_sound,
   operator_wait, start_sequence
 };
 
