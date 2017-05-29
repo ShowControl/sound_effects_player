@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+<!-- The example_02 production uses these sounds. -->
+  <sounds>
+    <version>1.0</version>
+
+    <routing></routing>
+  </sounds>
+</show_control>

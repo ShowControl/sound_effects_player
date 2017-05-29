@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+
+  <!-- The sequence items for the example_02 production.  -->
+  
+  <sound_sequence>
+    <version>1.0</version>
+
+    <sequence_item>
+      <name>start_of_sequence</name>
+      <type>start_sequence</type>
+      <next>exiting</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>exiting</name>
+      <type>wait</type>
+      <time_to_wait>2.0</time_to_wait>
+      <text_to_display>exiting...</text_to_display>
+    </sequence_item>
+
+  </sound_sequence>
+</show_control>
