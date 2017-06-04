@@ -3,7 +3,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man po doc icons sample example_01 example_02
+SUBDIRS = src man po doc icons sample example_01 example_02 example_03
 
 dist_doc_DATA = \
 	README \
@@ -65,6 +65,19 @@ EXTRA_DIST = \
 	example_02/Example_02_sound_sequence.xml \
 	example_02/Example_02_sounds.xml \
 	example_02/run_example_02.xml \
+	example_03/background_music.wav \
+	example_03/Example_03_cues.xml \
+	example_03/Example_03_equipment.xml \
+	example_03/Example_03_project.xml \
+	example_03/Example_03_script.xml \
+	example_03/Example_03_sound_sequence.xml \
+	example_03/Example_03_sounds.xml \
+	example_03/full_ring.wav \
+	example_03/run_example_03.xml \
+	example_03/Theater_cues.xml \
+	example_03/Theater_equipment.xml \
+	example_03/Theater_sound_sequence.xml \
+	example_03/Theater_sounds.xml \
 	$(INTLTOOL_FILES)
 
 iconsdir=${datadir}/icons/hicolor/48x48/apps

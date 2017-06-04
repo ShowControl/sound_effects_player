@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+
+  <!-- This sound sequence is unique to Example_03.  These sequence items
+       are available to the sound_effect_player's internal sequencer along
+       with the sequence items in Theater_sound_sequence.xml.  -->
+
+  <sound_sequence>
+    <version>1.0</version>
+
+    <sequence_item>
+      <name>start_of_sequence</name>
+      <type>start_sequence</type>
+      <next>wait_for_curtain</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>wait_for_curtain</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when the curtain opens</text_to_display>
+      <next_play>scene_01</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>scene_01</name>
+      <type>start_sound</type>
+      <sound_name>background music</sound_name>
+      <cluster_number>15</cluster_number>
+      <text_to_display>background music</text_to_display>
+      <tag>background music</tag>
+      <next_starts>offer_telephone</next_starts>
+    </sequence_item>
+
+    <sequence_item>
+      <name>offer_telephone</name>
+      <type>offer_sound</type>
+      <next_to_start>telephone-ring</next_to_start>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Telephone ring</text_to_display>
+      <tag>telephone-ring</tag>
+      <next>wait for end of scene 1</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>wait for end of scene 1</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when the curtain closes</text_to_display>
+      <next_play>end of scene 1</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>end of scene 1</name>
+      <type>cease_offering_sound</type>
+      <tag>telephone-ring</tag>
+      <next>stop_telephone</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>stop_telephone</name>
+      <type>stop_sound</type>
+      <tag>telephone-ring</tag>
+      <next>stop_background</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>stop_background</name>
+      <type>stop_sound</type>
+      <tag>background music</tag>
+    </sequence_item>
+    
+  </sound_sequence>
+</show_control>

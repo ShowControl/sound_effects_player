@@ -159,7 +159,7 @@ sequence_start (GApplication * app)
 
   sequence_data = sep_get_sequence_data (app);
 
-  /* Find the Sequence Start item in the sequence.  */
+  /* Find the Start Sequence item in the sequence.  */
   start_item = NULL;
   for (item_list = sequence_data->item_list; item_list != NULL;
        item_list = item_list->next)
@@ -173,11 +173,11 @@ sequence_start (GApplication * app)
     }
   if (start_item == NULL)
     {
-      display_show_message ("No Sequence Start item.", app);
+      display_show_message ("No Start Sequence item.", app);
       return;
     }
 
-  /* We have a sequence which contains a Start sequence item.  Proceed to
+  /* We have a sequence which contains a Start Sequence item.  Proceed to
    * the specified next item.  */
   if (start_item->next == NULL)
     {
@@ -199,6 +199,7 @@ static void
 execute_items (struct sequence_info *sequence_data, GApplication * app)
 {
   struct sequence_item_info *next_item;
+  gchar *display_text;
 
   while (sequence_data->next_item_name != NULL)
     {
@@ -207,7 +208,12 @@ execute_items (struct sequence_info *sequence_data, GApplication * app)
 
       if (next_item == NULL)
         {
-          display_show_message ("Next item not found.", app);
+          display_text =
+            g_strdup_printf ("Next item, %s, not found.",
+                             sequence_data->next_item_name);
+          display_show_message (display_text, app);
+          g_free (display_text);
+          display_text = NULL;
           break;
         }
 
@@ -273,6 +279,7 @@ void
 execute_item (struct sequence_item_info *the_item,
               struct sequence_info *sequence_data, GApplication * app)
 {
+  gchar *display_text;
 
   if (TRACE_SEQUENCER)
     {
@@ -283,7 +290,11 @@ execute_item (struct sequence_item_info *the_item,
   switch (the_item->type)
     {
     case unknown:
-      display_show_message ("Unknown sequence item", app);
+      display_text =
+        g_strdup_printf ("Unknown sequence item: %s", the_item->name);
+      display_show_message (display_text, app);
+      g_free (display_text);
+      display_text = NULL;
       break;
 
     case start_sound:
@@ -330,13 +341,16 @@ execute_start_sound (struct sequence_item_info *the_item,
   struct remember_info *remember_data;
   gboolean item_found;
   GList *item_list;
+  gchar *display_text;
 
   if (TRACE_SEQUENCER)
     {
       g_print ("Start Sound, cluster = %d, sound name = %s, next = %s, "
-               " complete = %s, terminate = %s.\n", the_item->cluster_number,
-               the_item->sound_name, the_item->next_starts,
-               the_item->next_completion, the_item->next_termination);
+               "tag %s, release = %s, complete = %s, terminate = %s.\n",
+               the_item->cluster_number, the_item->sound_name,
+               the_item->next_starts, the_item->tag,
+               the_item->next_release_started, the_item->next_completion,
+               the_item->next_termination);
 
       g_print ("item_list = %p, " "next_item_name = %p, " "running = %p, "
                "offering = %p, " "current_operator_wait = %p, "
@@ -369,8 +383,14 @@ execute_start_sound (struct sequence_item_info *the_item,
     {
       if (!old_sound_effect->release_has_started)
         {
-          display_show_message ("Cannot start a sound on a busy cluster.",
-                                app);
+          display_text =
+            g_strdup_printf ("Cannot start sound %s on busy"
+                             " cluster %d, occupied by %s.",
+                             the_item->sound_name, the_item->cluster_number,
+                             old_sound_effect->name);
+          display_show_message (display_text, app);
+          g_free (display_text);
+          display_text = NULL;
           return;
         }
       /* There is a sound on this cluster, but it is releasing.
@@ -891,6 +911,7 @@ sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app)
   struct sequence_item_info *sequence_item;
   gboolean found_item;
   GList *item_list;
+  gchar *display_text;
 
   sequence_data = sep_get_sequence_data (app);
 
@@ -916,7 +937,10 @@ sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app)
     }
 
   /* If no cluster has been marked by Offer Sound with that
-   * sequence item, check for "quit" as a special case.  */
+   * sequence item, check for "quit" as a special case.  
+   * Placing this test after the search for a cluster
+   * lets the sequence capture the quit command and do a
+   * controlled shutdown.  */
   if (!found_item)
     {
       if (g_strcmp0 (Q_number, (gchar *) "quit") == 0)
@@ -929,7 +953,12 @@ sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app)
 
   if (!found_item)
     {
-      display_show_message ("No matching Q_number.", app);
+      display_text =
+        g_strdup_printf ("There is no cluster holding an"
+                         " Offer Sound with Q_number %s.", Q_number);
+      display_show_message (display_text, app);
+      g_free (display_text);
+      display_text = NULL;
       return;
     }
 
@@ -983,6 +1012,7 @@ sequence_OSC_cue (guint osc_cue, GApplication * app)
   struct sequence_item_info *sequence_item;
   gboolean found_item;
   GList *item_list;
+  gchar *display_text;
 
   sequence_data = sep_get_sequence_data (app);
 
@@ -1009,7 +1039,11 @@ sequence_OSC_cue (guint osc_cue, GApplication * app)
 
   if (!found_item)
     {
-      display_show_message ("No matching OSC_cue", app);
+      display_text =
+        g_strdup_printf ("There is no cluster with OSC cue %d.", osc_cue);
+      display_show_message (display_text, app);
+      g_free (display_text);
+      display_text = NULL;
       return;
     }
 
@@ -1031,6 +1065,7 @@ sequence_cluster_start (guint cluster_number, GApplication * app)
   struct sequence_item_info *sequence_item;
   gboolean found_item;
   GList *item_list;
+  gchar *display_text;
 
   if (TRACE_SEQUENCER)
     {
@@ -1054,7 +1089,12 @@ sequence_cluster_start (guint cluster_number, GApplication * app)
     }
   if (!found_item)
     {
-      display_show_message ("No sound offering on this cluster.", app);
+      display_text =
+        g_strdup_printf ("No Offer Sound outstanding on cluster %d",
+                         cluster_number);
+      display_show_message (display_text, app);
+      g_free (display_text);
+      display_text = NULL;
       return;
     }
 
@@ -1075,6 +1115,7 @@ sequence_cluster_stop (guint cluster_number, GApplication * app)
   struct remember_info *remember_data;
   gboolean item_found;
   GList *item_list;
+  gchar *display_text;
 
   sequence_data = sep_get_sequence_data (app);
 
@@ -1095,7 +1136,11 @@ sequence_cluster_stop (guint cluster_number, GApplication * app)
   if (!item_found)
     {
       /* There isn't.  Ignore the stop button.  */
-      display_show_message ("No sound to stop.", app);
+      display_text =
+        g_strdup_printf ("No sound to stop on cluster %d.", cluster_number);
+      display_show_message (display_text, app);
+      g_free (display_text);
+      display_text = NULL;
       return;
     }
 
@@ -1225,8 +1270,9 @@ sequence_sound_completion (struct sound_info *sound_effect,
            item_list = item_list->next)
         {
           offer_remember_data = item_list->data;
-          if ((offer_remember_data->cluster_number ==
-               sound_effect->cluster_number) && (offer_remember_data->active))
+          if ((offer_remember_data->active)
+              && (offer_remember_data->cluster_number ==
+                  sound_effect->cluster_number))
             {
               offer_sound_sequence_item = offer_remember_data->sequence_item;
               item_found = TRUE;
@@ -1240,7 +1286,9 @@ sequence_sound_completion (struct sound_info *sound_effect,
         {
           if (TRACE_SEQUENCER)
             {
-              g_print ("Offer sound found.\n");
+              g_print ("Offer sound %s found on cluster %d.\n",
+                       offer_sound_sequence_item->name,
+                       remember_data->cluster_number);
             }
           sound_cluster_set_name (offer_sound_sequence_item->text_to_display,
                                   remember_data->cluster_number, app);
