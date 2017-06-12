@@ -46,8 +46,29 @@ sound_effects_player_SOURCES = \
 	sound_structure.h \
 	sound_subroutines.c \
 	sound_subroutines.h \
+	time_copy.c \
+	time_current_tm.c \
+	time_current_tm_nano.c \
+	time_diff.c \
+	time_length.c \
+	time_local_add.c \
+	time_local_normalize.c \
+	time_local_to_utc.c \
+	time_sleep_until.c \
+	time_subroutines.h \
+	time_tm_nano_to_integer.c \
+	time_tm_nano_to_string.c \
+	time_tm_to_integer.c \
+	time_tm_to_string.c \
+	time_utc_add.c \
+	time_utc_normalize.c \
+	time_utc_to_local.c \
+	dtai_table.h \
+	dtai_table.tab \
 	timer_subroutines.c \
-	timer_subroutines.h
+	timer_subroutines.h \
+	trace_subroutines.c \
+	trace_subroutines.h 
 
 sound_effects_player_LDFLAGS = \
 	-Wl,--export-dynamic

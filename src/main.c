@@ -1,6 +1,6 @@
 /*
  * main.c
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * sound_effects_player is free software: you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by the
@@ -23,9 +23,11 @@
 #include <glib/gi18n.h>
 
 /* Persistent data.  */
-gchar *monitor_file_name = NULL;
-gchar *audio_output_string = NULL;
-gchar *device_name_string = NULL;
+static gchar *monitor_file_name = NULL;
+static gchar *audio_output_string = NULL;
+static gchar *device_name_string = NULL;
+static gchar *trace_file_name = NULL;
+static gint trace_sequencer_level = 0;
 
 /* The entry point for the sound_effects_player application.  
  * This is a GTK application, so much of what is done here is standard 
@@ -41,19 +43,26 @@ main (int argc, char *argv[])
   gboolean pid_file_written = FALSE;
   FILE *pid_file = NULL;
   const GOptionEntry entries[] = {
-    {"process-id-file", 'p', 0, G_OPTION_ARG_FILENAME, &pid_file_name,
+    {"process-id-file", 'p', G_OPTION_FLAG_NONE, G_OPTION_ARG_FILENAME,
+     &pid_file_name,
      "name of the file written with the process id, for signaling"},
-    {"monitor-file", 'm', 0, G_OPTION_ARG_FILENAME, &monitor_file_name,
-     "name of the file which monitors output"},
+    {"monitor-file", 'm', G_OPTION_FLAG_NONE, G_OPTION_ARG_FILENAME,
+     &monitor_file_name, "name of the file which records produced sound"},
     {"audio-output", 'a', 0, G_OPTION_ARG_STRING, &audio_output_string,
      "type of audio output: ALSA, none, jack, pulse"},
     {"device-name", 'd', 0, G_OPTION_ARG_STRING, &device_name_string,
      "for ALSA output, name of the device"},
+    {"trace-file", 't', G_OPTION_FLAG_NONE, G_OPTION_ARG_FILENAME,
+     &trace_file_name, "name of the file for trace output"},
+    {"trace-sequencer-level", 'v', 0, G_OPTION_ARG_INT,
+     &trace_sequencer_level,
+     "The amount of sequencer tracing: 0 = none, 1 = all"},
     /* add more command line options here */
     {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &filenames,
      "Special option that collects any remaining arguments for us"},
     {NULL,}
   };
+
   GOptionContext *ctx;
   GError *err = NULL;
   const gchar *nano_str;
@@ -174,6 +183,8 @@ main (int argc, char *argv[])
   audio_output_string = NULL;
   free (device_name_string);
   device_name_string = NULL;
+  free (trace_file_name);
+  trace_file_name = NULL;
 
   return status;
 }
@@ -196,3 +207,17 @@ main_get_device_name_string ()
 {
   return device_name_string;
 }
+
+gchar *
+main_get_trace_file_name ()
+{
+  return trace_file_name;
+}
+
+gint
+main_get_trace_sequencer_level ()
+{
+  return trace_sequencer_level;
+}
+
+/* End of file main.c */

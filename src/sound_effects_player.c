@@ -18,18 +18,19 @@
  */
 #include <glib/gi18n.h>
 #include <libxml/xmlmemory.h>
-#include "sound_effects_player.h"
-#include "sound_structure.h"
+#include "display_subroutines.h"
 #include "gstreamer_subroutines.h"
 #include "menu_subroutines.h"
 #include "network_subroutines.h"
-#include "parse_xml_subroutines.h"
 #include "parse_net_subroutines.h"
-#include "sound_subroutines.h"
+#include "parse_xml_subroutines.h"
 #include "sequence_subroutines.h"
 #include "signal_subroutines.h"
+#include "sound_effects_player.h"
+#include "sound_structure.h"
+#include "sound_subroutines.h"
 #include "timer_subroutines.h"
-#include "display_subroutines.h"
+#include "trace_subroutines.h"
 
 G_DEFINE_TYPE (Sound_Effects_Player, sound_effects_player,
                GTK_TYPE_APPLICATION);
@@ -96,6 +97,9 @@ struct _Sound_Effects_PlayerPrivate
   /* The path to the user interface files. */
   gchar *ui_path;
 
+  /* The persistent information for the trace subroutines.  */
+  void *trace_data;
+  
   /* ANJUTA: Widgets declaration for sound_effects_player.ui - DO NOT REMOVE */
 };
 
@@ -120,6 +124,9 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
 
+  /* Initialize the trace subroutines.  */
+  priv->trace_data = trace_init (app);
+  
   /* Initialize the signal handler.  */
   priv->signal_data = signal_init (app);
 
@@ -327,6 +334,10 @@ sound_effects_player_dispose (GObject * object)
       self->priv->project_filename = NULL;
     }
 
+  /* Shut down the trace subroutines.  */
+  trace_finalize (app);
+  self->priv->trace_data = NULL;
+  
   G_OBJECT_CLASS (sound_effects_player_parent_class)->dispose (object);
   return;
 }
@@ -599,6 +610,18 @@ sep_get_network_data (GApplication * app)
 
   network_data = priv->network_data;
   return (network_data);
+}
+
+/* Find the trace subroutines' persistent data.  */
+void *
+sep_get_trace_data (GApplication * app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+  void *trace_data;
+
+  trace_data = priv->trace_data;
+  return (trace_data);
 }
 
 /* Find the network commands parser information.  

@@ -1,7 +1,7 @@
 /*
  * sound_effects_player.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  * 
  * Sound_effects_player is free software: you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by the
@@ -85,6 +85,9 @@ GtkWidget *sep_get_common_area (GApplication * app);
 
 /* Find the network information. */
 void *sep_get_network_data (GApplication * app);
+
+/* Find the trace information.  */
+void *sep_get_trace_data (GApplication * app);
 
 /* Find the network messages parser information. */
 void *sep_get_parse_net_data (GApplication * app);

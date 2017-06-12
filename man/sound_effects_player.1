@@ -1,4 +1,4 @@
-.TH SOUND_EFFECTS_PLAYER 1 2017-01-22 ShowControl
+.TH SOUND_EFFECTS_PLAYER 1 2017-06-11 ShowControl
 .SH NAME
 sound_effects_player \- play sound effects for a live stage play
 .SH SYNOPSIS
@@ -14,8 +14,9 @@ the performance, then interacts with the sound effects operator
 to make those sounds at the appropriate times.
 .P
 The input file is an XML file that describes the sounds and when 
-to make them.  See the README file for details.  If the file
-is not specified it can be read using the graphic user interface.
+to make them.  See the file How_to_Use_the_Sound_Effects_Player.pdf
+for details.  If the file is not specified it can be read using
+the graphic user interface.
 .P
 This program can be used interactively and can also be run by an
 external sequencer which sends commands to it.  Both interactive
@@ -32,7 +33,7 @@ Writes the process ID on the specified file.  This lets a script
 find the process of the instance of sound_effects_player that it has
 just launched, so the script can send signals to it.
 .TP
-.BR \-m ", " \-\-monitor\-file =\fIoutput\-file\fR
+.BR \-m ", " \-\-monitor\-file =\fIsound-output\-file\fR
 Writes the sound produced into a WAV file.  This option adds a 
 lot of latency, and so is mainly useful for debugging.  
 The default is not to write the sound into a WAV file.
@@ -50,6 +51,14 @@ If audio_output is ALSA (either explicitly or by default) do
 output to this ALSA device.  To see the list of ALSA devices, 
 type \fBaplay \-L\fR.
 The default is device \(aqdefault\(aq.
+.TP
+.BR \-t ", " \-\-trace\-file =\fItrace-output\-file\fR
+Traces the execution of the sequencer into a text file.
+This is useful when you have a complex sound sequence, and
+need feedback about what it is doing.
+.TP
+.BR \-v ", " \-\-trace\-sequencer\-level =\fInumber\fR
+The degree of sequencer tracing detail.  0 means none, 1 means all.
 .TP
 .BR \-\-display =\fIdisplay\fR
 X display to use for sound effects operator interaction.
@@ -83,7 +92,11 @@ effects from this file.  The project XML file can refer to
 other XML files.
 All of the XML files are expected to be created using an XML 
 editor such as EMACS.
-See the README file for details.
+
+There are three optional output files: one records the PID
+of the program for signalling purposes, one records the sounds
+produced and one traces what the sequencer is doing.
+See above for how to specify them.
 
 .SH NOTES
 Sound_effects_player interacts with the sound effects operator 
@@ -103,6 +116,7 @@ Read file Sample_project.xml in the sample directory,
 extract the sound effects from the description of the project,
 and play them under the interactive control of the sound effects
 operator on the default ALSA output device.
+When the last sound finishes playing, exit.
 .IP "sound_effects_player -d hdmi:CARD=NVidia,DEV=0 sample/Sample_project.xml"
 The same except the sound is sent to the speakers on one
 of the video monitors.

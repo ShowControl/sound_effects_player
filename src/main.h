@@ -1,7 +1,7 @@
 /*
  * main.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,5 +24,7 @@
 gchar *main_get_monitor_file_name ();
 gchar *main_get_audio_output_string ();
 gchar *main_get_device_name_string ();
+gchar *main_get_trace_file_name ();
+gint main_get_trace_sequencer_level ();
 
 /* End of file main.h */
