@@ -4,15 +4,42 @@ dnl Created originally by the Anjuta application wizard.
 dnl required version of autoconf
 AC_PREREQ([2.53])
 
-AC_INIT(sound_effects_player, [0.85], [John_Sauter@systemeyescomputerstore.com], sound_effects_player)
+AC_INIT(sound_effects_player, [0.86], [John_Sauter@systemeyescomputerstore.com], sound_effects_player)
+AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.11])
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE([enable])
 AC_CONFIG_MACRO_DIR([m4])
+
+dnl checks for programs.
 AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_CPP
+AC_PROG_AWK
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+
+dnl checks for header files.
+AC_CHECK_HEADERS([fcntl.h stdlib.h string.h])
+
+dnl checks for typedefs, structures, and compiler characteristics.
+AC_STRUCT_TIMEZONE
+AC_TYPE_SIZE_T
+
+dnl checks for library functions.
+AC_FUNC_MKTIME
 AC_CHECK_LIB([m], [pow])
 AC_CHECK_LIB([xml2], [xmlDocGetRootElement])
+AC_CHECK_FUNCS([localtime_r])
+AC_CHECK_FUNCS([memset])
+AC_CHECK_FUNCS([pow])
+AC_CHECK_FUNCS([strerror])
+AC_CHECK_FUNCS([strtol])
+
+
 
 dnl ***************************************************************************
 dnl Internationalization
@@ -113,7 +140,7 @@ GST_PACKAGE_ORIGIN="https://developer.gnome.org/gstreamer/"
 AC_DEFINE_UNQUOTED(GST_PACKAGE_ORIGIN, "$GST_PACKAGE_ORIGIN", [Gstreamer package origin])
 AC_SUBST(GST_PACKAGE_ORIGIN)
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 src/Makefile
 man/Makefile
@@ -125,3 +152,4 @@ example_01/Makefile
 example_02/Makefile
 example_03/Makefile
 ])
+AC_OUTPUT

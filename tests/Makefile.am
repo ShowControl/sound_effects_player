@@ -1,1 +1,1 @@
-SUBDIRS = Sample
+SUBDIRS = Samples
