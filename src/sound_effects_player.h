@@ -104,17 +104,19 @@ GtkStatusbar *sep_get_status_bar (GApplication * app);
 /* Find the context ID.  */
 guint sep_get_context_id (GApplication * app);
 
-/* Find the project file. */
-xmlDocPtr sep_get_project_file (GApplication * app);
+/* Find the configuration file. */
+xmlDocPtr sep_get_configuration_file (GApplication * app);
 
-/* Remember the project file. */
-void sep_set_project_file (xmlDocPtr project_file, GApplication * app);
+/* Remember the configuration file. */
+void sep_set_configuration_file (xmlDocPtr configuration_file,
+				 GApplication * app);
 
-/* Find the name of the project file. */
-gchar *sep_get_project_filename (GApplication * app);
+/* Find the name of the configuration file. */
+gchar *sep_get_configuration_filename (GApplication * app);
 
-/* Remember the name of the project file. */
-void sep_set_project_filename (gchar * project_filename, GApplication * app);
+/* Remember the name of the configuration file. */
+void sep_set_configuration_filename (gchar * configuration_filename,
+				     GApplication * app);
 
 /* Find the path to the user interface files. */
 gchar *sep_get_ui_path (GApplication * app);

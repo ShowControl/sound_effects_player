@@ -149,18 +149,18 @@ menu_delete_top_window (GtkButton * close_button, GdkEvent * event,
   return TRUE;
 }
 
-/* Reset the project to its defaults. */
+/* Reset the application to its defaults. */
 static void
 new_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 {
-  sep_set_project_file (NULL, app);
+  sep_set_configuration_file (NULL, app);
   network_set_port (1500, app);
 
   return;
 }
 
-/* Open a project file and read its contents.  The file is assumed to be in 
- * XML format. */
+/* Open a configuration file and read its contents.  
+ * The file is assumed to be in XML format. */
 static void
 open_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 {
@@ -169,7 +169,7 @@ open_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
   GtkFileChooserAction file_action = GTK_FILE_CHOOSER_ACTION_OPEN;
   GtkWindow *parent_window;
   gint res;
-  gchar *project_file_name;
+  gchar *configuration_file_name;
 
   /* Get the top-level window to use as the transient parent for
    * the file open dialog.  This makes sure the dialog appears over the
@@ -178,7 +178,7 @@ open_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 
   /* Configure the dialogue: choosing multiple files is not permitted. */
   dialog =
-    gtk_file_chooser_dialog_new ("Open Project File", parent_window,
+    gtk_file_chooser_dialog_new ("Open Configuration File", parent_window,
                                  file_action, "_Cancel", GTK_RESPONSE_CANCEL,
                                  "_Open", GTK_RESPONSE_ACCEPT, NULL);
   chooser = GTK_FILE_CHOOSER (dialog);
@@ -189,10 +189,10 @@ open_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
   if (res == GTK_RESPONSE_ACCEPT)
     {
       /* We have a file name. */
-      project_file_name = gtk_file_chooser_get_filename (chooser);
+      configuration_file_name = gtk_file_chooser_get_filename (chooser);
       gtk_widget_destroy (dialog);
       /* Parse the file as an XML file and create the gstreamer pipeline.  */
-      sep_create_pipeline (project_file_name, (GApplication *) app);
+      sep_create_pipeline (configuration_file_name, (GApplication *) app);
     }
   else
     {
@@ -207,7 +207,7 @@ save_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 {
 }
 
-/* Write the project information to an XML file. */
+/* Write the configuration information to an XML file. */
 static void
 saveas_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 {
@@ -217,7 +217,7 @@ saveas_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
   GtkFileChooserAction file_action = GTK_FILE_CHOOSER_ACTION_SAVE;
   GtkWindow *parent_window;
   gint res;
-  gchar *project_file_name;
+  gchar *configuration_file_name;
 
   /* Get the top-level window to use as the transient parent for
    * the dialog.  This makes sure the dialog appears over the
@@ -225,32 +225,33 @@ saveas_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
   parent_window = sep_get_top_window ((GApplication *) app);
 
   /* Configure the dialogue: prompt on specifying an existing file,
-   * allow folder creation, and specify the current project file
+   * allow folder creation, and specify the current configuration file
    * name if one exists, or a default name if not. */
   dialog =
-    gtk_file_chooser_dialog_new ("Save Project File", parent_window,
+    gtk_file_chooser_dialog_new ("Save Configuration File", parent_window,
                                  file_action, "_Cancel", GTK_RESPONSE_CANCEL,
                                  "_Save", GTK_RESPONSE_ACCEPT, NULL);
   gtk_window_set_application (GTK_WINDOW (dialog), app);
   chooser = GTK_FILE_CHOOSER (dialog);
   gtk_file_chooser_set_do_overwrite_confirmation (chooser, TRUE);
   gtk_file_chooser_set_create_folders (chooser, TRUE);
-  project_file_name = sep_get_project_filename (app);
-  if (project_file_name == NULL)
+  configuration_file_name = sep_get_configuration_filename (app);
+  if (configuration_file_name == NULL)
     {
-      project_file_name = g_strdup ("Nameless_project.xml");
-      sep_set_project_filename (project_file_name, app);
+      configuration_file_name =
+        g_build_filename ("~/.ShowControl/", "ShowControl_config.xml", NULL);
+      sep_set_configuration_filename (configuration_file_name, app);
     }
-  gtk_file_chooser_set_filename (chooser, project_file_name);
+  gtk_file_chooser_set_filename (chooser, configuration_file_name);
 
   /* Use the file dialog to ask for a file to write. */
   res = gtk_dialog_run (GTK_DIALOG (dialog));
   if (res == GTK_RESPONSE_ACCEPT)
     {
       /* We have a file name. */
-      project_file_name = gtk_file_chooser_get_filename (chooser);
+      configuration_file_name = gtk_file_chooser_get_filename (chooser);
       gtk_widget_destroy (dialog);
-      parse_xml_write_project_file (project_file_name, app);
+      parse_xml_write_configuration_file (configuration_file_name, app);
     }
 
   return;

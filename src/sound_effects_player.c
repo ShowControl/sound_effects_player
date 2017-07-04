@@ -88,18 +88,18 @@ struct _Sound_Effects_PlayerPrivate
   void *parse_net_data;
 
   /* The XML file that holds parameters for the program. */
-  xmlDocPtr project_file;
+  xmlDocPtr configuration_file;
 
   /* The name of that file, for use in Save and as the default file
    * name for Save As. */
-  gchar *project_filename;
+  gchar *configuration_filename;
 
   /* The path to the user interface files. */
   gchar *ui_path;
 
   /* The persistent information for the trace subroutines.  */
   void *trace_data;
-  
+
   /* ANJUTA: Widgets declaration for sound_effects_player.ui - DO NOT REMOVE */
 };
 
@@ -126,7 +126,7 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
 
   /* Initialize the trace subroutines.  */
   priv->trace_data = trace_init (app);
-  
+
   /* Initialize the signal handler.  */
   priv->signal_data = signal_init (app);
 
@@ -138,7 +138,8 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
 
   /* Load the main user interface definition from its file. */
   builder = gtk_builder_new ();
-  filename = g_strconcat (priv->ui_path, "sound_effects_player.ui", NULL);
+  filename =
+    g_build_filename (priv->ui_path, "sound_effects_player.ui", NULL);
   if (!gtk_builder_add_from_file (builder, filename, &error))
     {
       g_critical ("Couldn't load builder file %s: %s", filename,
@@ -212,17 +213,21 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
   gtk_window_set_application (top_window, GTK_APPLICATION (app));
 
   /* If the invocation of sound_effects_player included a parameter,
-   * that parameter is the name of the project file to load before
+   * that parameter is the name of the configuration file to load before
    * starting the user interface.  */
   if (file != NULL)
     {
-      priv->project_filename = g_file_get_parse_name (file);
+      priv->configuration_filename = g_file_get_parse_name (file);
     }
   else
-    priv->project_filename = NULL;
+    /* If there is no parameter, we use the default configuration file.  */
+    priv->configuration_filename =
+      g_build_filename ((gchar *) "~",
+			(gchar *) ".ShowControl/ShowControl_config.xml",
+			NULL);
 
   /* Set up the menu. */
-  filename = g_strconcat (priv->ui_path, "app-menu.ui", NULL);
+  filename = g_build_filename (priv->ui_path, "app-menu.ui", NULL);
   menu_init (app, filename);
   g_free (filename);
 
@@ -244,16 +249,19 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
   gtk_widget_show_all (GTK_WIDGET (top_window));
   priv->windows_showing = TRUE;
 
-  /* If we have a parameter, it is the project XML file to read for our sounds.
-   * If we don't, the user will read a project XML file using the menu.  */
-  if (priv->project_filename != NULL)
+  /* If we have a parameter, it is the configuration XML file to read 
+   * for our sounds.  If we don't, we use a default configuration file,
+   * which may have nothing in it, so the user will have to read a 
+   * configuration XML file using the menu.  */
+  if (priv->configuration_filename != NULL)
     {
       message_code = display_show_message ("Loading...", app);
-      local_filename = g_strdup (priv->project_filename);
-      parse_xml_read_project_file (local_filename, app);
+      local_filename = g_strdup (priv->configuration_filename);
+      parse_xml_read_configuration_file (local_filename, app);
       priv->gstreamer_pipeline = sound_init (app);
       display_remove_message (message_code, app);
       message_code = display_show_message ("Starting...", app);
+      local_filename = NULL;
     }
   else
     {
@@ -321,23 +329,23 @@ sound_effects_player_dispose (GObject * object)
       sound_effect_list = next_sound_effect;
     }
 
-  /* Deallocate the project file.  */
-  if (self->priv->project_file != NULL)
+  /* Deallocate the configuration file.  */
+  if (self->priv->configuration_file != NULL)
     {
-      xmlFree (self->priv->project_file);
-      self->priv->project_file = NULL;
+      xmlFree (self->priv->configuration_file);
+      self->priv->configuration_file = NULL;
     }
 
-  if (self->priv->project_filename != NULL)
+  if (self->priv->configuration_filename != NULL)
     {
-      g_free (self->priv->project_filename);
-      self->priv->project_filename = NULL;
+      g_free (self->priv->configuration_filename);
+      self->priv->configuration_filename = NULL;
     }
 
   /* Shut down the trace subroutines.  */
   trace_finalize (app);
   self->priv->trace_data = NULL;
-  
+
   G_OBJECT_CLASS (sound_effects_player_parent_class)->dispose (object);
   return;
 }
@@ -405,8 +413,9 @@ sep_create_pipeline (gchar * filename, GApplication * app)
   gchar *local_filename;
 
   local_filename = g_strdup (filename);
-  parse_xml_read_project_file (local_filename, app);
+  parse_xml_read_configuration_file (local_filename, app);
   priv->gstreamer_pipeline = sound_init (app);
+  local_filename = NULL;
 
   return;
 }
@@ -687,45 +696,45 @@ sep_get_context_id (GApplication * app)
   return context_id;
 }
 
-/* Find the project file which contains the parameters. */
+/* Find the configuration file. */
 xmlDocPtr
-sep_get_project_file (GApplication * app)
+sep_get_configuration_file (GApplication * app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
-  xmlDocPtr project_file;
+  xmlDocPtr configuration_file;
 
-  project_file = priv->project_file;
-  return (project_file);
+  configuration_file = priv->configuration_file;
+  return (configuration_file);
 }
 
-/* Remember the project file which contains the parameters. */
+/* Remember the configuration file. */
 void
-sep_set_project_file (xmlDocPtr project_file, GApplication * app)
+sep_set_configuration_file (xmlDocPtr configuration_file, GApplication * app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
 
-  if (priv->project_file != NULL)
+  if (priv->configuration_file != NULL)
     {
-      xmlFreeDoc (priv->project_file);
-      priv->project_file = NULL;
+      xmlFreeDoc (priv->configuration_file);
+      priv->configuration_file = NULL;
     }
-  priv->project_file = project_file;
+  priv->configuration_file = configuration_file;
 
   return;
 }
 
-/* Find the name of the project file. */
+/* Find the name of the configuration file. */
 gchar *
-sep_get_project_filename (GApplication * app)
+sep_get_configuration_filename (GApplication * app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
-  gchar *project_filename;
+  gchar *configuration_filename;
 
-  project_filename = priv->project_filename;
-  return (project_filename);
+  configuration_filename = priv->configuration_filename;
+  return (configuration_filename);
 }
 
 /* Find the path to the user interface files. */
@@ -740,19 +749,19 @@ sep_get_ui_path (GApplication * app)
   return (ui_path);
 }
 
-/* Set the name of the project file. */
+/* Set the name of the configuration file. */
 void
-sep_set_project_filename (gchar * filename, GApplication * app)
+sep_set_configuration_filename (gchar * filename, GApplication * app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
 
-  if (priv->project_filename != NULL)
+  if (priv->configuration_filename != NULL)
     {
-      g_free (priv->project_filename);
-      priv->project_filename = NULL;
+      g_free (priv->configuration_filename);
+      priv->configuration_filename = NULL;
     }
-  priv->project_filename = filename;
+  priv->configuration_filename = filename;
 
   return;
 }

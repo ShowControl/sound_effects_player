@@ -1093,13 +1093,11 @@ static void
 parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
                     xmlNodePtr program_loc, GApplication * app)
 {
-  xmlChar *key;
   const xmlChar *name;
   xmlChar *prop_name;
   gchar *file_name;
   gchar *file_dirname;
   gchar *absolute_file_name;
-  gint64 port_number;
   xmlNodePtr sounds_loc, sequence_loc;
   xmlDocPtr sounds_file, sequence_file;
   const xmlChar *root_name;
@@ -1118,17 +1116,6 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
   while (program_loc != NULL)
     {
       name = program_loc->name;
-      if (xmlStrEqual (name, (const xmlChar *) "port"))
-        {
-          /* This is the "port" section within "program".  */
-          key =
-            xmlNodeListGetString (equipment_file,
-                                  program_loc->xmlChildrenNode, 1);
-          port_number = g_ascii_strtoll ((gchar *) key, NULL, 10);
-          /* Tell the network module the new port number. */
-          network_set_port (port_number, app);
-          xmlFree (key);
-        }
 
       if (xmlStrEqual (name, (const xmlChar *) "sounds"))
         {
@@ -1556,53 +1543,321 @@ parse_project_info (xmlDocPtr project_file, gchar * project_file_name,
         }
       current_loc = current_loc->next;
     }
+
   if (!found_equipment_section)
     {
       g_printerr ("No equipment section in project file: %s.\n",
-                  absolute_file_name);
+                  project_file_name);
     }
+
   g_free (absolute_file_name);
   absolute_file_name = NULL;
 
   return;
 }
 
-/* Open a project file and read its contents.  The file is assumed to be in 
- * XML format. */
-void
-parse_xml_read_project_file (gchar * project_file_name, GApplication * app)
+/* Dig through the sound_effects component section of a configuration file 
+ * to find the preferences for the sound effects component.  */
+static void
+parse_component_info (xmlDocPtr configuration_file,
+                      gchar * configuration_file_name,
+                      xmlNodePtr component_loc, GApplication * app)
 {
+  xmlChar *key;
+  const xmlChar *name;
+  gint64 port_number;
+
+  /* We start at the children of a "component" section which has the
+   * name "sound_effects". */
+
+  while (component_loc != NULL)
+    {
+      name = component_loc->name;
+      if (xmlStrEqual (name, (const xmlChar *) "port"))
+        {
+          /* This is the "port" section within "component".  */
+          key =
+            xmlNodeListGetString (configuration_file,
+                                  component_loc->xmlChildrenNode, 1);
+          port_number = g_ascii_strtoll ((gchar *) key, NULL, 10);
+          /* Tell the network module the new port number. */
+          network_set_port (port_number, app);
+          xmlFree (key);
+        }
+
+      component_loc = component_loc->next;
+    }
+
+  return;
+}
+
+/* Dig through the configuration xml file looking for the project and 
+ * preferences.  */
+static void
+parse_configuration_info (xmlDocPtr configuration_file,
+                          gchar * configuration_file_name,
+                          xmlNodePtr current_loc, GApplication * app)
+{
+  xmlChar *key;
+  const xmlChar *name;
+  gchar *file_name;
+  gchar *file_dirname;
+  gchar *absolute_file_name;
+  xmlNodePtr project_loc;
+  xmlNodePtr prefs_loc;
   xmlDocPtr project_file;
+  xmlChar *project_file_name;
+  xmlChar *project_folder_name;
+  xmlChar *component_id;
+  xmlNodePtr component_loc;
+  gboolean found_project_section;
+  gboolean found_prefs_section;
+  const xmlChar *root_name;
+  const xmlChar *project_name;
+  gboolean project_section_parsed;
+
+  /* We start at the children of the "configuration" section.  
+   * Important child sections for our purposes are "version", "project"
+   * and "prefs".  */
+  found_project_section = FALSE;
+  found_prefs_section = FALSE;
+  file_name = NULL;
+  file_dirname = NULL;
+  absolute_file_name = NULL;
+
+  while (current_loc != NULL)
+    {
+      name = current_loc->name;
+      if (xmlStrEqual (name, (const xmlChar *) "version"))
+        {
+          /* This is the "version" section within "configuration".  We can only
+           * interpret version 1 of the project section, so reject all other
+           * versions.  The value after the decimal point doesn't matter,
+           * since 1.1, for example, will be a compatible extension of 1.0.  */
+          key =
+            xmlNodeListGetString (configuration_file,
+                                  current_loc->xmlChildrenNode, 1);
+          if ((!g_str_has_prefix ((gchar *) key, (gchar *) "1.")))
+            {
+              g_printerr ("Version number of configuration is %s, "
+                          "should start with 1.\n", key);
+              return;
+            }
+          xmlFree (key);
+        }
+
+      if (xmlStrEqual (name, (const xmlChar *) "project"))
+        {
+          /* This is a "project" section within "configuration". 
+             It will have the name of the project file and its folder.
+           */
+          found_project_section = TRUE;
+
+          /* parse <file> and <folder> */
+          project_loc = current_loc->xmlChildrenNode;
+          project_file_name = NULL;
+          project_folder_name = NULL;
+          while (project_loc != NULL)
+            {
+              project_name = project_loc->name;
+              if (xmlStrEqual (project_name, (const xmlChar *) "file"))
+                {
+                  project_file_name =
+                    xmlNodeListGetString (configuration_file,
+                                          project_loc->xmlChildrenNode, 1);
+                }
+
+              if (xmlStrEqual (project_name, (const xmlChar *) "folder"))
+                {
+                  project_folder_name =
+                    xmlNodeListGetString (configuration_file,
+                                          project_loc->xmlChildrenNode, 1);
+                }
+              project_loc = project_loc->next;
+            }
+
+          /* We have the file and folder names for the project.
+           * If the folder plus file does not amount to an absolute
+           * path, prepend the path to the configuration file.
+           * This allows for configuration files to be copied along
+           * with their project and other files.  */
+          g_free (file_name);
+          file_name =
+            g_build_filename ((gchar *) project_folder_name,
+                              (gchar *) project_file_name, NULL);
+          if (g_path_is_absolute (file_name))
+            {
+              g_free (absolute_file_name);
+              absolute_file_name = g_strdup (file_name);
+            }
+          else
+            {
+              g_free (file_dirname);
+              file_dirname = g_path_get_dirname (configuration_file_name);
+              absolute_file_name =
+                g_build_filename (file_dirname, file_name, NULL);
+              g_free (file_dirname);
+              file_dirname = NULL;
+            }
+
+          g_free (file_name);
+          file_name = NULL;
+
+          /* Read the specified file as an XML file. */
+          xmlLineNumbersDefault (1);
+          xmlThrDefIndentTreeOutput (1);
+          xmlKeepBlanksDefault (0);
+          xmlThrDefTreeIndentString ("    ");
+          project_file = xmlParseFile (absolute_file_name);
+          if (project_file == NULL)
+            {
+              g_printerr ("Load of project file %s failed.\n",
+                          absolute_file_name);
+              g_free (absolute_file_name);
+              absolute_file_name = NULL;
+              return;
+            }
+
+          /* Make sure the project file is valid, then extract data from 
+           * it.  */
+          project_loc = xmlDocGetRootElement (project_file);
+          if (project_loc == NULL)
+            {
+              g_printerr ("Empty project file: %s.\n", absolute_file_name);
+              xmlFree (project_file);
+              g_free (absolute_file_name);
+              absolute_file_name = NULL;
+              return;
+            }
+          root_name = project_loc->name;
+          if (!xmlStrEqual (root_name, (const xmlChar *) "show_control"))
+            {
+              g_printerr ("Not a show_control file: %s; is %s.\n",
+                          absolute_file_name, root_name);
+              xmlFree (project_file);
+              g_free (absolute_file_name);
+              absolute_file_name = NULL;
+              return;
+            }
+
+          /* Within the top-level show_control structure should be a 
+           * project structure.  If there isn't, this isn't a project 
+           * file and must be rejected. */
+          project_loc = project_loc->xmlChildrenNode;
+          project_name = NULL;
+          project_section_parsed = FALSE;
+          while (project_loc != NULL)
+            {
+              project_name = project_loc->name;
+              if (xmlStrEqual (project_name, (const xmlChar *) "project"))
+                {
+                  parse_project_info (project_file, absolute_file_name,
+                                      project_loc->xmlChildrenNode, app);
+                  project_section_parsed = TRUE;
+                }
+              project_loc = project_loc->next;
+            }
+          if (!project_section_parsed)
+            {
+              g_printerr ("Not a project file: %s; is %s.\n",
+                          absolute_file_name, project_name);
+            }
+          xmlFree (project_file);
+        }
+
+      /* parse prefs */
+      if (xmlStrEqual (name, (const xmlChar *) "prefs"))
+        {
+          /* This is a "prefs" section within "configuration". 
+             It will have verious components, of which we care only about
+             "sound_effects".  */
+          found_prefs_section = TRUE;
+          prefs_loc = current_loc->xmlChildrenNode;
+          while (prefs_loc != NULL)
+            {
+              name = prefs_loc->name;
+              if (xmlStrEqual (name, (const xmlChar *) "component"))
+                {
+                  /* This is a "component" section.  
+                   * We only care about the sound
+                   * effects component. */
+                  component_id =
+                    xmlGetProp (prefs_loc, (const xmlChar *) "id");
+                  if (xmlStrEqual
+                      (component_id, (const xmlChar *) "sound_effects"))
+                    {
+                      /* This is the section of the configuration file that 
+                       * contains information about the sound effects program. 
+                       */
+                      component_loc = prefs_loc->xmlChildrenNode;
+                      parse_component_info (configuration_file,
+                                            configuration_file_name,
+                                            component_loc, app);
+                    }
+                  xmlFree (component_id);
+                }
+              prefs_loc = prefs_loc->next;
+            }
+        }
+
+      current_loc = current_loc->next;
+    }
+
+  if (!found_project_section)
+    {
+      g_printerr ("No project section in configuration file: %s.\n",
+                  configuration_file_name);
+    }
+  if (!found_prefs_section)
+    {
+      g_printerr ("No prefs section in configuration file: %s.\n",
+                  configuration_file_name);
+    }
+
+  g_free (absolute_file_name);
+  absolute_file_name = NULL;
+
+  return;
+}
+
+/* Open a configuration file and read its contents.  
+ * The file is assumed to be in XML format. */
+void
+parse_xml_read_configuration_file (gchar * configuration_file_name,
+                                   GApplication * app)
+{
+  xmlDocPtr configuration_file;
   xmlNodePtr current_loc;
   const xmlChar *name;
-  gboolean project_section_parsed;
+  gboolean configuration_section_parsed;
 
   /* Read the file as an XML file. */
   xmlLineNumbersDefault (1);
   xmlThrDefIndentTreeOutput (1);
   xmlKeepBlanksDefault (0);
   xmlThrDefTreeIndentString ("    ");
-  project_file = xmlParseFile (project_file_name);
-  if (project_file == NULL)
+  configuration_file = xmlParseFile (configuration_file_name);
+  if (configuration_file == NULL)
     {
-      g_printerr ("Load of project file %s failed.\n", project_file_name);
-      g_free (project_file_name);
-      project_file_name = NULL;
+      g_printerr ("Load of configuration file %s failed.\n",
+                  configuration_file_name);
+      g_free (configuration_file_name);
+      configuration_file_name = NULL;
       return;
     }
 
   /* Remember the file name. */
-  sep_set_project_filename (project_file_name, app);
+  sep_set_configuration_filename (configuration_file_name, app);
 
   /* Remember the data from the XML file, in case we want to refer to it
    * later. */
-  sep_set_project_file (project_file, app);
+  sep_set_configuration_file (configuration_file, app);
 
-  /* Make sure the project file is valid, then extract data from it. */
-  current_loc = xmlDocGetRootElement (project_file);
+  /* Make sure the configuration file is valid, then extract data from it. */
+  current_loc = xmlDocGetRootElement (configuration_file);
   if (current_loc == NULL)
     {
-      g_printerr ("Empty project file.\n");
+      g_printerr ("Empty configuration file.\n");
       return;
     }
   name = current_loc->name;
@@ -1612,41 +1867,43 @@ parse_xml_read_project_file (gchar * project_file_name, GApplication * app)
       return;
     }
 
-  /* Within the top-level show_control section should be a project
-   * section.  If there isn't, this isn't a project file and must
+  /* Within the top-level show_control section should be a configuration
+   * section.  If there isn't, this isn't a configuration file and must
    * be rejected.  If there is, process it.  */
   current_loc = current_loc->xmlChildrenNode;
   name = NULL;
-  project_section_parsed = FALSE;
+  configuration_section_parsed = FALSE;
   while (current_loc != NULL)
     {
       name = current_loc->name;
-      if (xmlStrEqual (name, (const xmlChar *) "project"))
+      if (xmlStrEqual (name, (const xmlChar *) "configuration"))
         {
-          parse_project_info (project_file, project_file_name,
-                              current_loc->xmlChildrenNode, app);
-          project_section_parsed = TRUE;
+          parse_configuration_info (configuration_file,
+                                    configuration_file_name,
+                                    current_loc->xmlChildrenNode, app);
+          configuration_section_parsed = TRUE;
         }
       current_loc = current_loc->next;
     }
-  if (!project_section_parsed)
+  if (!configuration_section_parsed)
     {
-      g_printerr ("Not a project file: %s.\n", name);
+      g_printerr ("Not a configuration file: %s.\n", name);
     }
 
   xmlCleanupParser ();
   return;
 }
 
-/* Write the project information to an XML file. */
+/* Write the configuration information to an XML file. */
 void
-parse_xml_write_project_file (gchar * project_file_name, GApplication * app)
+parse_xml_write_configuration_file (gchar * configuration_file_name,
+                                    GApplication * app)
 {
-  xmlDocPtr project_file;
+  xmlDocPtr configuration_file;
   xmlNodePtr current_loc;
-  xmlNodePtr equipment_loc;
-  xmlNodePtr project_loc;
-  xmlNodePtr program_loc;
+  xmlNodePtr prefs_loc;
+  xmlNodePtr component_loc;
+  xmlNodePtr port_loc;
   const xmlChar *name = NULL;
   xmlChar *prop_name = NULL;
   gint port_number;
@@ -1654,86 +1911,85 @@ parse_xml_write_project_file (gchar * project_file_name, GApplication * app)
   gboolean port_number_found;
   gchar text_buffer[G_ASCII_DTOSTR_BUF_SIZE];
 
-  /* Write the project data as an XML file. */
-  project_file = sep_get_project_file (app);
-  if (project_file == NULL)
+  /* Write the configuration data as an XML file. */
+  configuration_file = sep_get_configuration_file (app);
+  if (configuration_file == NULL)
     {
-      /* We don't have a project file--create one. */
+      /* We don't have a configuration file--create one. */
       xmlLineNumbersDefault (1);
       xmlThrDefIndentTreeOutput (1);
       xmlKeepBlanksDefault (0);
       xmlThrDefTreeIndentString ("    ");
-      project_file =
+      configuration_file =
         xmlParseDoc ((xmlChar *) "<?xml version=\"1.0\" "
-                     "encoding=\"utf-8\"?> <show_control> <project>"
+                     "encoding=\"utf-8\"?> <show_control> <configuration>"
                      "<version>1.0</version>"
-                     "<equipment> <program id=\"sound_effects\">"
-                     "<port>1500</port> </program> </equipment>"
-                     "</project> </show_control>");
-      sep_set_project_file (project_file, app);
+                     "<prefs> <component id=\"sound_effects\">"
+                     "<port>1500</port> </component> </prefs>"
+                     "</configuration> </show_control>");
+      sep_set_configuration_file (configuration_file, app);
     }
 
   /* The network port might have been changed using the preferences
    * dialogue.  Make sure we write out the current value. */
 
-  /* Find the network node, then set the value of the port node 
-   * within it.  This only works if the node number is in the top-level
-   * project file.  */
+  /* Find the component node, then set the value of the port node 
+   * within it.  */
   port_number_found = FALSE;
-  current_loc = xmlDocGetRootElement (project_file);
+  current_loc = xmlDocGetRootElement (configuration_file);
   /* We know the root element is show_control, and there is only one,
    * so we don't have to check it or iterate over it.  */
   current_loc = current_loc->xmlChildrenNode;
   while (current_loc != NULL)
     {
       name = current_loc->name;
-      if (xmlStrEqual (name, (const xmlChar *) "project"))
+      if (xmlStrEqual (name, (const xmlChar *) "configuration"))
         {
-          project_loc = current_loc->xmlChildrenNode;
-          while (project_loc != NULL)
+          prefs_loc = current_loc->xmlChildrenNode;
+          while (prefs_loc != NULL)
             {
-              name = project_loc->name;
-              if (xmlStrEqual (name, (const xmlChar *) "equipment"))
+              name = prefs_loc->name;
+              if (xmlStrEqual (name, (const xmlChar *) "prefs"))
                 {
-                  equipment_loc = project_loc->xmlChildrenNode;
-                  while (equipment_loc != NULL)
+                  component_loc = prefs_loc->xmlChildrenNode;
+                  while (component_loc != NULL)
                     {
-                      name = equipment_loc->name;
-                      if (xmlStrEqual (name, (const xmlChar *) "program"))
+                      name = component_loc->name;
+                      if (xmlStrEqual (name, (const xmlChar *) "component"))
                         {
                           prop_name =
-                            xmlGetProp (equipment_loc,
+                            xmlGetProp (component_loc,
                                         (const xmlChar *) "id");
                           if (xmlStrEqual
                               (prop_name, (const xmlChar *) "sound_effects"))
                             {
-                              program_loc = equipment_loc->xmlChildrenNode;
-                              while (program_loc != NULL)
+                              port_loc = component_loc->xmlChildrenNode;
+                              while (port_loc != NULL)
                                 {
-                                  name = program_loc->name;
+                                  name = port_loc->name;
                                   if (xmlStrEqual
                                       (name, (const xmlChar *) "port"))
                                     {
                                       /* This is the "port" node within 
-                                       * program sound_effects.  */
+                                       * component sound_effects.  */
                                       port_number = network_get_port (app);
                                       port_number_text =
                                         g_ascii_dtostr (text_buffer,
                                                         G_ASCII_DTOSTR_BUF_SIZE,
                                                         (1.0 * port_number));
-                                      xmlNodeSetContent (program_loc,
+                                      xmlNodeSetContent (port_loc,
                                                          (xmlChar *)
                                                          port_number_text);
                                       port_number_found = TRUE;
                                     }
-                                  program_loc = program_loc->next;
+                                  port_loc = port_loc->next;
                                 }
                             }
                         }
-                      equipment_loc = equipment_loc->next;
+                      component_loc = component_loc->next;
                     }
                 }
-              project_loc = project_loc->next;
+              prefs_loc = prefs_loc->next;
             }
         }
       current_loc = current_loc->next;
@@ -1743,15 +1999,16 @@ parse_xml_write_project_file (gchar * project_file_name, GApplication * app)
     {
       /* Write the file, with indentations to make it easier to edit
        * manually. */
-      xmlSaveFormatFileEnc (project_file_name, project_file, "utf-8", 1);
+      xmlSaveFormatFileEnc (configuration_file_name, configuration_file,
+                            "utf-8", 1);
 
       /* Remember the file name so we can use it as the default
        * next time. */
-      sep_set_project_filename (project_file_name, app);
+      sep_set_configuration_filename (configuration_file_name, app);
     }
   else
     {
-      g_printerr ("The project file is complex, and must be edited "
+      g_printerr ("The configuration file is complex, and must be edited "
                   "with an XML editor such as Emacs.\n");
     }
   g_free (prop_name);

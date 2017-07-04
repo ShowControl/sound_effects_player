@@ -25,6 +25,7 @@ EXTRA_DIST = \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
 	sample/440Hz.wav \
+	sample/Sample_config.xml \
 	sample/Sample_cues.xml \
 	sample/Sample_equipment.xml \
 	sample/Sample_project.xml \

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file contains the global information ShowControl uses.
+ShowControl expects this file to exist (on a linux platform)
+here: ~/.showcontrol/ShowControl_config.xml-->
+
+<!-- The outer structure name is "show_control" to identify
+     XML files belonging to the show_control project.  If the user
+     tries to read an XML file intended for some other application,
+     we can give a meaningful error message.  -->
+<show_control>
+
+<!-- This is the show_control configuration file.  -->
+  <configuration>
+    
+    <!--version of show_control -->
+    <version>1.0</version>
+
+<!-- This section specifies the definition file mixers that ShowControl can
+     control.  The file specified here typically resides iin a directory
+     relative to ~/.showcontrol.  Typically this is ~/.showcontrol/hardware.
+     If it is stored elsewhere, the folder element should contain an absolute
+     path (i.e. on linux the string begins with a slash "/").-->
+    <mixers>
+      <file>MixerDefs-r2.xml</file>
+      <folder>hardware</folder>
+    </mixers>
+
+<!-- The project section specifies the xml file that holds project specific
+     informaton.  This section is used to open the last project that was loaded
+     when ShowControl starts.  The folder always specfies an absolute path
+     (i.e. on linux the string begins with a slash "/").
+     This section is updated when the user selects File > Open Show-->
+    <project>
+      <file>Sample_project.xml</file>
+      <folder>.</folder>
+    </project>
+
+<!-- This section maintains the preferences that are managed by the
+     Edit > Preferences menu selection in ShowControl applications
+     (CueEngin, ShowMixer, etc.)-->
+    <prefs>
+      <component id="CueEngin">
+	<exitwithce>true</exitwithce>
+      </component>
+      <component id="sound_effects">
+	<port>1500</port>
+      </component>
+      <component id="sound_mixer">
+	<port>1501</port>
+      </component>
+      <component id="lighting">
+	<port>1502</port>
+      </component>
+    </prefs>
+    
+  </configuration>
+</show_control>

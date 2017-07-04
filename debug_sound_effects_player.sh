@@ -9,7 +9,7 @@ export GST_DEBUG_DUMP_DOT_DIR="/tmp"
 export G_SLICE=debug-blocks
 #sound_effects_player --gst-debug=*:5 --audio-output=NONE ../The_Perils_of_Pauline/Pauline_project.xml
 #sound_effects_player -d hdmi:CARD=NVidia,DEV=0 sample/Sample_project.xml
-sound_effects_player sample/Sample_project.xml
+sound_effects_player sample/Sample_config.xml
 
 rm *.dot
 rm *.png
