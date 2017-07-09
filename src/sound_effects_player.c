@@ -20,6 +20,7 @@
 #include <libxml/xmlmemory.h>
 #include "display_subroutines.h"
 #include "gstreamer_subroutines.h"
+#include "main.h"
 #include "menu_subroutines.h"
 #include "network_subroutines.h"
 #include "parse_net_subroutines.h"
@@ -94,6 +95,12 @@ struct _Sound_Effects_PlayerPrivate
    * name for Save As. */
   gchar *configuration_filename;
 
+  /* The folder that holds the project file.  */
+  gchar *project_folder_name;
+
+  /* The file within that folder that holds the project.  */
+  gchar *project_file_name;
+
   /* The path to the user interface files. */
   gchar *ui_path;
 
@@ -118,8 +125,8 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
   gchar *cluster_name;
   GtkWidget *cluster_widget;
   gchar *filename;
-  gchar *local_filename;
   guint message_code;
+  GFile *parent_file;
 
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -212,20 +219,6 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
 
   gtk_window_set_application (top_window, GTK_APPLICATION (app));
 
-  /* If the invocation of sound_effects_player included a parameter,
-   * that parameter is the name of the configuration file to load before
-   * starting the user interface.  */
-  if (file != NULL)
-    {
-      priv->configuration_filename = g_file_get_parse_name (file);
-    }
-  else
-    /* If there is no parameter, we use the default configuration file.  */
-    priv->configuration_filename =
-      g_build_filename ((gchar *) "~",
-			(gchar *) ".ShowControl/ShowControl_config.xml",
-			NULL);
-
   /* Set up the menu. */
   filename = g_build_filename (priv->ui_path, "app-menu.ui", NULL);
   menu_init (app, filename);
@@ -249,19 +242,50 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
   gtk_widget_show_all (GTK_WIDGET (top_window));
   priv->windows_showing = TRUE;
 
-  /* If we have a parameter, it is the configuration XML file to read 
-   * for our sounds.  If we don't, we use a default configuration file,
-   * which may have nothing in it, so the user will have to read a 
-   * configuration XML file using the menu.  */
-  if (priv->configuration_filename != NULL)
+  /* Read the configuration file, which will contain the preferences
+   * and the default project file.  If the configuration file has not
+   * been specified on the command line, read the default configuration
+   * file.  If it does not exist, create a default configuration file.  */
+  priv->configuration_filename =
+    g_strdup (main_get_configuration_file_name ());
+  if (priv->configuration_filename == NULL)
+    {
+      priv->configuration_filename =
+        g_build_filename (g_get_user_config_dir (), (gchar *) "ShowControl",
+                          (gchar *) "ShowControl_config.xml", NULL);
+    }
+  parse_xml_read_configuration_file (priv->configuration_filename, app);
+
+  /* If the invocation of sound_effects_player included a parameter,
+   * that parameter is the name of the project file to load before
+   * starting the user interface, overriding the value in the
+   * configuration file.  */
+  if (file != NULL)
+    {
+      parent_file = g_file_get_parent (file);
+      priv->project_folder_name = g_file_get_path (parent_file);
+      priv->project_file_name = g_file_get_basename (file);
+
+      /* Write back the configuration file, updated with the new
+       * project folder and file names.  */
+      parse_xml_write_configuration_file (priv->configuration_filename, app);
+      g_object_unref (parent_file);
+      parent_file = NULL;
+    }
+
+  /* If we have a parameter, it is the project XML file to read 
+   * for our sounds.  If we don't, read the most recent project file,
+   * whose folder and name were saved in the configuration file.
+   * If there is no project file the user will have to read one
+   * using the menu.  */
+  if (priv->project_file_name != NULL)
     {
       message_code = display_show_message ("Loading...", app);
-      local_filename = g_strdup (priv->configuration_filename);
-      parse_xml_read_configuration_file (local_filename, app);
+      parse_xml_read_project_file (priv->project_folder_name,
+                                   priv->project_file_name, app);
       priv->gstreamer_pipeline = sound_init (app);
       display_remove_message (message_code, app);
       message_code = display_show_message ("Starting...", app);
-      local_filename = NULL;
     }
   else
     {
@@ -327,6 +351,17 @@ sound_effects_player_dispose (GObject * object)
       self->priv->sound_list =
         g_list_delete_link (self->priv->sound_list, sound_effect_list);
       sound_effect_list = next_sound_effect;
+    }
+
+  if (self->priv->project_folder_name != NULL)
+    {
+      g_free (self->priv->project_folder_name);
+      self->priv->project_folder_name = NULL;
+    }
+  if (self->priv->project_file_name != NULL)
+    {
+      g_free (self->priv->project_file_name);
+      self->priv->project_file_name = NULL;
     }
 
   /* Deallocate the configuration file.  */
@@ -721,6 +756,64 @@ sep_set_configuration_file (xmlDocPtr configuration_file, GApplication * app)
       priv->configuration_file = NULL;
     }
   priv->configuration_file = configuration_file;
+
+  return;
+}
+
+/* Find the name of the project folder. */
+gchar *
+sep_get_project_folder_name (GApplication * app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+  gchar *project_folder_name;
+
+  project_folder_name = priv->project_folder_name;
+  return (project_folder_name);
+}
+
+/* Remember the name of the project folder. */
+void
+sep_set_project_folder_name (gchar * project_folder_name, GApplication * app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+
+  if (priv->project_folder_name != NULL)
+    {
+      g_free (priv->project_folder_name);
+      priv->project_folder_name = NULL;
+    }
+  priv->project_folder_name = project_folder_name;
+
+  return;
+}
+
+/* Find the name of the project file. */
+gchar *
+sep_get_project_file_name (GApplication * app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+  gchar *project_file_name;
+
+  project_file_name = priv->project_file_name;
+  return (project_file_name);
+}
+
+/* Remember the name of the project file. */
+void
+sep_set_project_file_name (gchar * project_file_name, GApplication * app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+
+  if (priv->project_file_name != NULL)
+    {
+      g_free (priv->project_file_name);
+      priv->project_file_name = NULL;
+    }
+  priv->project_file_name = project_file_name;
 
   return;
 }

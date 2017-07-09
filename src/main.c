@@ -28,6 +28,7 @@ static gchar *audio_output_string = NULL;
 static gchar *device_name_string = NULL;
 static gchar *trace_file_name = NULL;
 static gint trace_sequencer_level = 0;
+static gchar *configuration_file_name = NULL;
 
 /* The entry point for the sound_effects_player application.  
  * This is a GTK application, so much of what is done here is standard 
@@ -57,6 +58,8 @@ main (int argc, char *argv[])
     {"trace-sequencer-level", 'v', 0, G_OPTION_ARG_INT,
      &trace_sequencer_level,
      "The amount of sequencer tracing: 0 = none, 1 = all"},
+    {"configuration-file", 'c', G_OPTION_FLAG_NONE, G_OPTION_ARG_FILENAME,
+     &configuration_file_name, "name of the configuration file"},
     /* add more command line options here */
     {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &filenames,
      "Special option that collects any remaining arguments for us"},
@@ -185,7 +188,8 @@ main (int argc, char *argv[])
   device_name_string = NULL;
   free (trace_file_name);
   trace_file_name = NULL;
-
+  free (configuration_file_name);
+  configuration_file_name = NULL;
   return status;
 }
 
@@ -218,6 +222,12 @@ gint
 main_get_trace_sequencer_level ()
 {
   return trace_sequencer_level;
+}
+
+gchar *
+main_get_configuration_file_name ()
+{
+  return configuration_file_name;
 }
 
 /* End of file main.c */

@@ -1,4 +1,4 @@
-.TH SOUND_EFFECTS_PLAYER 1 2017-06-11 ShowControl
+.TH SOUND_EFFECTS_PLAYER 1 2017-07-09 ShowControl
 .SH NAME
 sound_effects_player \- play sound effects for a live stage play
 .SH SYNOPSIS
@@ -59,6 +59,12 @@ need feedback about what it is doing.
 .TP
 .BR \-v ", " \-\-trace\-sequencer\-level =\fInumber\fR
 The degree of sequencer tracing detail.  0 means none, 1 means all.
+.TP
+.BR \-c ", " \-\-configuration\-file = \fIconfiguration\-file\fR
+Contains the preferences and default project name.  If unspecified,
+default is \fIShowControl/ShowControl_config.xml\fR in the user default
+configuration directory.  The file is created if it does not already
+exist.  The name of the last project loaded is written to this file.
 .TP
 .BR \-\-display =\fIdisplay\fR
 X display to use for sound effects operator interaction.

@@ -26,5 +26,6 @@ gchar *main_get_audio_output_string ();
 gchar *main_get_device_name_string ();
 gchar *main_get_trace_file_name ();
 gint main_get_trace_sequencer_level ();
+gchar *main_get_configuration_file_name ();
 
 /* End of file main.h */

@@ -25,3 +25,6 @@ void parse_xml_read_configuration_file (gchar * configuration_file_name,
 
 void parse_xml_write_configuration_file (gchar * configuration_file_name,
                                          GApplication * app);
+void parse_xml_read_project_file (gchar * project_folder_name,
+                                  gchar * project_file_name,
+                                  GApplication * app);
