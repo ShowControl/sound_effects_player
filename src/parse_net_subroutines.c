@@ -24,10 +24,7 @@
 #include "sound_subroutines.h"
 #include "sequence_subroutines.h"
 
-/* These subroutines are used to process network messages.
- * Each message consists of a keyword followed by a value.  Upon receiving
- * a command we perform the action specified by the keyword.
- */
+/* These subroutines are used to process network messages.  */
 
 #define TRACE_PARSE_NET FALSE
 
@@ -156,9 +153,11 @@ parse_net_text (guint nread, gchar * text, GApplication * app)
           cue_number = cue_number + text[15];
 
           /* Tell the sequencer to perform the cue.  */
-          sequence_OSC_cue (cue_number, app);
+          sequence_OSC_cue_number (cue_number, app);
           return;
         }
+
+      /* TODO: add /cue with a string operand.  */
 
       /* The datagram starts with "/" but is not recognized.  */
       g_print ("Unknown message (in hexadecimal): ");

@@ -95,6 +95,10 @@ struct _Sound_Effects_PlayerPrivate
    * name for Save As. */
   gchar *configuration_filename;
 
+  /* The name of the file from which the network port number was set,
+   * for warning messages about duplicate settings.  */
+  gchar *network_port_filename;
+
   /* The folder that holds the project file.  */
   gchar *project_folder_name;
 
@@ -362,6 +366,11 @@ sound_effects_player_dispose (GObject * object)
     {
       g_free (self->priv->project_file_name);
       self->priv->project_file_name = NULL;
+    }
+  if (self->priv->network_port_filename != NULL)
+    {
+      g_free (self->priv->network_port_filename);
+      self->priv->network_port_filename = NULL;
     }
 
   /* Deallocate the configuration file.  */
@@ -757,6 +766,35 @@ sep_set_configuration_file (xmlDocPtr configuration_file, GApplication * app)
     }
   priv->configuration_file = configuration_file;
 
+  return;
+}
+
+/* Find the file where the network port was set. */
+gchar *
+sep_get_network_port_filename (GApplication * app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+  gchar *network_port_filename;
+
+  network_port_filename = priv->network_port_filename;
+  return (network_port_filename);
+}
+
+/* Remember the file name where the network port was set. */
+void
+sep_set_network_port_filename (gchar * network_port_filename,
+                               GApplication * app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+
+  if (priv->network_port_filename != NULL)
+    {
+      g_free (priv->network_port_filename);
+      priv->network_port_filename = NULL;
+    }
+  priv->network_port_filename = g_strdup (network_port_filename);
   return;
 }
 

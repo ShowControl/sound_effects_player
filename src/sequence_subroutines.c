@@ -107,6 +107,10 @@ static void execute_operator_wait (struct sequence_item_info *the_item,
                                    struct sequence_info *sequence_data,
                                    GApplication * app);
 
+static void execute_cancel_wait (struct sequence_item_info *the_item,
+                                 struct sequence_info *sequence_data,
+                                 GApplication * app);
+
 static void update_operator_display (struct sequence_info *sequence_data,
                                      GApplication * app);
 static void clock_tick (void *sequence_data, GApplication * app);
@@ -312,6 +316,9 @@ execute_item (struct sequence_item_info *the_item,
       execute_operator_wait (the_item, sequence_data, app);
       break;
 
+    case cancel_wait:
+      execute_cancel_wait (the_item, sequence_data, app);
+
     case start_sequence:
       display_show_message ("Start sequence", app);
       break;
@@ -501,11 +508,11 @@ execute_wait (struct sequence_item_info *the_item,
     {
       wait_seconds = the_item->time_to_wait / 1e9;
       trace_text =
-        g_strdup_printf ("Wait, name = %s, time = %f,"
-                         " when complete = %s, operator text = %s, next = %s.",
-                         the_item->name, wait_seconds,
+        g_strdup_printf ("Wait, name = %s, time = %f, "
+                         "when complete = %s, operator text = %s, "
+                         "tag = %s, next = %s.", the_item->name, wait_seconds,
                          the_item->next_completion, the_item->text_to_display,
-                         the_item->next);
+                         the_item->tag, the_item->next);
       trace_sequencer_write (trace_text, app);
       g_free (trace_text);
       trace_text = NULL;
@@ -563,7 +570,7 @@ wait_completed (void *user_data, GApplication * app)
   current_sequence_item = NULL;
 
   /* Find this item on the wait list so we can remove it.  */
-  list_element = sequence_data->waiting;
+  list_element = g_list_first (sequence_data->waiting);
   while (list_element != NULL)
     {
       next_list_element = list_element->next;
@@ -622,10 +629,12 @@ execute_offer_sound (struct sequence_item_info *the_item,
     {
       trace_text =
         g_strdup_printf ("Offer sound, name = %s, " "cluster = %d, "
-                         "Q number = %s, "
+                         "Q number = %s, OSC cue number = %d, "
+                         "OSC cue string = %s, "
                          "next = %s, next_to_start = %s, tag = %s.",
                          the_item->name, the_item->cluster_number,
-                         the_item->Q_number, the_item->next,
+                         the_item->Q_number, the_item->OSC_cue_number,
+                         the_item->OSC_cue_string, the_item->next,
                          the_item->next_to_start, the_item->tag);
       trace_sequencer_write (trace_text, app);
       g_free (trace_text);
@@ -734,8 +743,9 @@ execute_operator_wait (struct sequence_item_info *the_item,
     {
       trace_text =
         g_strdup_printf ("Operator Wait, name = %s, next play = %s, "
-                         "operator text = %s, next = %s.", the_item->name,
-                         the_item->next_play, the_item->text_to_display,
+                         "operator text = %s, tag= %s, next = %s.",
+                         the_item->name, the_item->next_play,
+                         the_item->text_to_display, the_item->tag,
                          the_item->next);
       trace_sequencer_write (trace_text, app);
       g_free (trace_text);
@@ -766,6 +776,115 @@ execute_operator_wait (struct sequence_item_info *the_item,
       remember_data->active = FALSE;
       sequence_data->operator_waiting =
         g_list_append (sequence_data->operator_waiting, remember_data);
+    }
+
+  /* Advance to the next sequence item.  */
+  sequence_data->next_item_name = the_item->next;
+
+  return;
+}
+
+/* Execute a Cancel Wait sequence item.  */
+void
+execute_cancel_wait (struct sequence_item_info *the_item,
+                     struct sequence_info *sequence_data, GApplication * app)
+{
+  struct remember_info *remember_data;
+  struct sequence_item_info *current_sequence_item;
+  struct sequence_item_info *next_sequence_item;
+  GList *list_element, *next_list_element;
+  gchar *trace_text;
+
+  if (trace_sequencer_level (app) > 0)
+    {
+      trace_text =
+        g_strdup_printf ("Cancel Wait, name = %s, tag = %s, next = %s.",
+                         the_item->name, the_item->tag, the_item->next);
+      trace_sequencer_write (trace_text, app);
+      g_free (trace_text);
+      trace_text = NULL;
+    }
+
+  /* Find all Waits with this tag that are in the remember queue and 
+   * remove them.  */
+  current_sequence_item = NULL;
+
+  list_element = g_list_first (sequence_data->waiting);
+  while (list_element != NULL)
+    {
+      next_list_element = list_element->next;
+      remember_data = list_element->data;
+      current_sequence_item = remember_data->sequence_item;
+      if (g_strcmp0 (current_sequence_item->tag, the_item->tag) == 0)
+        {
+          /* The tag matches.  Remove the item.  */
+          remember_data->active = FALSE;
+          g_free (remember_data);
+          sequence_data->waiting =
+            g_list_delete_link (sequence_data->waiting, list_element);
+        }
+      list_element = next_list_element;
+    }
+
+  /* Find all Operator Waits with this tag that are in the remember queue and 
+   * remove them also.  */
+  current_sequence_item = NULL;
+
+  list_element = g_list_first (sequence_data->operator_waiting);
+  while (list_element != NULL)
+    {
+      next_list_element = list_element->next;
+      remember_data = list_element->data;
+      current_sequence_item = remember_data->sequence_item;
+      if (g_strcmp0 (current_sequence_item->tag, the_item->tag) == 0)
+        {
+          /* The tag matches.  Remove the item.  */
+          remember_data->active = FALSE;
+          g_free (remember_data);
+          sequence_data->waiting =
+            g_list_delete_link (sequence_data->waiting, list_element);
+        }
+      list_element = next_list_element;
+    }
+
+  /* If there is an Operator Wait that is in execution, a common case,
+   * and if it has the specified tag, cancel it.  */
+
+  remember_data = sequence_data->current_operator_wait;
+
+  /* If we are not waiting for the operator to press the key,
+   * there is nothing to cancel.  */
+  if (remember_data != NULL)
+    {
+      current_sequence_item = remember_data->sequence_item;
+
+      /* This Operator Wait sequence item is no longer waiting.  */
+      sequence_data->current_operator_wait = NULL;
+      g_free (remember_data);
+      remember_data = NULL;
+
+      /* See if there is another one ready to wait.
+       * We have already deleted those with the matching tag,
+       * so any left will be allowed to execute.  */
+      list_element = g_list_first (sequence_data->operator_waiting);
+      if (list_element != NULL)
+        {
+          /* There is, give it its chance to display for the opeaator.  */
+          sequence_data->operator_waiting =
+            g_list_remove_link (sequence_data->operator_waiting,
+                                list_element);
+          remember_data = list_element->data;
+          remember_data->active = TRUE;
+          next_sequence_item = remember_data->sequence_item;
+          display_set_operator_text (next_sequence_item->text_to_display,
+                                     app);
+          sequence_data->current_operator_wait = remember_data;
+          g_list_free (list_element);
+        }
+      else
+        {
+          display_clear_operator_text (app);
+        }
     }
 
   /* Advance to the next sequence item.  */
@@ -1031,9 +1150,10 @@ sequence_MIDI_show_control_go_off (gchar * Q_number, GApplication * app)
   return;
 }
 
-/* Execute the Open Sound Control (OSC) cue command.  */
+/* Execute the Open Sound Control (OSC) cue command
+ * when the operand is a number.  */
 void
-sequence_OSC_cue (guint osc_cue, GApplication * app)
+sequence_OSC_cue_number (guint osc_cue_number, GApplication * app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1047,7 +1167,8 @@ sequence_OSC_cue (guint osc_cue, GApplication * app)
 
   if (trace_sequencer_level (app) > 0)
     {
-      trace_text = g_strdup_printf ("OSC cue, cue number = %d.", osc_cue);
+      trace_text =
+        g_strdup_printf ("OSC cue number, operand = %d.", osc_cue_number);
       trace_sequencer_write (trace_text, app);
       g_free (trace_text);
       trace_text = NULL;
@@ -1061,8 +1182,9 @@ sequence_OSC_cue (guint osc_cue, GApplication * app)
     {
       remember_data = item_list->data;
       sequence_item = remember_data->sequence_item;
-      if (sequence_item->OSC_cue_specified
-          && (sequence_item->OSC_cue == osc_cue) && (remember_data->active))
+      if (sequence_item->OSC_cue_number_specified
+          && (sequence_item->OSC_cue_number == osc_cue_number)
+          && (remember_data->active))
         {
           found_item = TRUE;
           break;
@@ -1072,7 +1194,73 @@ sequence_OSC_cue (guint osc_cue, GApplication * app)
   if (!found_item)
     {
       display_text =
-        g_strdup_printf ("There is no cluster with OSC cue %d.", osc_cue);
+        g_strdup_printf ("There is no cluster with OSC cue number %d.",
+                         osc_cue_number);
+      display_show_message (display_text, app);
+      if (trace_sequencer_level (app) > 0)
+        {
+          trace_sequencer_write (display_text, app);
+        }
+      g_free (display_text);
+      display_text = NULL;
+      return;
+    }
+
+  /* Run the sequencer.  A subsequent Start Sound sequence item
+   * which names this same cluster will take posession of the cluster
+   * until it completes or is terminated.  */
+  sequence_data->next_item_name = sequence_item->next_to_start;
+  execute_items (sequence_data, app);
+
+  return;
+}
+
+/* Execute the Open Sound Control (OSC) cue command
+ * when the operand is a string.  */
+void
+sequence_OSC_cue_string (gchar * osc_cue_string, GApplication * app)
+{
+  struct sequence_info *sequence_data;
+  struct remember_info *remember_data;
+  struct sequence_item_info *sequence_item;
+  gboolean found_item;
+  GList *item_list;
+  gchar *display_text;
+  gchar *trace_text;
+
+  sequence_data = sep_get_sequence_data (app);
+
+  if (trace_sequencer_level (app) > 0)
+    {
+      trace_text =
+        g_strdup_printf ("OSC cue string, operand = %s.", osc_cue_string);
+      trace_sequencer_write (trace_text, app);
+      g_free (trace_text);
+      trace_text = NULL;
+    }
+
+  /* Find the cluster whose Offer Sound sequence item has the specified
+   * OSC_cue string.  */
+  found_item = FALSE;
+  for (item_list = sequence_data->offering; item_list != NULL;
+       item_list = item_list->next)
+    {
+      remember_data = item_list->data;
+      sequence_item = remember_data->sequence_item;
+      if (sequence_item->OSC_cue_string_specified
+          && (g_strcmp0 (sequence_item->OSC_cue_string, osc_cue_string) == 0)
+          && (remember_data->active))
+        {
+          found_item = TRUE;
+          break;
+        }
+    }
+
+  if (!found_item)
+    {
+      display_text =
+        g_strdup_printf ("There is no cluster with OSC cue string %s.",
+                         osc_cue_string);
       display_show_message (display_text, app);
       if (trace_sequencer_level (app) > 0)
         {

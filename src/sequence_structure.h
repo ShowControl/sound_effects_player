@@ -31,7 +31,7 @@
 /* There are several types of sequence item, as follows:  */
 enum sequence_item_type
 { unknown, start_sound, stop_sound, wait, offer_sound, cease_offering_sound,
-  operator_wait, start_sequence
+  operator_wait, cancel_wait, start_sequence
 };
 
 /* The following structure is used for all sequence items.  No item uses
@@ -78,9 +78,14 @@ struct sequence_item_info
   gint MIDI_program_number;     /* The MIDI program number and */
   gint MIDI_note_number;        /* note number which trigger this cluster */
   gboolean MIDI_note_number_specified;  /* They may be omitted.  */
-  guint OSC_cue;                /* The Open Show Control (OSC) cue number
+  guint OSC_cue_number;         /* The Open Show Control (OSC) cue number
                                  * which triggers this sound. */
-  gboolean OSC_cue_specified;   /* TRUE if OSC_cue has been specified.  */
+  gboolean OSC_cue_number_specified;    /* TRUE if OSC_cue_number has been 
+                                         * specified.  */
+  gchar *OSC_cue_string;        /* The Open Show Control (OSC) cue string
+                                 * which triggers this sound.  */
+  gboolean OSC_cue_string_specified;    /* TRUE if OSC_cue_string has been
+                                         * specified.  */
   guint macro_number;           /* Used by MIDI Show Control's Fire command
                                  * to trigger this cluster.  */
   gchar *function_key;          /* The function key which triggers this 

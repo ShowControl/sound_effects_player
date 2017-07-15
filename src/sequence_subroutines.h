@@ -40,8 +40,11 @@ void sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app);
 /* Execute the MIDI Show Control command Go_off.  */
 void sequence_MIDI_show_control_go_off (gchar * Q_number, GApplication * app);
 
-/* Execute an Open Sound Control (OSC) cue command.  */
-void sequence_OSC_cue (guint osc_cue, GApplication * app);
+/* Execute an Open Sound Control (OSC) cue command with a numeric operand.  */
+void sequence_OSC_cue_number (guint osc_cue_number, GApplication * app);
+
+/* Execute an Open Sound Control (OSC) cue command with a string operand.  */
+void sequence_OSC_cue_string (gchar * osc_cue_string, GApplication * app);
 
 /* Start the sound offered on a cluster.  */
 void sequence_cluster_start (guint cluster_number, GApplication * app);

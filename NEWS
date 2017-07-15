@@ -1,3 +1,7 @@
+Vresion 0.89, July 15, 2017
+  Add the cancel wait sequence item and start work on OSC cues with
+  a string operand.
+  
 Version 0.88, July 9, 2017
   The top-level file is back to being a project file, but add
   --configuration-file to specify the configuration file.

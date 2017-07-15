@@ -543,8 +543,10 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
           sequence_item_data->next_release_started = NULL;
           sequence_item_data->importance = 1;
           sequence_item_data->Q_number = NULL;
-          sequence_item_data->OSC_cue = 0;
-          sequence_item_data->OSC_cue_specified = FALSE;
+          sequence_item_data->OSC_cue_number = 0;
+          sequence_item_data->OSC_cue_number_specified = FALSE;
+          sequence_item_data->OSC_cue_string = NULL;
+          sequence_item_data->OSC_cue_string_specified = FALSE;
           sequence_item_data->text_to_display = NULL;
 
           /* Fields used in the Stop Sound sequence item but not mentioned 
@@ -568,7 +570,7 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
           sequence_item_data->next_play = NULL;
           sequence_item_data->omit_from_display = FALSE;
 
-          /* The Cease Offering Sounds and Start Sequence
+          /* The Cease Offering Sounds, Cancel Wait and Start Sequence
            *  sequence items uses only fields already mentioned.  */
 
           /* Collect information from the XML file.  */
@@ -625,6 +627,11 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                       (name_data, (const xmlChar *) "operator_wait"))
                     {
                       item_type = operator_wait;
+                    }
+                  if (xmlStrEqual
+                      (name_data, (const xmlChar *) "cancel_wait"))
+                    {
+                      item_type = cancel_wait;
                     }
                   if (xmlStrEqual
                       (name_data, (const xmlChar *) "start_sequence"))
@@ -888,10 +895,10 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                   name_data = NULL;
                 }
 
-              if (xmlStrEqual (name, (const xmlChar *) "OSC_cue"))
+              if (xmlStrEqual (name, (const xmlChar *) "OSC_cue_number"))
                 {
-                  /* The cue number of this sound, for Open Sound Control.
-                   */
+                  /* The cue for this sound, when expressed as a number,
+                   * for Open Sound Control.  */
                   name_data =
                     xmlNodeListGetString (sequence_file,
                                           sequence_item_loc->xmlChildrenNode,
@@ -899,8 +906,23 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                   long_data = g_ascii_strtoll ((gchar *) name_data, NULL, 10);
                   xmlFree (name_data);
                   name_data = NULL;
-                  sequence_item_data->OSC_cue = long_data;
-                  sequence_item_data->OSC_cue_specified = TRUE;
+                  sequence_item_data->OSC_cue_number = long_data;
+                  sequence_item_data->OSC_cue_number_specified = TRUE;
+                }
+
+              if (xmlStrEqual (name, (const xmlChar *) "OSC_cue_string"))
+                {
+                  /* The cue for this sound, when expressed as text,
+                   * for Open Sound Control.  */
+                  name_data =
+                    xmlNodeListGetString (sequence_file,
+                                          sequence_item_loc->xmlChildrenNode,
+                                          1);
+                  sequence_item_data->OSC_cue_string =
+                    g_strdup ((gchar *) name_data);
+                  sequence_item_data->OSC_cue_string_specified = TRUE;
+                  xmlFree (name_data);
+                  name_data = NULL;
                 }
 
               if (xmlStrEqual (name, (const xmlChar *) "text_to_display"))
@@ -1088,7 +1110,7 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
 }
 
 /* Dig through the sound_effects program section of an equipment file 
- * to find the sound and sequence information.  */
+ * to find the network port, sound and sequence information.  */
 static void
 parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
                     xmlNodePtr program_loc, GApplication * app)
@@ -1103,10 +1125,13 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
   const xmlChar *root_name;
   const xmlChar *sounds_name, *sequence_name;
   gboolean sounds_section_parsed, sequence_section_parsed;
+  gchar *old_file_name;
+  xmlChar *key;
+  gint64 port_number, old_port_number;
 
   /* We start at the children of a "program" section which has the
    * name "sound_effects". */
-  /* We are looking for sound and sequence sections.  */
+  /* We are looking for port, sound and sequence sections.  */
 
   file_name = NULL;
   file_dirname = NULL;
@@ -1116,6 +1141,31 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
   while (program_loc != NULL)
     {
       name = program_loc->name;
+
+      if (xmlStrEqual (name, (const xmlChar *) "port"))
+        {
+          /* This is the "port" section within "program"  */
+          key =
+            xmlNodeListGetString (equipment_file,
+                                  program_loc->xmlChildrenNode, 1);
+          port_number = g_ascii_strtoll ((gchar *) key, NULL, 10);
+          /* Tell the network module the new network port number. */
+          old_port_number = network_get_port (app);
+          if (port_number != old_port_number)
+            {
+              network_set_port (port_number, app);
+              old_file_name = sep_get_network_port_filename (app);
+              if (old_file_name != NULL)
+                {
+                  g_printerr ("Network port set to %ld in file %s "
+                              "but previously set to %ld in file %s.\n",
+                              port_number, equipment_file_name,
+                              old_port_number, old_file_name);
+                }
+              sep_set_network_port_filename (equipment_file_name, app);
+            }
+          xmlFree (key);
+        }
 
       if (xmlStrEqual (name, (const xmlChar *) "sounds"))
         {
@@ -1580,8 +1630,9 @@ parse_component_info (xmlDocPtr configuration_file,
             xmlNodeListGetString (configuration_file,
                                   component_loc->xmlChildrenNode, 1);
           port_number = g_ascii_strtoll ((gchar *) key, NULL, 10);
-          /* Tell the network module the new port number. */
+          /* Tell the network module the new network port number. */
           network_set_port (port_number, app);
+          sep_set_network_port_filename (configuration_file_name, app);
           xmlFree (key);
         }
 
