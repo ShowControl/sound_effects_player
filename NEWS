@@ -1,4 +1,7 @@
-Vresion 0.89, July 15, 2017
+Version 0.90, July 22, 2017
+  Complete work on OSC cues with a string operand.
+  
+Version 0.89, July 15, 2017
   Add the cancel wait sequence item and start work on OSC cues with
   a string operand.
   

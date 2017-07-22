@@ -10,7 +10,6 @@
     <program id="sound_effects">
       <sounds href="Example_03_sounds.xml"></sounds>
       <sound_sequence href="Example_03_sound_sequence.xml"/>
-      <port>1500</port>
     </program>
 
     <program id="lighting">

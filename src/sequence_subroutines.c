@@ -424,6 +424,18 @@ execute_start_sound (struct sequence_item_info *the_item,
       sequence_data->running =
         g_list_append (sequence_data->running, remember_data);
     }
+  else
+    {
+      trace_text =
+        g_strdup_printf ("Sound %s not defined.", the_item->sound_name);
+      display_show_message (trace_text, app);
+      if (trace_sequencer_level (app) > 0)
+        {
+          trace_sequencer_write (trace_text, app);
+        }
+      g_free (trace_text);
+      trace_text = NULL;
+    }
 
   /* In case this is the most important text to be displayed to the operator,
    * update the operator display.  */

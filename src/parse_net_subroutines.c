@@ -118,20 +118,22 @@ parse_net_text (guint nread, gchar * text, GApplication * app)
 
   parse_net_data = sep_get_parse_net_data (app);
 
-  /* If the datagram starts with "/", this is an OSC message.
-   * All OSC messages are 16 bytes long.  Ignore data after
-   * byte 16 to make testing with ncat easier.  */
+  /* If the datagram starts with "/" and is at least 16 bytes long,
+   * it is an OSC message.  We ignore extra data at the end of a
+   * datagram to make testing using nc and emacs in hexl-mode easier.  */
   if ((text[0] == '/') && (nread >= 16))
     {
       /* The only OSC command we implement at this time
-       * is cue.  The three forms we handle are "/cue/next/",
-       * "/cue/quit/" and "/cue/#,i <cue number>".  */
+       * is cue.  The four forms we handle are "/cue/next/",
+       * "/cue/quit/", "/cue/#,i <cue number>" and /cue/uuid,s <cue_string>.
+       * The first three forms are 16 bytes long, the last 56.  */
       if (memcmp (text, (gchar *) "/cue/quit\0\0\0,\0\0\0", 16) == 0)
         {
           /* This is "/cue/quit".  */
           g_application_quit (app);
           return;
         }
+
       if (memcmp (text, (gchar *) "/cue/next\0\0\0,\0\0\0", 16) == 0)
         {
           /* This is "/cue/next".  Treat it like pressing the Play
@@ -139,6 +141,7 @@ parse_net_text (guint nread, gchar * text, GApplication * app)
           sequence_button_play (app);
           return;
         }
+
       if (memcmp (text, (gchar *) "/cue/#\0\0,i\0\0", 12) == 0)
         {
           /* This is "/cue/#,i <cue number>".
@@ -157,7 +160,16 @@ parse_net_text (guint nread, gchar * text, GApplication * app)
           return;
         }
 
-      /* TODO: add /cue with a string operand.  */
+      if ((nread >= 56)
+          && (memcmp (text, (gchar *) "/cue/uuid\0\0\0,s\0\0", 16) == 0))
+        {
+          /* This is "/cue/uuid,s <cue string>".
+           * Bytes 16-51 are the cue string.  These bytes are ASCII text
+           * and are followed by 4 NULs, so we can pass the address
+           * of text [16] as the pointer to a string.  */
+          sequence_OSC_cue_string ((gchar *) & text[16], app);
+          return;
+        }
 
       /* The datagram starts with "/" but is not recognized.  */
       g_print ("Unknown message (in hexadecimal): ");

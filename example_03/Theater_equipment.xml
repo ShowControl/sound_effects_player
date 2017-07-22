@@ -20,7 +20,6 @@
       <sounds href="Theater_sounds.xml"/>
       <sound_sequence href="Theater_sound_sequence.xml"/>
       <IP_address>localhost6</IP_address>
-      <port>5005</port>
     </program>
 
     <program id="lighting">
