@@ -1,7 +1,7 @@
 /*
  * network_subroutines.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,8 +27,14 @@
 /* Initialize. */
 void *network_init (GApplication * app);
 
+/* Bind to the network port.  */
+void network_bind_port (GApplication * app);
+
 /* Set the port number. */
 void network_set_port (int port_number, GApplication * app);
+
+/* Unbind the network port.  */
+void network_unbind_port (GApplication * app);
 
 /* Get the port number. */
 gint network_get_port (GApplication * app);

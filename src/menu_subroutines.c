@@ -110,7 +110,9 @@ menu_network_port_changed (GtkEntry * port_entry, GtkWidget * dialog_widget)
   port_number = strtoll (port_text, NULL, 10);
 
   /* Tell the network module to change its port number. */
+  network_unbind_port (app);
   network_set_port (port_number, app);
+  network_bind_port (app);
 
   return TRUE;
 }
@@ -153,8 +155,10 @@ menu_delete_top_window (GtkButton * close_button, GdkEvent * event,
 static void
 new_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 {
+  network_unbind_port (app);
   sep_set_configuration_file (NULL, app);
   network_set_port (1500, app);
+  network_bind_port (app);
 
   return;
 }

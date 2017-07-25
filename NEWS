@@ -1,3 +1,6 @@
+Version 0.91, July 25, 2017
+  Don't permit the network port number to be set in the configuration file.
+  
 Version 0.90, July 22, 2017
   Complete work on OSC cues with a string operand.
   

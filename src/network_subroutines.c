@@ -29,6 +29,7 @@ struct network_info
 {
   gchar *network_buffer;
   gint port_number;
+  gboolean bound;
   GSource *source_IPv4, *source_IPv6;
   GSocket *socket_IPv4, *socket_IPv6;
 };
@@ -78,17 +79,11 @@ receive_data_callback (GSocket * socket, GIOCondition condition,
   return G_SOURCE_CONTINUE;
 }
 
-/* Initialize the network subroutines.  We start to listen for messages.
- * The return value is the persistent data.  Send text messages for testing
- * using ncat: nc -u localhost 1500.  */
+/* Initialize the network subroutines.  The return value is the 
+ * persistent data.  */
 void *
 network_init (GApplication * app)
 {
-  GError *error = NULL;
-  GSocket *socket_IPv4, *socket_IPv6;
-  GInetAddress *inet_IPv4_address, *inet_IPv6_address;
-  GSocketAddress *socket_IPv4_address, *socket_IPv6_address;
-  GSource *source_IPv4, *source_IPv6;
   gchar *network_buffer;
   struct network_info *network_data;
 
@@ -102,6 +97,25 @@ network_init (GApplication * app)
   /* Set the default port. */
   network_data->port_number = 1500;
 
+  /* The port is not yet bound.  */
+  network_data->bound = FALSE;
+
+  return network_data;
+}
+
+/* Subroutine to bind the network port so we can listen on it.  */
+void
+network_bind_port (GApplication * app)
+{
+  GError *error = NULL;
+  GSocket *socket_IPv4, *socket_IPv6;
+  GInetAddress *inet_IPv4_address, *inet_IPv6_address;
+  GSocketAddress *socket_IPv4_address, *socket_IPv6_address;
+  GSource *source_IPv4, *source_IPv6;
+  struct network_info *network_data;
+
+  network_data = sep_get_network_data (app);
+
   /* Create a socket to listen for UDP messages on IPv6 and, if necessary,
    * another to listen for UDP messages on IPv4. */
 
@@ -111,7 +125,7 @@ network_init (GApplication * app)
   if (error != NULL)
     {
       g_error (error->message);
-      return NULL;
+      return;
     }
 
   inet_IPv6_address = g_inet_address_new_any (G_SOCKET_FAMILY_IPV6);
@@ -121,7 +135,7 @@ network_init (GApplication * app)
   if (error != NULL)
     {
       g_error (error->message);
-      return NULL;
+      return;
     }
   source_IPv6 =
     g_socket_create_source (socket_IPv6, G_IO_IN | G_IO_HUP, NULL);
@@ -135,7 +149,8 @@ network_init (GApplication * app)
     {
       network_data->source_IPv4 = NULL;
       network_data->socket_IPv4 = NULL;
-      return network_data;
+      network_data->bound = TRUE;
+      return;
     }
 
   /* The IPv6 socket we just created doesn't speak IPv4, so create
@@ -147,7 +162,7 @@ network_init (GApplication * app)
   if (error != NULL)
     {
       g_error (error->message);
-      return NULL;
+      return;
     }
   inet_IPv4_address = g_inet_address_new_any (G_SOCKET_FAMILY_IPV4);
   socket_IPv4_address =
@@ -156,7 +171,7 @@ network_init (GApplication * app)
   if (error != NULL)
     {
       g_error (error->message);
-      return NULL;
+      return;
     }
   source_IPv4 =
     g_socket_create_source (socket_IPv4, G_IO_IN | G_IO_HUP, NULL);
@@ -165,26 +180,33 @@ network_init (GApplication * app)
   g_source_attach (source_IPv4, NULL);
   network_data->source_IPv4 = source_IPv4;
   network_data->socket_IPv4 = socket_IPv4;
+  network_data->bound = TRUE;
 
-  return network_data;
+  return;
 }
 
 /* Set the network port number. */
 void
 network_set_port (int port_number, GApplication * app)
 {
-  GError *error = NULL;
-  GSocket *socket_IPv4, *socket_IPv6;
-  GInetAddress *inet_IPv4_address, *inet_IPv6_address;
-  GSocketAddress *socket_IPv4_address, *socket_IPv6_address;
-  GSource *source_IPv4, *source_IPv6;
   struct network_info *network_data;
 
   network_data = sep_get_network_data (app);
 
   network_data->port_number = port_number;
+  return;
+}
 
-  /* Stop network processing on the old port. */
+/* Unbind from the network port.  */
+void
+network_unbind_port (GApplication * app)
+{
+  GError *error = NULL;
+  struct network_info *network_data;
+
+  network_data = sep_get_network_data (app);
+
+  /* Stop network processing.  */
   if (network_data->source_IPv4 != NULL)
     {
       g_socket_close (network_data->socket_IPv4, &error);
@@ -199,6 +221,7 @@ network_set_port (int port_number, GApplication * app)
       g_source_unref (network_data->source_IPv4);
       network_data->source_IPv4 = NULL;
     }
+
   if (network_data->source_IPv6 != NULL)
     {
       g_socket_close (network_data->socket_IPv6, &error);
@@ -214,68 +237,7 @@ network_set_port (int port_number, GApplication * app)
       network_data->source_IPv6 = NULL;
     }
 
-  /* Create a socket to listen for UDP messages on IPv6 and, if necessary,
-   * another to listen for UDP messages on IPv4. */
-
-  socket_IPv6 =
-    g_socket_new (G_SOCKET_FAMILY_IPV6, G_SOCKET_TYPE_DATAGRAM,
-                  G_SOCKET_PROTOCOL_UDP, &error);
-  if (error != NULL)
-    {
-      g_error (error->message);
-      return;
-    }
-
-  inet_IPv6_address = g_inet_address_new_any (G_SOCKET_FAMILY_IPV6);
-  socket_IPv6_address =
-    g_inet_socket_address_new (inet_IPv6_address, network_data->port_number);
-  g_socket_bind (socket_IPv6, socket_IPv6_address, FALSE, &error);
-  if (error != NULL)
-    {
-      g_error (error->message);
-      return;
-    }
-  source_IPv6 =
-    g_socket_create_source (socket_IPv6, G_IO_IN | G_IO_HUP, NULL);
-  g_source_set_callback (source_IPv6, (GSourceFunc) receive_data_callback,
-                         app, NULL);
-  g_source_attach (source_IPv6, NULL);
-  network_data->source_IPv6 = source_IPv6;
-  network_data->socket_IPv6 = socket_IPv6;
-
-  if (g_socket_speaks_ipv4 (socket_IPv6))
-    {
-      network_data->source_IPv4 = NULL;
-      return;
-    }
-
-  /* The IPv6 socket we just created doesn't speak IPv4, so create
-   * a socket that does. */
-
-  socket_IPv4 =
-    g_socket_new (G_SOCKET_FAMILY_IPV4, G_SOCKET_TYPE_DATAGRAM,
-                  G_SOCKET_PROTOCOL_UDP, &error);
-  if (error != NULL)
-    {
-      g_error (error->message);
-      return;
-    }
-  inet_IPv4_address = g_inet_address_new_any (G_SOCKET_FAMILY_IPV4);
-  socket_IPv4_address =
-    g_inet_socket_address_new (inet_IPv4_address, network_data->port_number);
-  g_socket_bind (socket_IPv4, socket_IPv4_address, FALSE, &error);
-  if (error != NULL)
-    {
-      g_error (error->message);
-      return;
-    }
-  source_IPv4 =
-    g_socket_create_source (socket_IPv4, G_IO_IN | G_IO_HUP, NULL);
-  g_source_set_callback (source_IPv4, (GSourceFunc) receive_data_callback,
-                         app, NULL);
-  g_source_attach (source_IPv4, NULL);
-  network_data->source_IPv4 = source_IPv4;
-  network_data->socket_IPv6 = socket_IPv6;
+  network_data->bound = FALSE;
 
   return;
 }

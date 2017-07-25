@@ -1630,9 +1630,12 @@ parse_component_info (xmlDocPtr configuration_file,
             xmlNodeListGetString (configuration_file,
                                   component_loc->xmlChildrenNode, 1);
           port_number = g_ascii_strtoll ((gchar *) key, NULL, 10);
-          /* Tell the network module the new network port number. */
-          network_set_port (port_number, app);
-          sep_set_network_port_filename (configuration_file_name, app);
+
+          /* We do not permit the port number to be set in the configuration
+           * file.  Instead, set it in an equipment file.  */
+          g_printerr ("Do not set the network port to %ld in file %s.\n"
+                      "Instead, set it in an equipment file.\n", port_number,
+                      configuration_file_name);
           xmlFree (key);
         }
 
@@ -1801,7 +1804,8 @@ parse_xml_read_configuration_file (gchar * configuration_file_name,
   configuration_file = xmlParseFile (configuration_file_name);
   if (configuration_file == NULL)
     {
-      g_printerr ("Load of configuration file %s failed.\n",
+      g_printerr ("Load of configuration file %s failed.  "
+		  "Creating a blank file.\n",
                   configuration_file_name);
       configuration_file =
         xmlParseDoc ((xmlChar *) "<?xml version=\"1.0\" "
@@ -1809,7 +1813,7 @@ parse_xml_read_configuration_file (gchar * configuration_file_name,
                      "<version>1.0</version>"
                      "<project> <folder> </folder> <file> </file> </project>"
                      "<prefs> <component id=\"sound_effects\">"
-                     "<port>1500</port> </component> </prefs>"
+                     "</component> </prefs>"
                      "</configuration> </show_control>");
     }
 
@@ -1866,20 +1870,15 @@ parse_xml_write_configuration_file (gchar * configuration_file_name,
   xmlDocPtr configuration_file;
   xmlNodePtr current_loc;
   xmlNodePtr prefs_loc;
-  xmlNodePtr component_loc;
   xmlNodePtr project_loc;
   const xmlChar *project_name = NULL;
   gchar *project_file_name;
   gchar *project_folder_name;
-  xmlNodePtr port_loc;
   const xmlChar *name = NULL;
   xmlChar *prop_name = NULL;
-  gint port_number;
-  gchar *port_number_text = NULL;
   GFile *configuration_gfile;
   GFile *configuration_gdirectory;
   gchar *configuration_directory_name;
-  gchar text_buffer[G_ASCII_DTOSTR_BUF_SIZE];
 
   /* Write the configuration data as an XML file. */
   configuration_file = sep_get_configuration_file (app);
@@ -1896,7 +1895,6 @@ parse_xml_write_configuration_file (gchar * configuration_file_name,
                      "<version>1.0</version>"
                      "<project> <folder> </folder> <file> </file> </project>"
                      "<prefs> <component id=\"sound_effects\">"
-                     "<port>1500</port> </component> </prefs>"
                      "</configuration> </show_control>");
       sep_set_configuration_file (configuration_file, app);
     }
@@ -1939,47 +1937,7 @@ parse_xml_write_configuration_file (gchar * configuration_file_name,
                         }
                       project_loc = project_loc->next;
                     }
-                }
 
-              if (xmlStrEqual (name, (const xmlChar *) "prefs"))
-                {
-                  /* Fill in the current value of the network port number.  */
-                  component_loc = prefs_loc->xmlChildrenNode;
-                  while (component_loc != NULL)
-                    {
-                      name = component_loc->name;
-                      if (xmlStrEqual (name, (const xmlChar *) "component"))
-                        {
-                          prop_name =
-                            xmlGetProp (component_loc,
-                                        (const xmlChar *) "id");
-                          if (xmlStrEqual
-                              (prop_name, (const xmlChar *) "sound_effects"))
-                            {
-                              port_loc = component_loc->xmlChildrenNode;
-                              while (port_loc != NULL)
-                                {
-                                  name = port_loc->name;
-                                  if (xmlStrEqual
-                                      (name, (const xmlChar *) "port"))
-                                    {
-                                      /* This is the "port" node within 
-                                       * component sound_effects.  */
-                                      port_number = network_get_port (app);
-                                      port_number_text =
-                                        g_ascii_dtostr (text_buffer,
-                                                        G_ASCII_DTOSTR_BUF_SIZE,
-                                                        (1.0 * port_number));
-                                      xmlNodeSetContent (port_loc,
-                                                         (xmlChar *)
-                                                         port_number_text);
-                                    }
-                                  port_loc = port_loc->next;
-                                }
-                            }
-                        }
-                      component_loc = component_loc->next;
-                    }
                 }
               prefs_loc = prefs_loc->next;
             }

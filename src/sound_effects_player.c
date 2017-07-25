@@ -239,7 +239,7 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
   /* Initialize the network message parser. */
   priv->parse_net_data = parse_net_init (app);
 
-  /* Listen for network messages. */
+  /* Initialize the network handler so we can set the network port number. */
   priv->network_data = network_init (app);
 
   /* The display is initialized; time to show it. */
@@ -295,6 +295,10 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
     {
       message_code = display_show_message ("No sounds.", app);
     }
+
+  /* Listen for network messages, since the network port is
+   * now determined.  */
+  network_bind_port (app);
 
   return;
 }
