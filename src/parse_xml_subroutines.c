@@ -1805,8 +1805,7 @@ parse_xml_read_configuration_file (gchar * configuration_file_name,
   if (configuration_file == NULL)
     {
       g_printerr ("Load of configuration file %s failed.  "
-		  "Creating a blank file.\n",
-                  configuration_file_name);
+                  "Creating a blank file.\n", configuration_file_name);
       configuration_file =
         xmlParseDoc ((xmlChar *) "<?xml version=\"1.0\" "
                      "encoding=\"utf-8\"?> <show_control> <configuration>"
@@ -1895,6 +1894,7 @@ parse_xml_write_configuration_file (gchar * configuration_file_name,
                      "<version>1.0</version>"
                      "<project> <folder> </folder> <file> </file> </project>"
                      "<prefs> <component id=\"sound_effects\">"
+                     "</component> </prefs>"
                      "</configuration> </show_control>");
       sep_set_configuration_file (configuration_file, app);
     }
