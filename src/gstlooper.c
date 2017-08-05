@@ -2118,20 +2118,36 @@ round_up_to_position (GstLooper * self, guint64 specified_time)
   /* The time is specified in nanoseconds.  If the buffer position 
    * corresponding to that time isn't on a frame boundary, convert it to the 
    * next higher buffer positon that is on a frame boundary.  */
-  position = (gdouble) specified_time *self->bytes_per_ns;
-  frame_size = self->width * self->channel_count / 8;
-  frame_index = (position / frame_size);
-  byte_position = frame_index * frame_size;
-  if (byte_position < position)
+
+  /* If the WAV file is invalid, we will have zeros for the format information.
+   * Defend against divide by zero.  */
+
+  if ((self->bytes_per_ns == 0.0) || (self->width == 0)
+      || (self->channel_count == 0))
     {
-      byte_position = (frame_index + 1) * frame_size;
+      byte_position = 0;
+      GST_DEBUG_OBJECT (self,
+                        "time %" GST_TIME_FORMAT
+                        " rounded up to 0 due to invalid WAV file"
+                        " attributes.", GST_TIME_ARGS (specified_time));
     }
-  GST_DEBUG_OBJECT (self,
-                    "time %" GST_TIME_FORMAT " rounded up to %"
-                    GST_TIME_FORMAT " yielding buffer position %"
-                    G_GUINT64_FORMAT ".", GST_TIME_ARGS (specified_time),
-                    GST_TIME_ARGS (byte_position / self->bytes_per_ns),
-                    byte_position);
+  else
+    {
+      position = (gdouble) specified_time *self->bytes_per_ns;
+      frame_size = self->width * self->channel_count / 8;
+      frame_index = (position / frame_size);
+      byte_position = frame_index * frame_size;
+      if (byte_position < position)
+        {
+          byte_position = (frame_index + 1) * frame_size;
+        }
+      GST_DEBUG_OBJECT (self,
+                        "time %" GST_TIME_FORMAT " rounded up to %"
+                        GST_TIME_FORMAT " yielding buffer position %"
+                        G_GUINT64_FORMAT ".", GST_TIME_ARGS (specified_time),
+                        GST_TIME_ARGS (byte_position / self->bytes_per_ns),
+                        byte_position);
+    }
   return byte_position;
 }
 
@@ -2152,16 +2168,32 @@ round_down_to_position (GstLooper * self, guint64 specified_time)
   /* The time is specified in nanoseconds.  If the buffer position 
    * corresponding to that time isn't on a frame boundary, convert it to the 
    * next lower buffer positon that is on a frame boundary.  */
-  position = (gdouble) specified_time *self->bytes_per_ns;
-  frame_size = self->width * self->channel_count / 8;
-  frame_index = (position / frame_size);
-  byte_position = frame_index * frame_size;
-  GST_DEBUG_OBJECT (self,
-                    "time %" GST_TIME_FORMAT " rounded down to %"
-                    GST_TIME_FORMAT " for buffer position %" G_GUINT64_FORMAT
-                    ".", GST_TIME_ARGS (specified_time),
-                    GST_TIME_ARGS (byte_position / self->bytes_per_ns),
-                    byte_position);
+
+  /* If the WAV file is invalid, we will have zeros for the format information.
+   * Defend against divide by zero.  */
+
+  if ((self->bytes_per_ns == 0.0) || (self->width == 0)
+      || (self->channel_count == 0))
+    {
+      byte_position = 0;
+      GST_DEBUG_OBJECT (self,
+                        "time %" GST_TIME_FORMAT
+                        " rounded down to 0 due to invalid WAV file"
+                        " attributes.", GST_TIME_ARGS (specified_time));
+    }
+  else
+    {
+      position = (gdouble) specified_time *self->bytes_per_ns;
+      frame_size = self->width * self->channel_count / 8;
+      frame_index = (position / frame_size);
+      byte_position = frame_index * frame_size;
+      GST_DEBUG_OBJECT (self,
+                        "time %" GST_TIME_FORMAT " rounded down to %"
+                        GST_TIME_FORMAT " for buffer position %"
+                        G_GUINT64_FORMAT ".", GST_TIME_ARGS (specified_time),
+                        GST_TIME_ARGS (byte_position / self->bytes_per_ns),
+                        byte_position);
+    }
   return byte_position;
 }
 
