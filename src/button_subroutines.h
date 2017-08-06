@@ -1,7 +1,7 @@
 /*
  * button_subroutines.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 
 /* Subroutines defined in button_subroutines.c */
 void button_mute_toggled (GtkToggleButton * button, gpointer user_data);
+void button_master_volume_changed (GtkButton * button, gpointer user_data);
 void button_start_clicked (GtkButton * button, gpointer user_data);
 void button_stop_clicked (GtkButton * button, gpointer user_data);
 void button_set_cluster_playing (struct sound_info *sound_data,

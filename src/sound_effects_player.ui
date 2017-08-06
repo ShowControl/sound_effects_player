@@ -162,16 +162,78 @@ Author: John Sauter
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="operator_text">
-                    <property name="name">operator_text</property>
+                  <object class="GtkGrid" id="volume">
+                    <property name="name">master_volume</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Operator Text</property>
+                    <child>
+                      <object class="GtkLabel" id="master_volume_label">
+                        <property name="name">volume_label</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">volume</property>
+                        <property name="width_chars">8</property>
+                        <property name="max_width_chars">8</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkVolumeButton" id="master_volume_button">
+                        <property name="name">volume</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="focus_on_click">False</property>
+                        <property name="receives_default">True</property>
+                        <property name="value">1</property>
+                        <property name="icons">audio-volume-muted-symbolic
+audio-volume-high-symbolic
+audio-volume-low-symbolic
+audio-volume-medium-symbolic</property>
+                        <signal name="value-changed" handler="button_master_volume_changed" object="volume" swapped="no"/>
+                        <child internal-child="plus_button">
+                          <object class="GtkButton">
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
+                            <property name="relief">none</property>
+                          </object>
+                        </child>
+                        <child internal-child="minus_button">
+                          <object class="GtkButton">
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
+                            <property name="relief">none</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="operator_text">
+                    <property name="name">operator_text</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
               </object>
@@ -267,7 +329,6 @@ Author: John Sauter
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -470,7 +531,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -672,7 +732,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -875,7 +934,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -1112,7 +1170,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -1315,7 +1372,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -1517,7 +1573,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -1722,7 +1777,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -1958,7 +2012,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -2161,7 +2214,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -2363,7 +2415,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -2568,7 +2619,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -2804,7 +2854,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -3007,7 +3056,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -3209,7 +3257,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>
@@ -3414,7 +3461,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="height_request">30</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Name of the Sound</property>
                                     <property name="ellipsize">end</property>
                                   </object>
                                   <packing>

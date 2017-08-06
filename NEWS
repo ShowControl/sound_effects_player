@@ -1,3 +1,6 @@
+Version 0.93, August 6, 2017
+  Add a master volume control.
+  
 Version 0.92, August 5, 2017
   Make the dependence on gtk-doc more explicit.
   Avoid a divide by 0 in gstlooper so that GstWavParse will have time to

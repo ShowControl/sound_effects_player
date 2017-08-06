@@ -1,7 +1,7 @@
 /*
  * button_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,74 @@ button_mute_toggled (GtkToggleButton * button, gpointer user_data)
   /* Set the mute property of the volume element based on whether
    * the mute button has been activated or deactivated.  */
   g_object_set (volume_element, "mute", button_state, NULL);
+
+  return;
+}
+
+/* The master volume slider has been moved.  Update the volume and the display. 
+ * The user data is the widget being controlled. */
+void
+button_master_volume_changed (GtkButton * button, gpointer user_data)
+{
+  GApplication *app;
+  GstPipeline *pipeline_element;
+  GstElement *volume_element;
+  GstElement *final_bin_element;
+  GtkLabel *volume_label = NULL;
+  gdouble new_value;
+  gchar *value_string;
+  GtkWidget *parent_container;
+  GList *children_list = NULL;
+  const gchar *child_name = NULL;
+
+  app = sep_get_application_from_widget (user_data);
+  pipeline_element = sep_get_pipeline_from_app (app);
+
+  /* If we don't have a Gstreamer pipeline, do nothing.  */
+  if (pipeline_element == NULL)
+    return;
+
+  /* Find the final bin.  If we don't have one, do nothing.  */
+  final_bin_element =
+    gst_bin_get_by_name (GST_BIN (pipeline_element), (gchar *) "final");
+  if (final_bin_element == NULL)
+    return;
+
+  /* Find the volume element in the final bin.  If it isn't there,
+   * do nothing.  */
+  volume_element = gstreamer_get_volume (GST_BIN (final_bin_element));
+  if (volume_element == NULL)
+    return;
+
+  /* Find the volume label associated with this volume widget.
+   * It will be a child of this widget's parent. */
+  parent_container = gtk_widget_get_parent (GTK_WIDGET (button));
+  children_list =
+    gtk_container_get_children (GTK_CONTAINER (parent_container));
+  while (children_list != NULL)
+    {
+      child_name = gtk_widget_get_name (children_list->data);
+      if (g_strcmp0 (child_name, "volume_label") == 0)
+        {
+          volume_label = children_list->data;
+          break;
+        }
+      children_list = children_list->next;
+    }
+  g_list_free (children_list);
+
+  /* If there is no volume label, do nothing.  */
+  if (volume_label == NULL)
+    return;
+
+  new_value = gtk_scale_button_get_value (GTK_SCALE_BUTTON (button));
+  /* Set the volume of the sound. */
+  g_object_set (volume_element, "volume", new_value, NULL);
+
+  /* Update the text in the volume label. */
+  value_string = g_strdup_printf ("Vol%4.0f%%", new_value * 100.0);
+  gtk_label_set_text (volume_label, value_string);
+  g_free (value_string);
 
   return;
 }
