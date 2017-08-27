@@ -256,11 +256,11 @@ audio-volume-medium-symbolic</property>
             <property name="name">clusters_scrolled_window</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">always</property>
+            <property name="vscrollbar_policy">always</property>
             <property name="shadow_type">in</property>
-            <property name="min_content_width">20</property>
-            <property name="min_content_height">20</property>
-            <property name="propagate_natural_width">True</property>
-            <property name="propagate_natural_height">True</property>
+            <property name="min_content_width">100</property>
+            <property name="min_content_height">100</property>
             <child>
               <object class="GtkViewport" id="clusters_viewport">
                 <property name="name">clusters_viewport</property>
@@ -3585,7 +3585,7 @@ audio-volume-medium-symbolic</property>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">1</property>
           </packing>

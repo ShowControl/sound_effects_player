@@ -116,6 +116,7 @@ trace_sequencer_write (gchar * line, GApplication * app)
   size_t bytes_to_write;
   gchar *current_time;
   gchar *output_string;
+  ssize_t bytes_written;
 
   trace_data = sep_get_trace_data (app);
 
@@ -125,7 +126,13 @@ trace_sequencer_write (gchar * line, GApplication * app)
   g_free (current_time);
   current_time = NULL;
   bytes_to_write = strlen (output_string);
-  write (trace_data->fid, output_string, bytes_to_write);
+  bytes_written = write (trace_data->fid, output_string, bytes_to_write);
+  if (bytes_written < 0)
+    {
+      g_printf ("Trace file write failure on %s: %s.\n",
+                trace_data->file_name, g_strerror (errno));
+      trace_data->sequencer_level = 0;
+    }
   fsync (trace_data->fid);
   g_free (output_string);
   output_string = NULL;

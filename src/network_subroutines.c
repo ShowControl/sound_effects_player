@@ -60,7 +60,8 @@ receive_data_callback (GSocket * socket, GIOCondition condition,
 
       if (error != NULL)
         {
-          g_error (error->message);
+          printf ("Error in network socket receive: %s.\n", error->message);
+          g_error_free (error);
           return G_SOURCE_REMOVE;
         }
       if (nread != 0)
@@ -124,7 +125,8 @@ network_bind_port (GApplication * app)
                   G_SOCKET_PROTOCOL_UDP, &error);
   if (error != NULL)
     {
-      g_error (error->message);
+      printf ("Failed to create network socket: %s.\n", error->message);
+      g_error_free (error);
       return;
     }
 
@@ -134,7 +136,8 @@ network_bind_port (GApplication * app)
   g_socket_bind (socket_IPv6, socket_IPv6_address, FALSE, &error);
   if (error != NULL)
     {
-      g_error (error->message);
+      printf ("Network socket bind failed: %s.\n", error->message);
+      g_error_free (error);
       return;
     }
   source_IPv6 =
@@ -161,7 +164,8 @@ network_bind_port (GApplication * app)
                   G_SOCKET_PROTOCOL_UDP, &error);
   if (error != NULL)
     {
-      g_error (error->message);
+      printf ("Failed to create network IPV4 socket: %s.\n", error->message);
+      g_error_free (error);
       return;
     }
   inet_IPv4_address = g_inet_address_new_any (G_SOCKET_FAMILY_IPV4);
@@ -170,7 +174,8 @@ network_bind_port (GApplication * app)
   g_socket_bind (socket_IPv4, socket_IPv4_address, FALSE, &error);
   if (error != NULL)
     {
-      g_error (error->message);
+      printf ("Failed to bind IPv4 socket: %s.\n", error->message);
+      g_error_free (error);
       return;
     }
   source_IPv4 =
@@ -212,7 +217,8 @@ network_unbind_port (GApplication * app)
       g_socket_close (network_data->socket_IPv4, &error);
       if (error != NULL)
         {
-          g_error (error->message);
+          printf ("Network unbind failed: %s.\n", error->message);
+          g_error_free (error);
         }
       g_object_unref (network_data->socket_IPv4);
       network_data->socket_IPv4 = NULL;
@@ -227,7 +233,8 @@ network_unbind_port (GApplication * app)
       g_socket_close (network_data->socket_IPv6, &error);
       if (error != NULL)
         {
-          g_error (error->message);
+          printf ("Network socket close failed: %s.\n", error->message);
+          g_error_free (error);
         }
       g_object_unref (network_data->socket_IPv6);
       network_data->socket_IPv6 = NULL;

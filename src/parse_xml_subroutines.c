@@ -1946,7 +1946,7 @@ parse_xml_write_configuration_file (gchar * configuration_file_name,
     }
 
   /* Make sure the directory containing the configuration file exists.  */
-  configuration_gfile = g_file_parse_name (configuration_file_name);
+  configuration_gfile = g_file_new_for_path (configuration_file_name);
   configuration_gdirectory = g_file_get_parent (configuration_gfile);
   configuration_directory_name = g_file_get_path (configuration_gdirectory);
   g_mkdir_with_parents (configuration_directory_name, 0755);

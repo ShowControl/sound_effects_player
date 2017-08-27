@@ -139,7 +139,7 @@ main (int argc, char *argv[])
                        GTK_MICRO_VERSION);
   if (check_version_str != NULL)
     {
-      g_print (check_version_str);
+      g_print ("GTK check version yields: %s.\n", check_version_str);
       return -1;
     }
 

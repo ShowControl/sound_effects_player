@@ -1010,7 +1010,7 @@ gst_looper_push_data_downstream (GstPad * pad)
   flow_result = gst_pad_push (self->srcpad, buffer);
   if (flow_result != GST_FLOW_OK)
     {
-      GST_DEBUG_OBJECT ("pad push of data returned with %s.",
+      GST_DEBUG_OBJECT (self, "pad push of data returned with %s.",
                         gst_flow_get_name (flow_result));
     }
   GST_DEBUG_OBJECT (self, "completed push of data");
