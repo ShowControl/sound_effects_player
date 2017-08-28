@@ -57,6 +57,7 @@ gstreamer_init (int sound_count, GApplication * app)
   gboolean output_enabled;
   gboolean link_ok;
   GstCaps *caps_filter;
+  gint output_type;             /* 1 = ALSA, 2 = JACK */
 
   /* Check to see if --monitor-file was specified on the command line.  */
   monitor_file_name = main_get_monitor_file_name ();
@@ -69,22 +70,30 @@ gstreamer_init (int sound_count, GApplication * app)
   /* Check to see if --audio-output was specified on the command line.  */
   audio_output_string = main_get_audio_output_string ();
   output_enabled = FALSE;
+  output_type = 0;
   if (audio_output_string == NULL)
     {
       /* Default is ALSA on default device */
       output_enabled = TRUE;
+      output_type = 1;
     }
   else
     {
       if (g_strcmp0 (audio_output_string, (gchar *) "none") == 0)
         {
           output_enabled = FALSE;
+          output_type = 0;
         }
       if (g_strcmp0 (audio_output_string, (gchar *) "ALSA") == 0)
         {
           output_enabled = TRUE;
+          output_type = 1;
         }
-      /* TODO: add support for Jack and Pulseaudio */
+      if (g_strcmp0 (audio_output_string, (gchar *) "JACK") == 0)
+        {
+          output_enabled = TRUE;
+          output_type = 2;
+        }
     }
 
   /* Create the top-level pipeline.  */
@@ -124,7 +133,16 @@ gstreamer_init (int sound_count, GApplication * app)
 
   if ((monitor_enabled == FALSE) && (output_enabled == TRUE))
     {                           /* audio only */
-      sink_element = gst_element_factory_make ("alsasink", "final/sink");
+      sink_element = NULL;
+      if (output_type == 1)
+        {
+          sink_element = gst_element_factory_make ("alsasink", "final/sink");
+        }
+      if (output_type == 2)
+        {
+          sink_element =
+            gst_element_factory_make ("jackaudiosink", "final/sink");
+        }
       if (sink_element == NULL)
         {
           GST_ERROR ("Unable to create the final sink gstreamer element.\n");
@@ -149,7 +167,16 @@ gstreamer_init (int sound_count, GApplication * app)
         gst_element_factory_make ("queue", "final/queue_file");
       queue_output_element =
         gst_element_factory_make ("queue", "final/queue_output");
-      sink_element = gst_element_factory_make ("alsasink", "final/sink");
+      sink_element = NULL;
+      if (output_type == 1)
+        {
+          sink_element = gst_element_factory_make ("alsasink", "final/sink");
+        }
+      if (output_type == 2)
+        {
+          sink_element =
+            gst_element_factory_make ("jackaudiosink", "final/sink");
+        }
       wavenc_element = gst_element_factory_make ("wavenc", "final/wavenc");
       filesink_element =
         gst_element_factory_make ("filesink", "final/filesink");
@@ -202,14 +229,33 @@ gstreamer_init (int sound_count, GApplication * app)
       g_object_set (filesink_element, "location", monitor_file_name, NULL);
     }
 
-  /* Set the device name for ALSA output, if specified.  */
+  /* Set the device name for ALSA output, if specified.  If we are using
+   * JACK, this is the client name.  */
   if (output_enabled == TRUE)
     {
       device_name_string = main_get_device_name_string ();
       if (device_name_string != NULL)
         {
-          g_object_set (sink_element, "device", device_name_string, NULL);
+          if (output_type == 1)
+            {
+              g_object_set (sink_element, "device", device_name_string, NULL);
+            }
+          if (output_type == 2)
+            {
+              g_object_set (sink_element, "client-name", device_name_string,
+                            NULL);
+            }
         }
+    }
+
+  /* Set the other JACK parameters.  The values are from gstjack.h in the
+     gstreamer source code.  */
+  if ((output_enabled == TRUE) && (output_type == 2))
+    {
+      /* Do not connect automatically; let JACK do the connecting.  */
+      g_object_set (sink_element, "connect", 0, NULL);
+      /* When the JACK transport stops, we stop.  */
+      g_object_set (sink_element, "transport", 2, NULL);
     }
 
   /* Watch for messages from the pipeline.  */

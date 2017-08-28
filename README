@@ -7,6 +7,11 @@ packages: gcc, intltool, gstreamer1-devel, gstreamer-plugins-base-devel,
 gtk3-devel and gtk-doc.  I could then do the usual ./configure, make,
 sudo make install.
 
+If you wish to use JACK, you will need gstreamer1-plugins-good-extras
+and qjackctl.  The sound effects player does not its output ports
+itself, but you can use the patchbay feature of qjackctl
+to cause them to connect.
+
 On Ubuntu Studio 16.04 I had to install intltool, libgstreamer1.0-dev,
 gtk+-3.0 and gtk-doc-tools.
 

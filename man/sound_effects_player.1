@@ -38,13 +38,14 @@ Writes the sound produced into a WAV file.  This option adds a
 lot of latency, and so is mainly useful for debugging.  
 The default is not to write the sound into a WAV file.
 .TP
-.BR \-a ", " \-\-audio\-output =\fBnone\fR | \fBALSA\fR | \fBJack\fR | \fBPulse\fR
+.BR \-a ", " \-\-audio\-output =\fBnone\fR | \fBALSA\fR | \fBJACK\fR | \fBPulse\fR
 Controls the audio output.  None means do no audio output, 
 but the WAV file specified by \-\-monitor\-file will still 
 be written.
 \fBALSA\fR means output using the Advanced Linux Sound Architecture, 
-which is the default.  
-\fBJack\fR and \fBPulse\fR are not yet implemented.
+which is the default.
+\fBJACK\fR means output using the Jack Audio Connection Kit.
+\fBPulse\fR is not yet implemented.
 .TP
 .BR \-d ", " \-\-device\-name =\fIname\fR
 If audio_output is ALSA (either explicitly or by default) do 
