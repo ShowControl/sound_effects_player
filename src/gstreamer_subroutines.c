@@ -53,6 +53,8 @@ gstreamer_init (int sound_count, GApplication * app)
   gchar *monitor_file_name;
   gchar *audio_output_string;
   gchar *device_name_string;
+  gchar *client_name_string;
+  gchar *server_name_string;
   gboolean monitor_enabled;
   gboolean output_enabled;
   gboolean link_ok;
@@ -229,22 +231,28 @@ gstreamer_init (int sound_count, GApplication * app)
       g_object_set (filesink_element, "location", monitor_file_name, NULL);
     }
 
-  /* Set the device name for ALSA output, if specified.  If we are using
-   * JACK, this is the client name.  */
+  /* Use the command-line options to condition the audio output.  */
   if (output_enabled == TRUE)
     {
+      /* Set the device name for ALSA output, if specified.  */
       device_name_string = main_get_device_name_string ();
-      if (device_name_string != NULL)
+      if ((device_name_string != NULL) && (output_type == 1))
         {
-          if (output_type == 1)
-            {
-              g_object_set (sink_element, "device", device_name_string, NULL);
-            }
-          if (output_type == 2)
-            {
-              g_object_set (sink_element, "client-name", device_name_string,
-                            NULL);
-            }
+          g_object_set (sink_element, "device", device_name_string, NULL);
+        }
+
+      /* Set the client name and server name for JACK output, if specified.  */
+      client_name_string = main_get_client_name_string ();
+      if ((client_name_string != NULL) && (output_type == 2))
+        {
+          g_object_set (sink_element, "client-name", client_name_string,
+                        NULL);
+        }
+      server_name_string = main_get_server_name_string ();
+      if ((server_name_string != NULL) && (output_type == 2))
+        {
+          g_object_set (sink_element, "server-name", server_name_string,
+                        NULL);
         }
     }
 

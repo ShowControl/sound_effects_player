@@ -26,6 +26,8 @@
 static gchar *monitor_file_name = NULL;
 static gchar *audio_output_string = NULL;
 static gchar *device_name_string = NULL;
+static gchar *client_name_string = NULL;
+static gchar *server_name_string = NULL;
 static gchar *trace_file_name = NULL;
 static gint trace_sequencer_level = 0;
 static gchar *configuration_file_name = NULL;
@@ -50,9 +52,13 @@ main (int argc, char *argv[])
     {"monitor-file", 'm', G_OPTION_FLAG_NONE, G_OPTION_ARG_FILENAME,
      &monitor_file_name, "name of the file which records produced sound"},
     {"audio-output", 'a', 0, G_OPTION_ARG_STRING, &audio_output_string,
-     "type of audio output: ALSA, none, jack, pulse"},
+     "type of audio output: ALSA, none, JACK, pulse"},
     {"device-name", 'd', 0, G_OPTION_ARG_STRING, &device_name_string,
-     "for ALSA output, name of the device"},
+     "for ALSA output, name of the ALSA device"},
+    {"client-name", 0, 0, G_OPTION_ARG_STRING, &client_name_string,
+     "for JACK output, name of the JACK client"},
+    {"server-name", 0, 0, G_OPTION_ARG_STRING, &server_name_string,
+     "for JACK output, name of the JACK server"},
     {"trace-file", 't', G_OPTION_FLAG_NONE, G_OPTION_ARG_FILENAME,
      &trace_file_name, "name of the file for trace output"},
     {"trace-sequencer-level", 'v', 0, G_OPTION_ARG_INT,
@@ -186,6 +192,10 @@ main (int argc, char *argv[])
   audio_output_string = NULL;
   free (device_name_string);
   device_name_string = NULL;
+  free (client_name_string);
+  client_name_string = NULL;
+  free (server_name_string);
+  server_name_string = NULL;
   free (trace_file_name);
   trace_file_name = NULL;
   free (configuration_file_name);
@@ -210,6 +220,18 @@ gchar *
 main_get_device_name_string ()
 {
   return device_name_string;
+}
+
+gchar *
+main_get_client_name_string ()
+{
+  return client_name_string;
+}
+
+gchar *
+main_get_server_name_string ()
+{
+  return server_name_string;
 }
 
 gchar *

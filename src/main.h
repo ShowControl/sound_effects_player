@@ -19,11 +19,14 @@
 
 #include <gtk/gtk.h>
 
-/* Subroutines defined in main.c */
+/* Subroutines defined in main.c.  These are used to retrieve option
+ * values specified on the command line.  */
 
 gchar *main_get_monitor_file_name ();
 gchar *main_get_audio_output_string ();
 gchar *main_get_device_name_string ();
+gchar *main_get_client_name_string ();
+gchar *main_get_server_name_string ();
 gchar *main_get_trace_file_name ();
 gint main_get_trace_sequencer_level ();
 gchar *main_get_configuration_file_name ();
