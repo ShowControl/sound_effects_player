@@ -28,7 +28,9 @@ display_update_vu_meter (gpointer * user_data, gint channel,
 {
   GtkWidget *common_area;
   GList *children_list;
+  GList *grandchildren_list;
   const gchar *child_name;
+  const gchar *grandchild_name;
   GtkWidget *VU_meter = NULL;
   GtkLevelBar *channel_level_bar = NULL;
   gint64 channel_number;
@@ -41,11 +43,27 @@ display_update_vu_meter (gpointer * user_data, gint channel,
   while (children_list != NULL)
     {
       child_name = gtk_widget_get_name (children_list->data);
-      if (g_ascii_strcasecmp (child_name, "VU_meter") == 0)
+      if (g_ascii_strcasecmp (child_name, "global display") == 0)
         {
-          VU_meter = children_list->data;
-          break;
+          grandchildren_list =
+            gtk_container_get_children (children_list->data);
+
+          while (grandchildren_list != NULL)
+            {
+              grandchild_name =
+                gtk_widget_get_name (grandchildren_list->data);
+              if (g_ascii_strcasecmp (grandchild_name, "VU_meter") == 0)
+                {
+                  VU_meter = grandchildren_list->data;
+                  break;
+                }
+              grandchildren_list = grandchildren_list->next;
+            }
+          g_list_free (grandchildren_list);
         }
+
+      if (VU_meter != NULL)
+        break;
       children_list = children_list->next;
     }
   g_list_free (children_list);
@@ -73,8 +91,8 @@ display_update_vu_meter (gpointer * user_data, gint channel,
    * Due to what appears to be a bug in level_bar, do not set it very small.  
    */
   channel_value = new_value;
-  if (channel_value < 0.002)
-    channel_value = 0.002;
+  if (channel_value < 0.01)
+    channel_value = 0.01;
   gtk_level_bar_set_value (channel_level_bar, channel_value);
 
   return;
@@ -148,4 +166,56 @@ display_clear_operator_text (GApplication * app)
   gtk_label_set_text (text_label, (gchar *) "");
 
   return;
+}
+
+/* Update the current activity information.  */
+void
+display_current_activity (gchar * activity_text, GApplication * app)
+{
+  GtkLabel *activity_label;
+  GtkWidget *common_area;
+  GList *children_list;
+  GList *grandchildren_list;
+  const gchar *child_name;
+  const gchar *grandchild_name;
+
+  common_area = sep_get_common_area (app);
+
+  /* Find the activity information in the common area. */
+  children_list = gtk_container_get_children (GTK_CONTAINER (common_area));
+  while (children_list != NULL)
+    {
+      child_name = gtk_widget_get_name (children_list->data);
+      if (g_ascii_strcasecmp (child_name, "global display") == 0)
+        {
+          grandchildren_list =
+            gtk_container_get_children (children_list->data);
+
+          while (grandchildren_list != NULL)
+            {
+              grandchild_name =
+                gtk_widget_get_name (grandchildren_list->data);
+              if (g_ascii_strcasecmp (grandchild_name, "activity") == 0)
+                {
+                  activity_label = grandchildren_list->data;
+                  break;
+                }
+              grandchildren_list = grandchildren_list->next;
+            }
+          g_list_free (grandchildren_list);
+        }
+
+      if (activity_label != NULL)
+        break;
+      children_list = children_list->next;
+    }
+  g_list_free (children_list);
+
+
+  if (activity_label == NULL)
+    return;
+
+  gtk_label_set_text (activity_label, activity_text);
+  return;
+
 }

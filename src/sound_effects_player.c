@@ -444,8 +444,8 @@ sep_gstreamer_ready (GApplication * app)
       priv->windows_showing = TRUE;
     }
 
-  /* Tell the operator we are ready.  */
-  display_show_message ("Ready.", app);
+  /* Tell the operator we are running.  */
+  display_show_message ("Running.", app);
 
   /* Start the internal sequencer.  */
   sequence_start (app);

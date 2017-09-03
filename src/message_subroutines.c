@@ -18,7 +18,7 @@
  */
 
 /* GValueArray has been depreciated in favor of Garray since GLib 2.32,
- * but the "good" plugin named level still uses it in Gstreamer 1.4.  
+ * but the "good" plugin named level still uses it in Gstreamer 1.12.  
  * Maybe I will rewrite the level plugin to use Garray, but until then 
  * disable GLib depreciation warnings. */
 #define GLIB_DISABLE_DEPRECATION_WARNINGS

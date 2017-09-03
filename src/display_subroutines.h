@@ -35,6 +35,8 @@ void display_set_operator_text (gchar * text_to_display, GApplication * app);
 
 void display_clear_operator_text (GApplication * app);
 
+void display_current_activity (gchar * activity_text, GApplication * app);
+
 #endif /* DISPLAY_SUBROUTINES_H */
 
 /* End of file display_subroutines.h */

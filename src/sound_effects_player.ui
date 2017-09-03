@@ -48,22 +48,17 @@ Author: John Sauter
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkBox" id="VU_meter">
-                <property name="name">VU_meter</property>
+              <object class="GtkBox" id="global display">
+                <property name="name">global display</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkLevelBar" id="channel_01">
-                    <property name="name">01</property>
-                    <property name="height_request">10</property>
+                  <object class="GtkLabel" id="activity">
+                    <property name="name">activity</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">1</property>
-                    <property name="margin_right">1</property>
-                    <property name="margin_top">1</property>
-                    <property name="margin_bottom">1</property>
-                    <property name="value">0.01</property>
+                    <property name="ellipsize">end</property>
+                    <property name="width_chars">60</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -72,19 +67,50 @@ Author: John Sauter
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLevelBar" id="channel_02">
-                    <property name="name">02</property>
-                    <property name="height_request">10</property>
+                  <object class="GtkBox" id="VU_meter">
+                    <property name="name">VU_meter</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_left">1</property>
-                    <property name="margin_right">1</property>
-                    <property name="margin_top">1</property>
-                    <property name="margin_bottom">1</property>
-                    <property name="value">0.01</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLevelBar" id="channel_01">
+                        <property name="name">01</property>
+                        <property name="height_request">10</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">1</property>
+                        <property name="margin_right">1</property>
+                        <property name="margin_top">1</property>
+                        <property name="margin_bottom">1</property>
+                        <property name="value">0.01</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLevelBar" id="channel_02">
+                        <property name="name">02</property>
+                        <property name="height_request">10</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">1</property>
+                        <property name="margin_right">1</property>
+                        <property name="margin_top">1</property>
+                        <property name="margin_bottom">1</property>
+                        <property name="value">0.01</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
+                    <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>

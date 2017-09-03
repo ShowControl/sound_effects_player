@@ -2481,46 +2481,49 @@ static guint64
 compute_remaining_time (GstLooper * object)
 {
   GstLooper *self = GST_LOOPER (object);
-  guint64 time_before_loop, time_inside_loop, time_after_loop;
+  guint64 time_inside_loop;
   gdouble total_time;
   gdouble current_time;
   gdouble current_time_int;
   guint64 total_time_int;
 
-  /* Compute the total time of the sound assuming no looping.  */
+  /* Compute the total time of the sound assuming no looping and
+     start_time = 0.  */
   total_time = (gdouble) self->local_buffer_size / self->bytes_per_ns;
   total_time_int = (guint64) total_time;
 
   if (self->loop_from == 0)
     {
-      /* If there is no looping, the time is simple to compute.  */
+      /* There is no looping, so the time is simple to compute.  */
       return (total_time_int - self->start_time - self->elapsed_time);
     }
 
   if ((self->loop_limit == 0) && (!self->released))
     {
-      /* If we will loop forever, the time is also simple to compute.  */
+      /* We will loop forever, so the time is infinite.  */
       return G_MAXUINT64;
     }
 
   if (self->released)
     {
-      /* We are looping, but we have received a release message,
-       * so looping has stopped.  We will run from the current
-       * position to the end of the buffer.  */
+      /* We are looping, possibly forever, but we have received 
+       * a release message, so looping has stopped.  We will run from 
+       * the current position to the end of the buffer.  */
       current_time =
         (gdouble) self->local_buffer_drain_level / self->bytes_per_ns;
       current_time_int = (guint64) current_time;
       return (total_time_int - current_time_int);
     }
 
-  /* Otherwise, we must compute the time before the loop, the time
-   * after the loop, and the time spent inside the loop.  */
-  time_before_loop = self->loop_to - self->start_time;
-  time_inside_loop = (self->loop_from - self->loop_to) * self->loop_limit;
-  time_after_loop = total_time_int - self->loop_from;
-  return (time_before_loop + time_inside_loop + time_after_loop -
-          self->start_time);
+  /* We are looping a definite number of times, and have not received
+   * a release.  The total time is increased by the length of the loop
+   * and the number of time we will repeat it.  */
+  time_inside_loop =
+    (self->loop_from - self->loop_to) * (self->loop_limit - 1);
+  total_time_int = total_time_int + time_inside_loop;
+
+  /* Now we can compute the remaining time without concern for looping.  */
+  return (total_time_int - self->start_time - self->elapsed_time);
 }
 
 /* Return the value of a property.  */

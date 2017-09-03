@@ -1,20 +1,29 @@
 <!DOCTYPE patchbay>
 <patchbay name="qjackctl_patchbay" version="0.4.4">
  <output-sockets>
-  <socket name="sound_effects_player 1" exclusive="off" type="jack-audio" client="sound_effects_player">
+  <socket type="jack-audio" exclusive="off" name="sound_effects_player 1" client="sound_effects_player">
    <plug>out_final/sink_1</plug>
    <plug>out_final/sink_2</plug>
   </socket>
+  <socket type="jack-audio" exclusive="off" name="bridge-[0-9]+ 1" client="bridge-[0-9]+">
+   <plug>monitor_1</plug>
+   <plug>monitor_2</plug>
+  </socket>
  </output-sockets>
  <input-sockets>
-  <socket name="system 1" exclusive="off" type="jack-audio" client="system">
+  <socket type="jack-audio" exclusive="off" name="bridge-[0-9]+ 1" client="bridge-[0-9]+">
+   <plug>meter_1</plug>
+   <plug>meter_2</plug>
+  </socket>
+  <socket type="jack-audio" exclusive="off" name="system 1" client="system">
    <plug>playback_1</plug>
    <plug>playback_2</plug>
   </socket>
  </input-sockets>
  <slots/>
  <cables>
-  <cable output="sound_effects_player 1" type="jack-audio" input="system 1"/>
+  <cable type="jack-audio" input="bridge-[0-9]+ 1" output="sound_effects_player 1"/>
+  <cable type="jack-audio" input="system 1" output="sound_effects_player 1"/>
  </cables>
 </patchbay>
 

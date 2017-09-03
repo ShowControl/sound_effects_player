@@ -114,9 +114,6 @@ static void execute_cancel_wait (struct sequence_item_info *the_item,
 static void update_operator_display (struct sequence_info *sequence_data,
                                      GApplication * app);
 static void clock_tick (void *sequence_data, GApplication * app);
-static void cancel_operator_display (struct remember_info *remember_data,
-                                     struct sequence_info *sequence_data,
-                                     GApplication * app);
 
 /* Subroutines for handling sequence items.  */
 
@@ -973,7 +970,7 @@ update_operator_display (struct sequence_info *sequence_data,
        * These may be the same item.  */
       sequence_item = most_important->sequence_item;
       sound_effect = most_important->sound_effect;
-      /* Prepend the elapsed time to the operator message, and append
+      /* Prepend the elapsed time to the activity information, and append
        * the remaining time, if known.  */
       elapsed_time = sound_get_elapsed_time (sound_effect, app);
       remaining_time = sound_get_remaining_time (sound_effect, app);
@@ -990,16 +987,9 @@ update_operator_display (struct sequence_info *sequence_data,
                              sequence_item->text_to_display,
                              (gdouble) remaining_time / 1e9);
         }
-      /* If there is a message already being displayed by the sequencer,
-       * remove it.  */
-      if (sequence_data->message_displaying)
-        {
-          display_remove_message (sequence_data->message_id, app);
-        }
 
-      /* Display the most important message.  */
-      sequence_data->message_id = display_show_message (display_text, app);
-      sequence_data->message_displaying = TRUE;
+      /* Display the most important activity.  */
+      display_current_activity (display_text, app);
       g_free (display_text);
       display_text = NULL;
 
@@ -1014,32 +1004,22 @@ update_operator_display (struct sequence_info *sequence_data,
        * to show.  */
       timer_create_entry (clock_tick, 0.1, sequence_data, app);
     }
+  else
+    {
+      /* There is nothing happening.  */
+      display_current_activity ((gchar *) "", app);
+    }
+  return;
 }
 
-/* Come here when the 0.1-second clock ticks to update the operator display.  */
+/* Come here when the 0.1-second clock ticks to update the activity display.  */
 static void
 clock_tick (void *user_data, GApplication * app)
 {
   struct sequence_info *sequence_data = user_data;
   update_operator_display (sequence_data, app);
+  return;
 }
-
-/* Cease showing some text to the operator.  */
-static void
-cancel_operator_display (struct remember_info *remember_data,
-                         struct sequence_info *sequence_data,
-                         GApplication * app)
-{
-
-  if (sequence_data->message_displaying && remember_data->being_displayed)
-    {
-      display_remove_message (sequence_data->message_id, app);
-      remember_data->being_displayed = FALSE;
-      sequence_data->message_id = 0;
-      sequence_data->message_displaying = FALSE;
-    }
-}
-
 
 /* Execute the Go command from an external sequencer issuing MIDI Show Control
  * commands.  */
@@ -1530,10 +1510,6 @@ sequence_sound_completion (struct sound_info *sound_effect,
   /* We have a Start Sound sequence item for this sound.  It has
    * completed.  */
   start_sound_sequence_item = remember_data->sequence_item;
-
-  /* If we are showing the status of this sound to the operator,
-   * stop doing that.  */
-  cancel_operator_display (remember_data, sequence_data, app);
 
   /* If this sound is still showing on the cluster, set the start label 
    * back to "Start".  */

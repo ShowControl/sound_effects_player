@@ -318,7 +318,7 @@ sound_get_remaining_time (struct sound_info * sound_data, GApplication * app)
 {
   GstElement *looper_element;
   guint64 looper_remaining_time;
-  guint64 envelope_duration_time, envelope_remaining_time, current_time;
+  guint64 envelope_duration_time, envelope_remaining_time, elapsed_time;
 
   /* Calculate the amount of time left in the looper element.  */
   looper_element = gstreamer_get_looper (sound_data->sound_control);
@@ -337,9 +337,9 @@ sound_get_remaining_time (struct sound_info * sound_data, GApplication * app)
     }
 
   /* Calculate how long until the envelope ends the sound.  */
-  current_time = g_get_monotonic_time () * 1e3;
-  envelope_remaining_time =
-    sound_data->starting_time + envelope_duration_time - current_time;
+  g_object_get (looper_element, (gchar *) "elapsed-time", &elapsed_time,
+                NULL);
+  envelope_remaining_time = envelope_duration_time - elapsed_time;
 
   /* Return the limit that will end the sound sooner.  */
   if (envelope_remaining_time < looper_remaining_time)
