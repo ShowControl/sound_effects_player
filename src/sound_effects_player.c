@@ -289,7 +289,14 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
                                    priv->project_file_name, app);
       priv->gstreamer_pipeline = sound_init (app);
       display_remove_message (message_code, app);
-      message_code = display_show_message ("Starting...", app);
+      if (priv->gstreamer_pipeline != NULL)
+        {
+          message_code = display_show_message ("Starting...", app);
+        }
+      else
+        {
+          message_code = display_show_message ("Failed.", app);
+        }
     }
   else
     {

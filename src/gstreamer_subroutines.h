@@ -25,7 +25,7 @@ GstPipeline *gstreamer_init (int sound_count, GApplication * app);
 GstBin *gstreamer_create_bin (struct sound_info *sound_data, int sound_number,
                               GstPipeline * pipeline_element,
                               GApplication * app);
-void gstreamer_complete_pipeline (GstPipeline * pipeline_element,
+gint gstreamer_complete_pipeline (GstPipeline * pipeline_element,
                                   GApplication * app);
 void gstreamer_shutdown (GApplication * app);
 GstPipeline *gstreamer_dispose (GApplication * app);

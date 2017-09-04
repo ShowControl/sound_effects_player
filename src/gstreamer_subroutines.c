@@ -645,8 +645,9 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   return (GST_BIN (bin_element));
 }
 
-/* After the individual bins are created, complete the pipeline.  */
-void
+/* After the individual bins are created, complete the pipeline.  
+ * If the pipeline cannot be completed, return 0, else return 1.  */
+gint
 gstreamer_complete_pipeline (GstPipeline * pipeline_element,
                              GApplication * app)
 {
@@ -654,6 +655,30 @@ gstreamer_complete_pipeline (GstPipeline * pipeline_element,
   GstBus *bus;
   GstMessage *msg;
   GError *err = NULL;
+
+  /* For debugging, write out a graphical representation of the pipeline. */
+  gstreamer_dump_pipeline (pipeline_element);
+
+  /* Place the pipeline in the paused state, to see if it can configure
+   * itself.  */
+  set_state_val =
+    gst_element_set_state (GST_ELEMENT (pipeline_element), GST_STATE_PAUSED);
+  if (set_state_val == GST_STATE_CHANGE_FAILURE)
+    {
+      g_print ("Unable to set the gstreamer pipeline to paused state.\n");
+
+      /* Check for an error message with details on the bus.  */
+      bus = gst_pipeline_get_bus (pipeline_element);
+      msg = gst_bus_pop_filtered (bus, GST_MESSAGE_ERROR);
+      if (msg != NULL)
+        {
+          gst_message_parse_error (msg, &err, NULL);
+          g_print ("Error: %s.\n", err->message);
+          g_error_free (err);
+          gst_message_unref (msg);
+        }
+      return (0);
+    }
 
   /* For debugging, write out a graphical representation of the pipeline. */
   gstreamer_dump_pipeline (pipeline_element);
@@ -669,7 +694,7 @@ gstreamer_complete_pipeline (GstPipeline * pipeline_element,
 
       /* Check for an error message with details on the bus.  */
       bus = gst_pipeline_get_bus (pipeline_element);
-      msg = gst_bus_poll (bus, GST_MESSAGE_ERROR, 0);
+      msg = gst_bus_pop_filtered (bus, GST_MESSAGE_ERROR);
       if (msg != NULL)
         {
           gst_message_parse_error (msg, &err, NULL);
@@ -677,13 +702,14 @@ gstreamer_complete_pipeline (GstPipeline * pipeline_element,
           g_error_free (err);
           gst_message_unref (msg);
         }
+      return (0);
     }
 
   if (GSTREAMER_TRACE)
     {
       g_print ("started the gstreamer pipeline.\n");
     }
-  return;
+  return (1);
 }
 
 /* We are done with Gstreamer; shut it down. */

@@ -40,6 +40,7 @@ sound_init (GApplication * app)
   gint sound_number, sound_count;
   GList *l;
   struct sound_info *sound_data;
+  gint success;
 
   sound_list = sep_get_sound_list (app);
 
@@ -95,7 +96,11 @@ sound_init (GApplication * app)
   /* If we have any sound effects, complete the gstreamer pipeline.  */
   if (sound_count > 0)
     {
-      gstreamer_complete_pipeline (pipeline_element, app);
+      success = gstreamer_complete_pipeline (pipeline_element, app);
+      if (success == 0)
+        {
+          pipeline_element = NULL;
+        }
     }
   else
     {
