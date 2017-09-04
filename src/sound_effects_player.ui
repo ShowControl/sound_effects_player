@@ -29,10 +29,12 @@ Author: John Sauter
   <!-- interface-copyright 2017 by John Sauter -->
   <!-- interface-authors John Sauter -->
   <object class="GtkApplicationWindow" id="top_level_window">
-    <property name="width_request">1050</property>
+    <property name="width_request">600</property>
     <property name="can_focus">False</property>
     <property name="border_width">6</property>
     <property name="title" translatable="yes">Sound Effects Player</property>
+    <property name="default_width">750</property>
+    <property name="default_height">600</property>
     <property name="icon_name">applications-multimedia</property>
     <signal name="delete-event" handler="menu_delete_top_window" object="top_box" swapped="no"/>
     <child>
@@ -58,10 +60,10 @@ Author: John Sauter
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="ellipsize">end</property>
-                    <property name="width_chars">60</property>
+                    <property name="width_chars">20</property>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
+                    <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
@@ -256,6 +258,7 @@ audio-volume-medium-symbolic</property>
                     <property name="name">operator_text</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="width_chars">20</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -302,10 +305,11 @@ audio-volume-medium-symbolic</property>
                     <property name="column_spacing">1</property>
                     <property name="row_spacing">1</property>
                     <property name="min_children_per_line">1</property>
+                    <property name="max_children_per_line">128</property>
                     <property name="activate_on_single_click">False</property>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -516,7 +520,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -720,7 +724,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -923,7 +927,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -1132,7 +1136,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -1341,7 +1345,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -1545,7 +1549,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -1748,7 +1752,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -1957,7 +1961,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -2166,7 +2170,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -2370,7 +2374,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -2573,7 +2577,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -2782,7 +2786,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -2991,7 +2995,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -3195,7 +3199,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -3398,7 +3402,7 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkFlowBoxChild">
-                        <property name="width_request">100</property>
+                        <property name="width_request">80</property>
                         <property name="height_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
