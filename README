@@ -10,11 +10,16 @@ sudo make install.
 If you wish to use JACK, you will need gstreamer1-plugins-good-extras
 and qjackctl.  The sound effects player does not its output ports
 itself, but you can use the patchbay feature of qjackctl
-to cause them to connect.
+to cause them to connect.  If JACK is not running when you start
+the sound effects player you will get an error message.
 
 On Ubuntu Studio 16.04 I had to install intltool, libgstreamer1.0-dev,
 gtk+-3.0 and gtk-doc-tools.
 
 This program uses custom gstreamer plugins.  To get gstreamer to load them,
 execute this bash command before running the program:
+
 export GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0
+
+If you get an error when starting the sound effects player saying that
+it cannot create an element, check that this command has been executed.

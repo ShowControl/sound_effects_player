@@ -102,7 +102,7 @@ gstreamer_init (int sound_count, GApplication * app)
   pipeline_element = GST_PIPELINE (gst_pipeline_new ("sound_effects"));
   if (pipeline_element == NULL)
     {
-      GST_ERROR ("Unable to create the gstreamer pipeline element.\n");
+      g_print ("Unable to create the gstreamer pipeline element.\n");
       return NULL;
     }
 
@@ -122,7 +122,7 @@ gstreamer_init (int sound_count, GApplication * app)
       || (level_element == NULL) || (resample_element == NULL)
       || (convert_element == NULL) || (volume_element == NULL))
     {
-      GST_ERROR ("Unable to create the final gstreamer elements.\n");
+      g_print ("Unable to create the final gstreamer elements.\n");
       return NULL;
     }
 
@@ -147,7 +147,7 @@ gstreamer_init (int sound_count, GApplication * app)
         }
       if (sink_element == NULL)
         {
-          GST_ERROR ("Unable to create the final sink gstreamer element.\n");
+          g_print ("Unable to create the final sink gstreamer element.\n");
           return NULL;
         }
     }
@@ -158,7 +158,7 @@ gstreamer_init (int sound_count, GApplication * app)
         gst_element_factory_make ("filesink", "final/filesink");
       if ((wavenc_element == NULL) || (filesink_element == NULL))
         {
-          GST_ERROR ("Unable to create the final sink gstreamer elements.\n");
+          g_print ("Unable to create the final sink gstreamer elements.\n");
           return NULL;
         }
     }
@@ -186,7 +186,7 @@ gstreamer_init (int sound_count, GApplication * app)
           || (queue_output_element == NULL) || (sink_element == NULL)
           || (wavenc_element == NULL) || (filesink_element == NULL))
         {
-          GST_ERROR ("Unable to create the final sink gstreamer elements.\n");
+          g_print ("Unable to create the final sink gstreamer elements.\n");
           return NULL;
         }
     }
@@ -196,7 +196,7 @@ gstreamer_init (int sound_count, GApplication * app)
       sink_element = gst_element_factory_make ("fakesink", "final/sink");
       if (sink_element == NULL)
         {
-          GST_ERROR ("Unable to create the final sink gstreamer element.\n");
+          g_print ("Unable to create the final sink gstreamer element.\n");
         }
     }
 
@@ -430,7 +430,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   bin_element = gst_bin_new (sound_name);
   if (bin_element == NULL)
     {
-      GST_ERROR ("Unable to create the bin element.\n");
+      g_print ("Unable to create the bin element.\n");
       return NULL;
     }
 
@@ -438,7 +438,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   source_element = gst_element_factory_make ("filesrc", element_name);
   if (source_element == NULL)
     {
-      GST_ERROR ("Unable to create the file source element.\n");
+      g_print ("Unable to create the file source element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -447,7 +447,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   parse_element = gst_element_factory_make ("wavparse", element_name);
   if (parse_element == NULL)
     {
-      GST_ERROR ("Unable to create the wave file parse element.\n");
+      g_print ("Unable to create the wave file parse element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -456,7 +456,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   looper_element = gst_element_factory_make ("looper", element_name);
   if (looper_element == NULL)
     {
-      GST_ERROR ("Unable to create the looper element.\n");
+      g_print ("Unable to create the looper element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -465,7 +465,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   convert_element = gst_element_factory_make ("audioconvert", element_name);
   if (convert_element == NULL)
     {
-      GST_ERROR ("Unable to create the audio convert element.\n");
+      g_print ("Unable to create the audio convert element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -475,7 +475,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
     gst_element_factory_make ("audioresample", element_name);
   if (resample1_element == NULL)
     {
-      GST_ERROR ("Unable to create the resample1 element.\n");
+      g_print ("Unable to create the resample1 element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -484,7 +484,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   envelope_element = gst_element_factory_make ("envelope", element_name);
   if (envelope_element == NULL)
     {
-      GST_ERROR ("Unable to create the envelope element.\n");
+      g_print ("Unable to create the envelope element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -495,7 +495,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
       pan_element = gst_element_factory_make ("audiopanorama", element_name);
       if (pan_element == NULL)
         {
-          GST_ERROR ("Unable to create the pan element.\n");
+          g_print ("Unable to create the pan element.\n");
           return NULL;
         }
       g_free (element_name);
@@ -509,7 +509,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   volume_element = gst_element_factory_make ("volume", element_name);
   if (volume_element == NULL)
     {
-      GST_ERROR ("Unable to create the volume element.\n");
+      g_print ("Unable to create the volume element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -519,7 +519,7 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
     gst_element_factory_make ("audioresample", element_name);
   if (resample2_element == NULL)
     {
-      GST_ERROR ("Unable to create the resample2 element.\n");
+      g_print ("Unable to create the resample2 element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -618,8 +618,8 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   success = gst_bin_add (GST_BIN (pipeline_element), bin_element);
   if (!success)
     {
-      GST_ERROR ("Failed to add sound effect %s bin to pipeline.\n",
-                 sound_data->name);
+      g_print ("Failed to add sound effect %s bin to pipeline.\n",
+               sound_data->name);
       return NULL;
     }
 
@@ -632,8 +632,8 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   link_status = gst_pad_link (last_source_pad, sink_pad);
   if (link_status != GST_PAD_LINK_OK)
     {
-      GST_ERROR ("Failed to link sound effect %s to final bin: %d, %d.\n",
-                 sound_data->name, sound_number, link_status);
+      g_print ("Failed to link sound effect %s to final bin: %d, %d.\n",
+               sound_data->name, sound_number, link_status);
       return NULL;
     }
   g_free (pad_name);
@@ -645,6 +645,138 @@ gstreamer_create_bin (struct sound_info * sound_data, int sound_number,
   return (GST_BIN (bin_element));
 }
 
+/* Print a message that appeared on the pipeline's message bus.  */
+static void
+print_message (GstMessage * msg)
+{
+  guint32 seqnum;
+  const GstStructure *s;
+  GstObject *src_obj;
+  gchar *sstr;
+  GstClock *clock;
+  GError *gerror;
+  gchar *debug;
+  gchar *name;
+
+  seqnum = gst_message_get_seqnum (msg);
+  s = gst_message_get_structure (msg);
+  src_obj = GST_MESSAGE_SRC (msg);
+
+  if (GST_IS_ELEMENT (src_obj))
+    {
+      g_print ("Got message #%u from element \"%s\" (%s): ", (guint) seqnum,
+               GST_ELEMENT_NAME (src_obj), GST_MESSAGE_TYPE_NAME (msg));
+    }
+  else if (GST_IS_PAD (src_obj))
+    {
+      g_print ("Got message #%u from pad \"%s:%s\" (%s): ", (guint) seqnum,
+               GST_DEBUG_PAD_NAME (src_obj), GST_MESSAGE_TYPE_NAME (msg));
+    }
+  else if (GST_IS_OBJECT (src_obj))
+    {
+      g_print ("Got message #%u from object \"%s\" (%s): ", (guint) seqnum,
+               GST_OBJECT_NAME (src_obj), GST_MESSAGE_TYPE_NAME (msg));
+    }
+  else
+    {
+      g_print ("Got message #%u (%s): ", (guint) seqnum,
+               GST_MESSAGE_TYPE_NAME (msg));
+
+    }
+
+  if (s != NULL)
+    {
+      sstr = gst_structure_to_string (s);
+      g_print ("%s.\n", sstr);
+      g_free (sstr);
+      sstr = NULL;
+    }
+  else
+    {
+      g_print ("no message details.\n");
+    }
+
+  switch (GST_MESSAGE_TYPE (msg))
+    {
+    case GST_MESSAGE_NEW_CLOCK:
+      gst_message_parse_new_clock (msg, &clock);
+      g_print ("New clock: %s.\n",
+               (clock ? GST_OBJECT_NAME (clock) : "NULL"));
+      break;
+
+    case GST_MESSAGE_CLOCK_LOST:
+      g_print ("Clock lost.\n");
+      break;
+
+    case GST_MESSAGE_EOS:
+      g_print ("Got an End-of-Stream (EOS) message from element \"%s\".\n",
+               GST_MESSAGE_SRC_NAME (msg));
+      break;
+
+    case GST_MESSAGE_TAG:
+      g_print ("Got a tag message from element \"%s\".\n",
+               GST_MESSAGE_SRC_NAME (msg));
+      break;
+    case GST_MESSAGE_TOC:
+      g_print ("Got a Table-of-Contents (TOC) message from element \"%s\".\n",
+               GST_MESSAGE_SRC_NAME (msg));
+      break;
+
+    case GST_MESSAGE_INFO:
+      name = gst_object_get_path_string (GST_MESSAGE_SRC (msg));
+      gst_message_parse_info (msg, &gerror, &debug);
+      if (debug != NULL)
+        {
+          g_print ("Got an INFO message: \"%s\".\n", debug);
+        }
+      g_clear_error (&gerror);
+      gerror = NULL;
+      g_free (debug);
+      debug = NULL;
+      g_free (name);
+      name = NULL;
+      break;
+
+    case GST_MESSAGE_WARNING:
+      name = gst_object_get_path_string (GST_MESSAGE_SRC (msg));
+      gst_message_parse_warning (msg, &gerror, &debug);
+      g_print ("Warning from element %s: \"%s\".\n", name, gerror->message);
+      if (debug != NULL)
+        {
+          g_print ("Additional debug info: \"%s\".\n", debug);
+        }
+      g_clear_error (&gerror);
+      gerror = NULL;
+      g_free (debug);
+      debug = NULL;
+      g_free (name);
+      name = NULL;
+      break;
+
+    case GST_MESSAGE_ERROR:
+      name = gst_object_get_path_string (GST_MESSAGE_SRC (msg));
+      gst_message_parse_error (msg, &gerror, &debug);
+      g_print ("Error from element %s: \"%s\".\n", name, gerror->message);
+      if (debug != NULL)
+        {
+          g_print ("Additional debug info: \"%s\".\n", debug);
+        }
+      g_clear_error (&gerror);
+      gerror = NULL;
+      g_free (debug);
+      debug = NULL;
+      g_free (name);
+      name = NULL;
+      break;
+
+    default:
+      /* All others we don't care.  */
+      break;
+    }
+
+  return;
+}
+
 /* After the individual bins are created, complete the pipeline.  
  * If the pipeline cannot be completed, return 0, else return 1.  */
 gint
@@ -654,7 +786,6 @@ gstreamer_complete_pipeline (GstPipeline * pipeline_element,
   GstStateChangeReturn set_state_val;
   GstBus *bus;
   GstMessage *msg;
-  GError *err = NULL;
 
   /* For debugging, write out a graphical representation of the pipeline. */
   gstreamer_dump_pipeline (pipeline_element);
@@ -665,19 +796,22 @@ gstreamer_complete_pipeline (GstPipeline * pipeline_element,
     gst_element_set_state (GST_ELEMENT (pipeline_element), GST_STATE_PAUSED);
   if (set_state_val == GST_STATE_CHANGE_FAILURE)
     {
-      g_print ("Unable to set the gstreamer pipeline to paused state.\n");
+      g_print ("Unable to set the gstreamer pipeline"
+               " to the \"paused\" state.\n");
 
-      /* Check for an error message with details on the bus.  */
+      /* Print any messages that appear on the pipeline's message bus, 
+       * in the hope of learning something that might be useful 
+       * for fixing the problem.  */
       bus = gst_pipeline_get_bus (pipeline_element);
-      msg = gst_bus_pop_filtered (bus, GST_MESSAGE_ERROR);
-      if (msg != NULL)
+      for (;;)
         {
-          gst_message_parse_error (msg, &err, NULL);
-          g_print ("Error: %s.\n", err->message);
-          g_error_free (err);
+          msg = gst_bus_timed_pop (bus, 1 * GST_SECOND);
+          if (msg == NULL)
+            return (0);
+
+          print_message (msg);
           gst_message_unref (msg);
         }
-      return (0);
     }
 
   /* For debugging, write out a graphical representation of the pipeline. */
@@ -690,20 +824,26 @@ gstreamer_complete_pipeline (GstPipeline * pipeline_element,
     gst_element_set_state (GST_ELEMENT (pipeline_element), GST_STATE_PLAYING);
   if (set_state_val == GST_STATE_CHANGE_FAILURE)
     {
-      g_print ("Unable to initial start the gstreamer pipeline.\n");
+      g_print ("Unable to set the gstreamer pipeline"
+               " to the \"playing\" state.\n");
 
-      /* Check for an error message with details on the bus.  */
+      /* Print any messages that appear on the pipeline's message bus, 
+       * in the hope of learning something that might be useful 
+       * for fixing the problem.  */
       bus = gst_pipeline_get_bus (pipeline_element);
-      msg = gst_bus_pop_filtered (bus, GST_MESSAGE_ERROR);
-      if (msg != NULL)
+      for (;;)
         {
-          gst_message_parse_error (msg, &err, NULL);
-          g_print ("Error: %s.\n", err->message);
-          g_error_free (err);
+          msg = gst_bus_timed_pop (bus, 1 * GST_SECOND);
+          if (msg == NULL)
+            return (0);
+
+          print_message (msg);
           gst_message_unref (msg);
         }
-      return (0);
     }
+
+  /* For debugging, write out a graphical representation of the pipeline. */
+  gstreamer_dump_pipeline (pipeline_element);
 
   if (GSTREAMER_TRACE)
     {
