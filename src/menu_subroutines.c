@@ -17,6 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include <stdlib.h>
 #include <gtk/gtk.h>
 #include <libxml/xmlmemory.h>
@@ -257,6 +258,10 @@ saveas_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
       gtk_widget_destroy (dialog);
       parse_xml_write_configuration_file (configuration_file_name, app);
     }
+  else
+    {
+      gtk_widget_destroy (dialog);
+    }
 
   return;
 }
@@ -277,6 +282,98 @@ paste_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 {
 }
 
+static void
+helpabout_activated (GSimpleAction * action, GVariant * parameter,
+                     gpointer app)
+{
+  GtkWidget *dialog;
+  GtkWidget *label;
+  GtkWidget *content_area;
+  GtkWindow *parent_window;
+  GtkDialogFlags flags;
+  gchar *text;
+  const gchar *gst_nano_str;
+  guint gtk_major, gtk_minor, gtk_micro;
+  guint gst_major, gst_minor, gst_micro, gst_nano;
+  extern const guint glib_major_version;
+  extern const guint glib_minor_version;
+  extern const guint glib_micro_version;
+  extern const guint glib_binary_age;
+  extern const guint glib_interface_age;
+
+
+  /* Get the top-level window to use as the transient parent for
+   * the dialog.  This makes sure the dialog appears over the
+   * application window. */
+  parent_window = sep_get_top_window ((GApplication *) app);
+
+  flags = GTK_DIALOG_DESTROY_WITH_PARENT;
+  dialog =
+    gtk_dialog_new_with_buttons ("About Sound Effects Player", parent_window,
+                                 flags, "_OK", GTK_RESPONSE_NONE, NULL);
+  content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+
+  /* Construct the text for the "Help About" message.  */
+  gtk_major = gtk_get_major_version ();
+  gtk_minor = gtk_get_minor_version ();
+  gtk_micro = gtk_get_micro_version ();
+  gst_version (&gst_major, &gst_minor, &gst_micro, &gst_nano);
+  if (gst_nano == 1)
+    gst_nano_str = "(CVS)";
+  else if (gst_nano == 2)
+    gst_nano_str = "(Prerelease)";
+  else
+    gst_nano_str = "";
+  text =
+    g_strdup_printf ("%s is a component of SoundControl, "
+                     "an application to control lighting and sound "
+                     "in theatrical productions.  This component "
+                     "plays music and sound effects.\n\n"
+                     "Copyright &#169; %s by John Sauter.\n"
+                     "This is %s version %s.\n" "Send bug reports to %s.\n"
+                     "Sources are on github at %s.\n\n"
+                     "This program comes with ABSOLUTELY NO WARRANTY;"
+                     " for details see the GNU General Public License.  "
+                     "This is free software, and you are welcome to"
+                     " redistribute it under certain conditions,"
+                     " as described in the GNU General Public License.\n\n"
+                     "This program is linked against glib"
+                     " %d.%d.%d ages %d and %d, against gtk %d.%d.%d and"
+                     " against Gstreamer %d.%d.%d%s.", PACKAGE,
+                     MODIFICATION_DATE, PACKAGE_NAME, PACKAGE_VERSION,
+                     PACKAGE_BUGREPORT, PACKAGE_URL, glib_major_version,
+                     glib_minor_version, glib_micro_version, glib_binary_age,
+                     glib_interface_age, gtk_major, gtk_minor, gtk_micro,
+                     gst_major, gst_minor, gst_micro, gst_nano_str);
+
+  /* Create the label widget.  */
+  label = gtk_label_new (NULL);
+
+  /* Tell it we want to wrap lines that are too long.  */
+  gtk_label_set_line_wrap ((GtkLabel *) label, TRUE);
+
+  /* Minimum width of 100 pixels.  */
+  gtk_widget_set_size_request (label, 100, -1);
+
+  /* Start at 450 pixels wide.  */
+  gtk_window_set_default_size ((GtkWindow *) dialog, 450, -1);
+
+  /* Give the label the text we constructed, expanding &#169; into the
+   * copyright symbol.  */
+  gtk_label_set_markup ((GtkLabel *) label, text);
+  g_free (text);
+  text = NULL;
+
+  /* Specify that the dialog box is to be destroyed when the user responds.  */
+  g_signal_connect_swapped (dialog, "response",
+                            G_CALLBACK (gtk_widget_destroy), dialog);
+
+  /* Add the label, and show everything we've added.  */
+  gtk_container_add (GTK_CONTAINER (content_area), label);
+  gtk_widget_show_all (dialog);
+
+  return;
+}
 
 /* Actions table to link menu items to subroutines. */
 static GActionEntry app_entries[] = {
@@ -288,7 +385,8 @@ static GActionEntry app_entries[] = {
   {"saveas", saveas_activated, NULL, NULL, NULL},
   {"copy", copy_activated, NULL, NULL, NULL},
   {"cut", cut_activated, NULL, NULL, NULL},
-  {"paste", paste_activated, NULL, NULL, NULL}
+  {"paste", paste_activated, NULL, NULL, NULL},
+  {"helpabout", helpabout_activated, NULL, NULL, NULL}
 };
 
 /* Initialize the menu. */

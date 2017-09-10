@@ -1,3 +1,7 @@
+Version 0.102, September 10, 2017
+  Add a Help About menu item, and remove some startup printout because
+  the information is now available through Help About.
+  
 Version 0.101, September 9, 2017
   Print more information when there is an error starting the gstreamer
   pipeline.

@@ -2,16 +2,15 @@
 # allow the application to be launched from the desktop GUI.
 
 [Desktop Entry]
-Version=1.0
+Version=1.1
 Type=Application
 Name=Sound Effects Player
 GenericName=Multimedia
-Comment=A program to play music and sound effects for live theatre
+Comment=Play music and sound effects for live theatre.
 TryExec=sound_effects_player
 Exec=sound_effects_player
 Icon=sound_effects_player_icon.png
 StartupNotify=true
 Terminal=false
-Categories=AudioVideo;Audio;Player;GTK;Gnome
-# When they are implemented I will add categories
-# Midi and Sequencer.
+Categories=AudioVideo;Audio;Player;Sequencer;Midi;GTK;Gnome
+

@@ -74,14 +74,7 @@ main (int argc, char *argv[])
 
   GOptionContext *ctx;
   GError *err = NULL;
-  const gchar *nano_str;
   const gchar *check_version_str;
-  guint major, minor, micro, nano;
-  extern const guint glib_major_version;
-  extern const guint glib_minor_version;
-  extern const guint glib_micro_version;
-  extern const guint glib_binary_age;
-  extern const guint glib_interface_age;
   int fake_argc;
   char *fake_argv[2];
 
@@ -127,18 +120,6 @@ main (int argc, char *argv[])
         }
     }
 
-  /* Print the version of glib that we are linked against. */
-  g_print ("This program is linked against glib %d.%d.%d ages %d and %d.\n",
-           glib_major_version, glib_minor_version, glib_micro_version,
-           glib_binary_age, glib_interface_age);
-
-  /* Print the version of gtk that we are linked against. */
-  major = gtk_get_major_version ();
-  minor = gtk_get_minor_version ();
-  micro = gtk_get_micro_version ();
-  g_print ("This program is linked against gtk %d.%d.%d.\n", major, minor,
-           micro);
-
   /* Check that the version of gtk is good. */
   check_version_str =
     gtk_check_version (GTK_MAJOR_VERSION, GTK_MINOR_VERSION,
@@ -148,18 +129,6 @@ main (int argc, char *argv[])
       g_print ("GTK check version yields: %s.\n", check_version_str);
       return -1;
     }
-
-  /* Print the version of Gstreamer that we are linked against. */
-  gst_version (&major, &minor, &micro, &nano);
-
-  if (nano == 1)
-    nano_str = "(CVS)";
-  else if (nano == 2)
-    nano_str = "(Prerelease)";
-  else
-    nano_str = "";
-  g_print ("This program is linked against GStreamer %d.%d.%d%s.\n", major,
-           minor, micro, nano_str);
 
   /* Initialize gstreamer */
   gst_init (&argc, &argv);
