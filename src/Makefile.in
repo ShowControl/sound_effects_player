@@ -164,16 +164,8 @@ am_sound_effects_player_OBJECTS = button_subroutines.$(OBJEXT) \
 	parse_net_subroutines.$(OBJEXT) \
 	parse_xml_subroutines.$(OBJEXT) sequence_subroutines.$(OBJEXT) \
 	signal_subroutines.$(OBJEXT) sound_effects_player.$(OBJEXT) \
-	sound_subroutines.$(OBJEXT) time_copy.$(OBJEXT) \
-	time_current_tm.$(OBJEXT) time_current_tm_nano.$(OBJEXT) \
-	time_diff.$(OBJEXT) time_length.$(OBJEXT) \
-	time_local_add.$(OBJEXT) time_local_normalize.$(OBJEXT) \
-	time_local_to_utc.$(OBJEXT) time_sleep_until.$(OBJEXT) \
-	time_tm_nano_to_integer.$(OBJEXT) \
-	time_tm_nano_to_string.$(OBJEXT) time_tm_to_integer.$(OBJEXT) \
-	time_tm_to_string.$(OBJEXT) time_utc_add.$(OBJEXT) \
-	time_utc_normalize.$(OBJEXT) time_utc_to_local.$(OBJEXT) \
-	timer_subroutines.$(OBJEXT) trace_subroutines.$(OBJEXT)
+	sound_subroutines.$(OBJEXT) timer_subroutines.$(OBJEXT) \
+	trace_subroutines.$(OBJEXT)
 sound_effects_player_OBJECTS = $(am_sound_effects_player_OBJECTS)
 sound_effects_player_DEPENDENCIES = $(am__DEPENDENCIES_1)
 sound_effects_player_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
@@ -459,25 +451,6 @@ sound_effects_player_SOURCES = \
 	sound_structure.h \
 	sound_subroutines.c \
 	sound_subroutines.h \
-	time_copy.c \
-	time_current_tm.c \
-	time_current_tm_nano.c \
-	time_diff.c \
-	time_length.c \
-	time_local_add.c \
-	time_local_normalize.c \
-	time_local_to_utc.c \
-	time_sleep_until.c \
-	time_subroutines.h \
-	time_tm_nano_to_integer.c \
-	time_tm_nano_to_string.c \
-	time_tm_to_integer.c \
-	time_tm_to_string.c \
-	time_utc_add.c \
-	time_utc_normalize.c \
-	time_utc_to_local.c \
-	dtai_table.h \
-	dtai_table.tab \
 	timer_subroutines.c \
 	timer_subroutines.h \
 	trace_subroutines.c \
@@ -659,22 +632,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/signal_subroutines.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sound_effects_player.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sound_subroutines.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_copy.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_current_tm.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_current_tm_nano.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_diff.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_length.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_local_add.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_local_normalize.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_local_to_utc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_sleep_until.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_tm_nano_to_integer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_tm_nano_to_string.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_tm_to_integer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_tm_to_string.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_utc_add.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_utc_normalize.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_utc_to_local.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/timer_subroutines.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trace_subroutines.Po@am__quote@
 

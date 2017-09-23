@@ -1,3 +1,6 @@
+Version 0.103, September 23, 2017
+  Depend on the libtime component.
+  
 Version 0.102, September 10, 2017
   Add a Help About menu item, and remove some startup printout because
   the information is now available through Help About.

@@ -4,8 +4,8 @@ dnl Created originally by the Anjuta application wizard.
 dnl required version of autoconf
 AC_PREREQ([2.53])
 
-AC_INIT(sound_effects_player, [0.102], [John_Sauter@systemeyescomputerstore.com], sound_effects_player, [git@github.com:ShowControl/sound_effects_player.git])
-AC_DEFINE([MODIFICATION_DATE], ["September 10, 2017"], [last modification date])
+AC_INIT(sound_effects_player, [0.103], [John_Sauter@systemeyescomputerstore.com], sound_effects_player, [git@github.com:ShowControl/sound_effects_player.git])
+AC_DEFINE([MODIFICATION_DATE], ["September 23, 2017"], [last modification date])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.11])
@@ -40,7 +40,15 @@ AC_CHECK_FUNCS([pow])
 AC_CHECK_FUNCS([strerror])
 AC_CHECK_FUNCS([strtol])
 
-
+dnl set LDFLAGS and LIBS so we can depend on libtime.
+LDFLAGS='-L/usr/local/lib'
+AC_SEARCH_LIBS([time_current_tm],[time],[ ],[
+  AC_MSG_ERROR([You need to have libtime installed.
+  Libtime is a component of ShowControl.  You can get it
+  from github at this URL: git@github.com:ShowControl/libtime.git
+  ])
+])	
+AC_CHECK_FUNCS([time_current_tm])
 
 dnl ***************************************************************************
 dnl Internationalization

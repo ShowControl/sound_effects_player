@@ -2,19 +2,19 @@ Sound_effects_player is a component of ShowControl, an application to control
 lighting and sound in theatrical productions.  This component plays sound
 effects.
 
-When installing on a Fedora 23 computer I had to first install the following
+When installing on a Fedora 26 computer I had to first install the following
 packages: gcc, intltool, gstreamer1-devel, gstreamer-plugins-base-devel,
-gtk3-devel and gtk-doc.  I could then do the usual ./configure, make,
+gtk3-devel, gtk-doc and libtime.  I could then do the usual ./configure, make,
 sudo make install.
 
 If you wish to use JACK, you will need gstreamer1-plugins-good-extras
-and qjackctl.  The sound effects player does not its output ports
+and qjackctl.  The sound effects player does not connect its output ports
 itself, but you can use the patchbay feature of qjackctl
-to cause them to connect.  If JACK is not running when you start
+to cause them to connect automatically.  If JACK is not running when you start
 the sound effects player you will get an error message.
 
 On Ubuntu Studio 16.04 I had to install intltool, libgstreamer1.0-dev,
-gtk+-3.0 and gtk-doc-tools.
+gtk+-3.0, gtk-doc-tools and libtime.  Libtime is a component of ShowControl.
 
 This program uses custom gstreamer plugins.  To get gstreamer to load them,
 execute this bash command before running the program:
@@ -23,3 +23,6 @@ export GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0
 
 If you get an error when starting the sound effects player saying that
 it cannot create an element, check that this command has been executed.
+
+If you get an error when starting the sound effects player saying that
+it cannot find a library, run ldconfig as root.
