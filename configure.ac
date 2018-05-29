@@ -4,8 +4,8 @@ dnl Created originally by the Anjuta application wizard.
 dnl required version of autoconf
 AC_PREREQ([2.53])
 
-AC_INIT(sound_effects_player, [0.103], [John_Sauter@systemeyescomputerstore.com], sound_effects_player, [git@github.com:ShowControl/sound_effects_player.git])
-AC_DEFINE([MODIFICATION_DATE], ["September 23, 2017"], [last modification date])
+AC_INIT(sound_effects_player, [0.104], [John_Sauter@systemeyescomputerstore.com], sound_effects_player, [git@github.com:ShowControl/sound_effects_player.git])
+AC_DEFINE([MODIFICATION_DATE], ["May 29, 2018"], [last modification date])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.11])
@@ -100,7 +100,7 @@ PKG_CHECK_MODULES(GST, [
       You need to install or upgrade the GStreamer development
       packages on your system. On debian-based systems these are
       libgstreamer1.0-dev and libgstreamer-plugins-base1.0-dev.
-      on RPM-based systems gstreamer1.0-devel, libgstreamer1.0-devel
+      on RPM-based systems gstreamer1-devel, gstreamer1-plugins-base-devel
       or similar. The minimum version required is $GST_REQUIRED.
   ])
 ])

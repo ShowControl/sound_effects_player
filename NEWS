@@ -1,3 +1,6 @@
+Version 0.104, May 29, 2018
+  Update dependencies list for Fedora 28, and use the latest autobuild.
+  
 Version 0.103, September 23, 2017
   Depend on the libtime component.
   
