@@ -2,14 +2,14 @@ Sound_effects_player is a component of ShowControl, an application to control
 lighting and sound in theatrical productions.  This component plays sound
 effects.
 
-When installing on a Fedora 28 computer I had to first install the following
-packages:
+When installing on a computer running the Fedora 29 distribution of
+GNU/Linux, I had to first install the following packages:
 
   to run autogen.sh: autoconf, automake, libtool, gtk-doc, intltool
     and glib2-devel.
 
-  to run configure: libtime, gstreamer1-devel, gstreamer1-plugins-base-devel
-    and gtk3-devel.
+  to run configure: make, libtime, gstreamer1-devel,
+    gstreamer1-plugins-base-devel and gtk3-devel.
 
 Note that libtime is not installed with dnf but is a separate component
 of ShowControl.

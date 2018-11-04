@@ -1,7 +1,7 @@
 /*
  * sound_effects_player.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2018 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  * 
  * Sound_effects_player is free software: you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by the
@@ -32,12 +32,6 @@
 #include "sound_subroutines.h"
 #include "timer_subroutines.h"
 #include "trace_subroutines.h"
-
-G_DEFINE_TYPE (Sound_Effects_Player, sound_effects_player,
-               GTK_TYPE_APPLICATION);
-
-/* ANJUTA: Macro SOUND_EFFECTS_PLAYER_APPLICATION gets Sound_Effects_Player
- *  - DO NOT REMOVE */
 
 /* The private data associated with the top-level window. */
 struct _Sound_Effects_PlayerPrivate
@@ -111,8 +105,10 @@ struct _Sound_Effects_PlayerPrivate
   /* The persistent information for the trace subroutines.  */
   void *trace_data;
 
-  /* ANJUTA: Widgets declaration for sound_effects_player.ui - DO NOT REMOVE */
 };
+
+G_DEFINE_TYPE_WITH_PRIVATE (Sound_Effects_Player, sound_effects_player,
+                            GTK_TYPE_APPLICATION);
 
 /* Create a new window loading a file. */
 static void
@@ -330,10 +326,7 @@ sound_effects_player_open (GApplication * application, GFile ** files,
 static void
 sound_effects_player_init (Sound_Effects_Player * object)
 {
-  object->priv =
-    G_TYPE_INSTANCE_GET_PRIVATE (object,
-                                 SOUND_EFFECTS_PLAYER_TYPE_APPLICATION,
-                                 Sound_Effects_PlayerPrivate);
+  object->priv = sound_effects_player_get_instance_private (object);
 }
 
 static void
@@ -417,9 +410,6 @@ sound_effects_player_class_init (Sound_Effects_PlayerClass * klass)
 {
   G_APPLICATION_CLASS (klass)->activate = sound_effects_player_activate;
   G_APPLICATION_CLASS (klass)->open = sound_effects_player_open;
-
-  g_type_class_add_private (klass, sizeof (Sound_Effects_PlayerPrivate));
-
   G_OBJECT_CLASS (klass)->dispose = sound_effects_player_dispose;
   G_OBJECT_CLASS (klass)->finalize = sound_effects_player_finalize;
 }
