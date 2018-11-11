@@ -1,3 +1,6 @@
+Version 0.106, November 11, 2018
+  Update tracing subroutines for the new version of libtime.
+  
 Version 0.105, November 4, 2018
   Update the dependencies list for Fedora 29, and remove the use of
   g_type_class_add_private, now depreciated in Glib 2.58.

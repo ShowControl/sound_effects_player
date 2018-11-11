@@ -99,7 +99,7 @@ trace_current_time (GApplication * app)
   time_current_tm (&current_time_tm);
 
   /* Convert to local time.  */
-  time_UTC_to_local (&current_time_tm, &local_time_tm, 0);
+  time_UTC_to_local (&current_time_tm, &local_time_tm, INT_MIN);
 
   /* Express the local time as a string.  */
   time_tm_to_string (&local_time_tm, &string_buffer[0],
