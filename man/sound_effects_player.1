@@ -1,6 +1,6 @@
-.TH SOUND_EFFECTS_PLAYER 1 2017-07-09 ShowControl
+.TH SOUND_EFFECTS_PLAYER 1 2019-10-12 ShowControl
 .SH NAME
-sound_effects_player \- play sound effects for a live stage play
+sound_effects_player \- play sound effects for a live stage performance
 .SH SYNOPSIS
 .B sound_effects_player 
 [\fIoptions\fR] [\fIinput_file\fR] 
@@ -66,10 +66,12 @@ By default use the default server.
 .BR \-t ", " \-\-trace\-file =\fItrace-output\-file\fR
 Traces the execution of the sequencer into a text file.
 This is useful when you have a complex sound sequence, and
-need feedback about what it is doing.
+need feedback about what it is doing.  The default is not
+to do any traceing.
 .TP
 .BR \-v ", " \-\-trace\-sequencer\-level =\fInumber\fR
 The degree of sequencer tracing detail.  0 means none, 1 means all.
+The default is 1.
 .TP
 .BR \-c ", " \-\-configuration\-file = \fIconfiguration\-file\fR
 Contains the preferences and default project name.  If unspecified,

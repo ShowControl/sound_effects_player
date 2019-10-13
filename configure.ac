@@ -4,8 +4,8 @@ dnl Created originally by the Anjuta application wizard.
 dnl required version of autoconf
 AC_PREREQ([2.53])
 
-AC_INIT(sound_effects_player, [0.106], [John_Sauter@systemeyescomputerstore.com], sound_effects_player, [git@github.com:ShowControl/sound_effects_player.git])
-AC_DEFINE([MODIFICATION_DATE], ["November 11, 2018"], [last modification date])
+AC_INIT(sound_effects_player, [0.107], [John_Sauter@systemeyescomputerstore.com], sound_effects_player, [git@github.com:ShowControl/sound_effects_player.git])
+AC_DEFINE([MODIFICATION_DATE], ["October 12, 2019"], [last modification date])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.11])

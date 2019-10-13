@@ -1,6 +1,6 @@
 /*
  * main.c
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2019 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * sound_effects_player is free software: you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by the
@@ -29,7 +29,7 @@ static gchar *device_name_string = NULL;
 static gchar *client_name_string = NULL;
 static gchar *server_name_string = NULL;
 static gchar *trace_file_name = NULL;
-static gint trace_sequencer_level = 0;
+static gint trace_sequencer_level = 1;
 static gchar *configuration_file_name = NULL;
 
 /* The entry point for the sound_effects_player application.  

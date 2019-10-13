@@ -1,3 +1,7 @@
+Version 0.107, October 13, 2019
+  Fix the confusion between clusters 7 and 8.  Fix the default value of
+  trace-sequencer-level.
+  
 Version 0.106, November 11, 2018
   Update tracing subroutines for the new version of libtime.
   

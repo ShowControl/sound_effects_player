@@ -34,6 +34,7 @@ struct trace_info
   gchar *file_name;
   gint sequencer_level;
   gint fid;
+  gint file_open;
 };
 
 /* Subroutines for tracing.  */
@@ -47,7 +48,8 @@ trace_init (GApplication * app)
   trace_data = g_malloc (sizeof (struct trace_info));
   trace_data->sequencer_level = main_get_trace_sequencer_level (app);
   trace_data->file_name = main_get_trace_file_name (app);
-
+  trace_data->file_open = 0;
+  
   if ((trace_data->file_name != NULL) && (trace_data->sequencer_level > 0))
     {
       /* Open the trace file for append.  */
@@ -61,8 +63,10 @@ trace_init (GApplication * app)
                     trace_data->file_name, g_strerror (errno));
           trace_data->sequencer_level = 0;
         }
+      else
+	trace_data->file_open = 1;
     }
-
+  
   return (trace_data);
 }
 
@@ -77,13 +81,16 @@ trace_finalize (GApplication * app)
   return;
 }
 
-/* See if the sequencer should be tracing.  */
+/* See if the sequencer should be traceing.  */
 gint
 trace_sequencer_level (GApplication * app)
 {
   struct trace_info *trace_data;
 
   trace_data = sep_get_trace_data (app);
+  if (trace_data->file_open == 0)
+    return (0);
+  
   return (trace_data->sequencer_level);
 }
 

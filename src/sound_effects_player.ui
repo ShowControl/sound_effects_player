@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 
+<!-- Generated with glade 3.22.1 
 
-Copyright (C) 2017 by John Sauter
+Copyright (C) 2019 by John Sauter
 
 This file is part of sound_effects_player.
 
@@ -26,7 +26,7 @@ Author: John Sauter
   <!-- interface-license-type gplv3 -->
   <!-- interface-name sound_effects_player -->
   <!-- interface-description A program to play sound effects for live theatre. -->
-  <!-- interface-copyright 2017 by John Sauter -->
+  <!-- interface-copyright 2019 by John Sauter -->
   <!-- interface-authors John Sauter -->
   <object class="GtkApplicationWindow" id="top_level_window">
     <property name="width_request">600</property>
@@ -37,6 +37,9 @@ Author: John Sauter
     <property name="default_height">600</property>
     <property name="icon_name">applications-multimedia</property>
     <signal name="delete-event" handler="menu_delete_top_window" object="top_box" swapped="no"/>
+    <child>
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkBox" id="top_box">
         <property name="name">top_box</property>
@@ -1767,8 +1770,8 @@ audio-volume-medium-symbolic</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkGrid" id="cluster_08">
-                                    <property name="name">cluster_08</property>
+                                  <object class="GtkGrid" id="cluster_07">
+                                    <property name="name">cluster_07</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="margin_left">5</property>
@@ -1787,7 +1790,7 @@ audio-volume-medium-symbolic</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
-                                        <signal name="clicked" handler="button_start_clicked" object="cluster_08" swapped="no"/>
+                                        <signal name="clicked" handler="button_start_clicked" object="cluster_07" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
@@ -1803,7 +1806,7 @@ audio-volume-medium-symbolic</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
-                                        <signal name="clicked" handler="button_stop_clicked" object="cluster_08" swapped="no"/>
+                                        <signal name="clicked" handler="button_stop_clicked" object="cluster_07" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
@@ -1976,8 +1979,8 @@ audio-volume-medium-symbolic</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="GtkGrid" id="cluster_07">
-                                    <property name="name">cluster_07</property>
+                                  <object class="GtkGrid" id="cluster_08">
+                                    <property name="name">cluster_08</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="margin_left">5</property>
@@ -1996,7 +1999,7 @@ audio-volume-medium-symbolic</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
-                                        <signal name="clicked" handler="button_start_clicked" object="cluster_07" swapped="no"/>
+                                        <signal name="clicked" handler="button_start_clicked" object="cluster_08" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
@@ -2012,7 +2015,7 @@ audio-volume-medium-symbolic</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
                                         <property name="receives_default">True</property>
-                                        <signal name="clicked" handler="button_stop_clicked" object="cluster_07" swapped="no"/>
+                                        <signal name="clicked" handler="button_stop_clicked" object="cluster_08" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="left_attach">1</property>
