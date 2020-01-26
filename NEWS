@@ -1,3 +1,6 @@
+Version 0.018, January 26, 2020
+  Improve the message about missing libtime dependency.
+  
 Version 0.107, October 13, 2019
   Fix the confusion between clusters 7 and 8.  Fix the default value of
   trace-sequencer-level.
