@@ -1,7 +1,7 @@
 /*
  * sound_effects_player.c
  *
- * Copyright © 2018 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  * 
  * Sound_effects_player is free software: you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by the
@@ -31,6 +31,7 @@
 #include "sound_structure.h"
 #include "sound_subroutines.h"
 #include "timer_subroutines.h"
+#include "time_subroutines.h"
 #include "trace_subroutines.h"
 
 /* The private data associated with the top-level window. */
@@ -310,6 +311,20 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
 static void
 sound_effects_player_activate (GApplication * application)
 {
+  /* Some high security environments disable the adjtimex function,
+   * even when it is just fetching information.  
+   * The adjtimex function is the only way to determine that
+   * there is a leap second in progress, so do not run if it
+   * doesn't work.  */
+  if (time_test_for_disabled_adjtimex() == 1)
+    {
+      g_critical ("\n"
+		  "The current time will not be correct during a leap second\n"
+		  "because the Linux adjtimex function is not working.\n"
+		  "See Fedora Bugzilla 1778298.\n");
+      exit (EXIT_FAILURE);
+    }
+
   sound_effects_player_new_window (application, NULL);
 }
 
@@ -318,6 +333,20 @@ sound_effects_player_open (GApplication * application, GFile ** files,
                            gint n_files, const gchar * hint)
 {
   gint i;
+
+  /* Some high security environments disable the adjtimex function,
+   * even when it is just fetching information.  
+   * The adjtimex function is the only way to determine that
+   * there is a leap second in progress, so do not run if it
+   * doesn't work.  */
+  if (time_test_for_disabled_adjtimex() == 1)
+    {
+      g_critical ("\n"
+		  "The current time will not be correct during a leap second\n"
+		  "because the Linux adjtimex function is not working.\n"
+		  "See Fedora Bugzilla 1778298.\n");
+      exit (EXIT_FAILURE);
+    }
 
   for (i = 0; i < n_files; i++)
     sound_effects_player_new_window (application, files[i]);

@@ -1,6 +1,6 @@
 /*
  * main.c
- * Copyright © 2019 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * sound_effects_player is free software: you can redistribute it and/or modify 
  * it under the terms of the GNU General Public License as published by the
@@ -19,6 +19,7 @@
 #include "config.h"
 #include "main.h"
 #include "sound_effects_player.h"
+#include "time_subroutines.h"
 
 #include <glib/gi18n.h>
 
@@ -77,7 +78,7 @@ main (int argc, char *argv[])
   const gchar *check_version_str;
   int fake_argc;
   char *fake_argv[2];
-
+  
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");

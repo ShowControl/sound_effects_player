@@ -1,3 +1,6 @@
+Version 0.109, April 1, 2020
+  Do not attempt to run if the environment has disabled leap second support.
+  
 Version 0.018, January 26, 2020
   Improve the message about missing libtime dependency.
   
