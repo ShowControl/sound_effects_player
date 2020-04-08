@@ -98,8 +98,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/gtk-doc.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
-	$(am__configure_deps) $(dist_desktop_DATA) $(dist_doc_DATA) \
-	$(am__DIST_COMMON)
+	$(am__configure_deps) $(dist_doc_DATA) $(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
@@ -160,9 +159,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(docdir)" \
-	"$(DESTDIR)$(iconsdir)"
-DATA = $(dist_desktop_DATA) $(dist_doc_DATA) $(icons_DATA)
+am__installdirs = "$(DESTDIR)$(docdir)" "$(DESTDIR)$(iconsdir)"
+DATA = $(dist_doc_DATA) $(icons_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -426,7 +424,7 @@ INTLTOOL_FILES = intltool-extract.in \
 
 EXTRA_DIST = \
 	autogen.sh \
-	sound_effects_player.desktop \
+	sound_effects_player.desktop.in \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
 	sample/440Hz.wav \
@@ -488,8 +486,7 @@ EXTRA_DIST = \
 
 iconsdir = ${datadir}/icons/hicolor/48x48/apps
 icons_DATA = icons/sound_effects_player_icon.png
-desktopdir = ${datadir}/applications
-dist_desktop_DATA = sound_effects_player.desktop
+applicationsdir = ${datadir}/applications
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \
 	intltool-update \
@@ -556,27 +553,6 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool config.lt
-install-dist_desktopDATA: $(dist_desktop_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(dist_desktop_DATA)'; test -n "$(desktopdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(desktopdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(desktopdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(desktopdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(desktopdir)" || exit $$?; \
-	done
-
-uninstall-dist_desktopDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_desktop_DATA)'; test -n "$(desktopdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(desktopdir)'; $(am__uninstall_files_from_dir)
 install-dist_docDATA: $(dist_doc_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(dist_doc_DATA)'; test -n "$(docdir)" || list=; \
@@ -922,7 +898,7 @@ check: check-recursive
 all-am: Makefile $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(iconsdir)"; do \
+	for dir in "$(DESTDIR)$(docdir)" "$(DESTDIR)$(iconsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -978,7 +954,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-dist_desktopDATA install-dist_docDATA \
+install-data-am: install-data-local install-dist_docDATA \
 	install-iconsDATA
 
 install-dvi: install-dvi-recursive
@@ -1025,8 +1001,8 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-dist_desktopDATA uninstall-dist_docDATA \
-	uninstall-iconsDATA uninstall-local
+uninstall-am: uninstall-dist_docDATA uninstall-iconsDATA \
+	uninstall-local
 
 .MAKE: $(am__recursive_targets) all install-am install-strip
 
@@ -1038,7 +1014,7 @@ uninstall-am: uninstall-dist_desktopDATA uninstall-dist_docDATA \
 	distclean-hdr distclean-libtool distclean-tags distcleancheck \
 	distdir distuninstallcheck dvi dvi-am html html-am info \
 	info-am install install-am install-data install-data-am \
-	install-dist_desktopDATA install-dist_docDATA install-dvi \
+	install-data-local install-dist_docDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-iconsDATA install-info install-info-am \
 	install-man install-pdf install-pdf-am install-ps \
@@ -1046,15 +1022,34 @@ uninstall-am: uninstall-dist_desktopDATA uninstall-dist_docDATA \
 	installdirs installdirs-am maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-dist_desktopDATA uninstall-dist_docDATA \
-	uninstall-iconsDATA uninstall-local
+	uninstall-am uninstall-dist_docDATA uninstall-iconsDATA \
+	uninstall-local
 
 .PRECIOUS: Makefile
 
 
+# When sound_effects_player starts up it loads all of the gstreamer
+# plugins it needs.  Two of them, gstlooper and gstenvelope, are
+# provided as part of sound_effects_player, and are stored
+# in ${libdir}/gstreamer-1.0/.  If ${libdir} is /usr/local/lib,
+# which is the default, we need the .desktop file to define the
+# environment variable GST_PLUGIN_PATH to be ${libdir}/gstreamer-1.0.
+# However, the value of ${libdir} isn't known until install time.
+# We use SED to edit the prototype .desktop file, replacing @libdir@
+# with the value of ${libdir}.  The resulting .desktop file is then
+# placed where desktop files are stored.
+
+install-data-local:
+	${MKDIR_P} ${applicationsdir}
+	chmod u+w ${applicationsdir}
+	$(SED) -e 's,[@]libdir[@],${libdir},' \
+${srcdir}/sound_effects_player.desktop.in > \
+${applicationsdir}/sound_effects_player.desktop
+
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(docdir)
+	rm -f ${applicationsdir}/sound_effects_player.desktop
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

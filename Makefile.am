@@ -21,7 +21,7 @@ INTLTOOL_FILES = intltool-extract.in \
 
 EXTRA_DIST = \
 	autogen.sh \
-	sound_effects_player.desktop \
+	sound_effects_player.desktop.in \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
 	sample/440Hz.wav \
@@ -84,8 +84,24 @@ EXTRA_DIST = \
 iconsdir=${datadir}/icons/hicolor/48x48/apps
 icons_DATA = icons/sound_effects_player_icon.png
 
-desktopdir=${datadir}/applications
-dist_desktop_DATA = sound_effects_player.desktop
+# When sound_effects_player starts up it loads all of the gstreamer
+# plugins it needs.  Two of them, gstlooper and gstenvelope, are
+# provided as part of sound_effects_player, and are stored
+# in ${libdir}/gstreamer-1.0/.  If ${libdir} is /usr/local/lib,
+# which is the default, we need the .desktop file to define the
+# environment variable GST_PLUGIN_PATH to be ${libdir}/gstreamer-1.0.
+# However, the value of ${libdir} isn't known until install time.
+# We use SED to edit the prototype .desktop file, replacing @libdir@
+# with the value of ${libdir}.  The resulting .desktop file is then
+# placed where desktop files are stored.
+
+install-data-local:
+applicationsdir=${datadir}/applications
+	${MKDIR_P} ${applicationsdir}
+	chmod u+w ${applicationsdir}
+	$(SED) -e 's,[@]libdir[@],${libdir},' \
+${srcdir}/sound_effects_player.desktop.in > \
+${applicationsdir}/sound_effects_player.desktop
 
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \
@@ -96,4 +112,4 @@ DISTCLEANFILES = intltool-extract \
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(docdir)
-
+	rm -f ${applicationsdir}/sound_effects_player.desktop

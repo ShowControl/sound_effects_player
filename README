@@ -12,7 +12,7 @@ GNU/Linux, I had to first install the following packages:
     gstreamer1-plugins-base-devel and gtk3-devel.
 
 Note that libtime is not installed with dnf but is a separate component
-of ShowControl.
+of ShowControl.  It is also available in COPR as johnsauter / libtime.
 
 The copy of gtk-doc.make is from /usr/share/gtk-doc/data/gtk-doc.make.
 Its name changed in Fedora 28, so I copied it rather than having a
@@ -28,12 +28,19 @@ On Ubuntu Studio 16.04 I had to install intltool, libgstreamer1.0-dev,
 gtk+-3.0, gtk-doc-tools and libtime.  Libtime is a component of ShowControl.
 
 This program uses custom gstreamer plugins.  To get gstreamer to load them,
-execute this bash command before running the program:
+execute this bash command before running the program from the command
+line:
 
 export GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0
 
+Note that /usr/local/lib is the default location for the provided
+gstreamer plugins; if you override libdir to install them elsewhere,
+change the command line as appropriate.
+
 If you get an error when starting the sound effects player saying that
 it cannot create an element, check that this command has been executed.
+When running sound_effects_player from a desktop icon, the export command
+is performed automatically by the desktop environment.
 
 If you get an error when starting the sound effects player saying that
 it cannot find a library, run ldconfig as root.

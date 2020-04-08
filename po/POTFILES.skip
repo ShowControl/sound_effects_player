@@ -1,0 +1,3 @@
+# List of source files which appear to contain translatable strings, but do not.
+
+sound_effects_player.desktop.in
