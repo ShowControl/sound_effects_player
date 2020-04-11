@@ -12,5 +12,5 @@ Exec=env GST_PLUGIN_PATH=@libdir@/gstreamer-1.0 sound_effects_player
 Icon=sound_effects_player_icon.png
 StartupNotify=true
 Terminal=false
-Categories=AudioVideo;Audio;Player;Sequencer;Midi;GTK;Gnome
+Categories=AudioVideo;Audio;Player;Sequencer;Midi;GTK
 

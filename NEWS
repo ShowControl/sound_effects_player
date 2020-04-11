@@ -1,4 +1,7 @@
-Version 1.110, April 8, 2020
+Version 0.111, April 11, 2020
+  Add a .spec file.
+  
+Version 0.110, April 8, 2020
   In the .desktop file, point to the correct directory for the provided
   gstreamer plugins.
   

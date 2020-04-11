@@ -11,6 +11,7 @@ dist_doc_DATA = \
 	AUTHORS \
 	ChangeLog \
 	INSTALL \
+	LICENSE \
 	NEWS \
 	listing/code.pdf
 
@@ -21,7 +22,9 @@ INTLTOOL_FILES = intltool-extract.in \
 
 EXTRA_DIST = \
 	autogen.sh \
+	build_RPMs.sh \
 	sound_effects_player.desktop.in \
+	sound_effects_player.spec \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
 	sample/440Hz.wav \
@@ -96,12 +99,17 @@ icons_DATA = icons/sound_effects_player_icon.png
 # placed where desktop files are stored.
 
 install-data-local:
-applicationsdir=${datadir}/applications
+applicationsdir=${DESTDIR}${datadir}/applications
 	${MKDIR_P} ${applicationsdir}
 	chmod u+w ${applicationsdir}
 	$(SED) -e 's,[@]libdir[@],${libdir},' \
 ${srcdir}/sound_effects_player.desktop.in > \
 ${applicationsdir}/sound_effects_player.desktop
+
+# Make RPMs for Fedora and other RPM-based distributions.
+.phoney: RPMs
+RPMs:
+	bash build_RPMs.sh
 
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \

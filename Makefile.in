@@ -415,6 +415,7 @@ dist_doc_DATA = \
 	AUTHORS \
 	ChangeLog \
 	INSTALL \
+	LICENSE \
 	NEWS \
 	listing/code.pdf
 
@@ -424,7 +425,9 @@ INTLTOOL_FILES = intltool-extract.in \
 
 EXTRA_DIST = \
 	autogen.sh \
+	build_RPMs.sh \
 	sound_effects_player.desktop.in \
+	sound_effects_player.spec \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
 	sample/440Hz.wav \
@@ -486,7 +489,7 @@ EXTRA_DIST = \
 
 iconsdir = ${datadir}/icons/hicolor/48x48/apps
 icons_DATA = icons/sound_effects_player_icon.png
-applicationsdir = ${datadir}/applications
+applicationsdir = ${DESTDIR}${datadir}/applications
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \
 	intltool-update \
@@ -1045,6 +1048,11 @@ install-data-local:
 	$(SED) -e 's,[@]libdir[@],${libdir},' \
 ${srcdir}/sound_effects_player.desktop.in > \
 ${applicationsdir}/sound_effects_player.desktop
+
+# Make RPMs for Fedora and other RPM-based distributions.
+.phoney: RPMs
+RPMs:
+	bash build_RPMs.sh
 
 # Remove doc directory on uninstall
 uninstall-local:
