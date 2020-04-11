@@ -1,7 +1,7 @@
 /*
  * display_subroutines.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -182,6 +182,7 @@ display_current_activity (gchar * activity_text, GApplication * app)
   common_area = sep_get_common_area (app);
 
   /* Find the activity information in the common area. */
+  activity_label = NULL;
   children_list = gtk_container_get_children (GTK_CONTAINER (common_area));
   while (children_list != NULL)
     {

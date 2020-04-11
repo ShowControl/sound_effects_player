@@ -5,13 +5,18 @@ Summary:        Play sounds for live theatre
 
 License:        GPLv3+
 URL:            https://github.com/ShowControl/sound_effects_player/
-Source0:        https://github.com/ShowControl/libtime/blob/master/sound_effects_player-%{version}.tar.gz
+Source0:        https://github.com/ShowControl/sound_effects_player/blob/master/sound_effects_player-%{version}.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  make
 BuildRequires:  python3 >= 3.5
 BuildRequires:  git
-BuildRequires: libtime-devel
+BuildRequires:  libtime-devel
+BuildRequires:  intltool
+BuildRequires:  gstreamer1-devel
+BuildRequires:  gstreamer1-plugins-base-devel
+BuildRequires:  gtk3-devel
+BuildRequires:  gtk-doc
 
 %global _hardened_build 1
 

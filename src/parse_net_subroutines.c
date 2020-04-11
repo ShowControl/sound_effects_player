@@ -1,7 +1,7 @@
 /*
  * parse_net_subroutines.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,12 +104,13 @@ parse_net_text (guint nread, gchar * text, GApplication * app)
   gchar *parameter_text = NULL;
   long int cluster_no;
   long long int cue_number;
-
+  int i;
+  
   if (TRACE_PARSE_NET)
     {
       printf ("network message, length %d, contents (in hexadecimal): ",
               nread);
-      for (int i = 0; i < nread; i++)
+      for (i = 0; i < nread; i++)
         {
           printf ("%02x", text[i]);
         }
@@ -173,7 +174,7 @@ parse_net_text (guint nread, gchar * text, GApplication * app)
 
       /* The datagram starts with "/" but is not recognized.  */
       g_print ("Unknown message (in hexadecimal): ");
-      for (int i = 0; i < nread; i++)
+      for (i = 0; i < nread; i++)
         {
           printf ("%02x", text[i]);
         }
