@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.111
+Version:        0.112
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -43,6 +43,9 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 %description doc
 The %{name}-doc package contains
 the documentation for %{name}.
+This is currently some design documents for the
+higher-level project, show_control, and a how-to
+document for sound_effects_player.
 
 %files
 %defattr(-,root,root)
@@ -84,7 +87,13 @@ the documentation for %{name}.
 
 %files doc
 %defattr(-,root,root)
+%doc %{_docdir}/%{name}/How_to_use_the_Sound_Effects_Player.pdf
+%doc %{_docdir}/%{name}/project_file.pdf
+%doc %{_docdir}/%{name}/sound_effects_player_overview.pdf
+%doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Sat Apr 11 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.112-1 Add documentation
 * Sat Apr 11 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.111-1 initial version of the spec file

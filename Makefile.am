@@ -13,6 +13,10 @@ dist_doc_DATA = \
 	INSTALL \
 	LICENSE \
 	NEWS \
+	Docs/How_to_use_the_Sound_Effects_Player.pdf \
+	Docs/project_file.pdf \
+	Docs/sound_effects_player_overview.pdf \
+	Docs/the_big_picture.pdf \
 	listing/code.pdf
 
 
