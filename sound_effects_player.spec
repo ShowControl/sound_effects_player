@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.112
+Version:        0.113
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -93,6 +93,8 @@ document for sound_effects_player.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Sun May 24 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.113-1 Support 8 sound channels.
 * Sat Apr 11 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.112-1 Add documentation
 * Sat Apr 11 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>

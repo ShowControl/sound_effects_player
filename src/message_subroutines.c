@@ -1,7 +1,7 @@
 /*
  * message_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  */
 
 /* GValueArray has been depreciated in favor of Garray since GLib 2.32,
- * but the "good" plugin named level still uses it in Gstreamer 1.12.  
+ * but the "good" plugin named level still uses it in Gstreamer 1.14.  
  * Maybe I will rewrite the level plugin to use Garray, but until then 
  * disable GLib depreciation warnings. */
 #define GLIB_DISABLE_DEPRECATION_WARNINGS
@@ -38,7 +38,7 @@
 /* Process a message from the pipeline. User_data is the 
  * application, so we can reach the display.  */
 gboolean
-message_handler (GstBus * bus_element, GstMessage * message,
+message_handler (GstBus *bus_element, GstMessage *message,
                  gpointer user_data)
 {
   GstPipeline *pipeline_element;
@@ -49,7 +49,7 @@ message_handler (GstBus * bus_element, GstMessage * message,
     {
       /* For debugging, write out a graphical representation of the pipeline.  
        */
-      gstreamer_dump_pipeline (pipeline_element);
+      gstreamer_dump_pipeline (pipeline_element, "message");
     }
 
   switch (GST_MESSAGE_TYPE (message))
@@ -103,6 +103,11 @@ message_handler (GstBus * bus_element, GstMessage * message,
                 /* Converting from dB to normal gives us a value between 
                  * 0.0 and 1.0. */
                 rms = pow (10, rms_dB / 20);
+		if (TRACE_MESSAGES)
+		  {
+		    g_print ("Update VU meter %d: %f, %f, %f, %f.\n",
+			     i, rms, rms_dB, peak_dB, decay_dB);
+		  }
                 display_update_vu_meter (user_data, i, rms, peak_dB,
                                          decay_dB);
               }
@@ -292,3 +297,5 @@ message_handler (GstBus * bus_element, GstMessage * message,
    * so the core can unref the message for us. */
   return TRUE;
 }
+
+/* End of file message_subroutines.c  */

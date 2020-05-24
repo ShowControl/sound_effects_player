@@ -1,7 +1,7 @@
 /*
  * parse_xml_subroutines.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,12 +29,157 @@
 #include "sequence_structure.h"
 #include "sequence_subroutines.h"
 
-/* Dig through a sounds xml file, or the sounds content of an equipment
- * or project xml file, looking for the individual sounds.  Construct the
- * sound effect player's internal data structure for each sound.  */
+#define TRACE_PARSE_XML FALSE
+
+/* Process the speakers section of a sound channel.
+ * We describe how much of the channel's sound goes to each speaker.  */
 static void
-parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
-                   xmlNodePtr sounds_loc, GApplication * app)
+parse_speakers_info (xmlDocPtr sounds_file, gchar *sounds_file_name,
+		     xmlNodePtr speakers_loc,
+		     struct sound_info *sound_data,
+		     struct channel_info *channel_data,
+		     GApplication *app)
+{
+  const xmlChar *speakers_name, *speaker_name;
+  xmlChar *speaker_name_data;
+  gdouble double_data;
+  xmlNodePtr speaker_loc;
+  struct speaker_info *speaker_data;
+  
+  /* We start at the children of a "speakers" section.  Each child should
+   * be a "speaker". */
+  while (speakers_loc != NULL)
+    {
+      speakers_name = speakers_loc->name;
+      if (xmlStrEqual (speakers_name, (const xmlChar *) "speaker"))
+	{
+	  speaker_loc = speakers_loc->xmlChildrenNode;
+	  /* Allocate data to describe this speaker and
+	   * initialize it with the default values.  */
+	  speaker_data = g_malloc (sizeof (struct speaker_info));
+	  speaker_data->name = NULL;
+	  speaker_data->volume_level = 1.0;
+	  speaker_data->speaker_code = -100;
+	  speaker_data->output_channel = -100;
+
+	  while (speaker_loc != NULL)
+	    {
+	      speaker_name = speaker_loc->name;
+	      if (xmlStrEqual (speaker_name, (const xmlChar *) "name"))
+		{
+		  /* Speaker names are "all", "none", a position like
+		   * "front_left" or a number.  */
+		  speaker_name_data =
+		    xmlNodeListGetString (sounds_file,
+					  speaker_loc->xmlChildrenNode, 1);
+		  speaker_data->name = g_strdup ((gchar *) speaker_name_data);
+		  xmlFree (speaker_name_data);
+		  speaker_name_data = NULL;
+		}
+	      
+	      if (xmlStrEqual (speaker_name, (const xmlChar *) "volume_level"))
+		{
+		  /* The amount of sound from this channel that flows
+		   * to this speaker.  1.0, which is the default, says to
+		   * pass the sound through without changing its volume.
+		   */
+		  speaker_name_data =
+		    xmlNodeListGetString (sounds_file,
+					  speaker_loc->xmlChildrenNode, 1);
+		  double_data =
+		    g_ascii_strtod ((gchar *) speaker_name_data, NULL);
+		  speaker_data->volume_level = double_data;
+		  xmlFree (speaker_name_data);
+		  speaker_name_data = NULL;
+		}
+	      
+	      speaker_loc = speaker_loc->next;
+	    }
+	  /* We have gathered the data for this speaker.
+	   * Add it to the list of speakers for this channel.
+	   */
+	  sound_append_speaker (speaker_data, channel_data, sound_data, app);
+	  speaker_data = NULL;
+	}
+      
+      speakers_loc = speakers_loc->next;
+    }
+  
+  return;
+}
+
+/* Process the channels section of a sound.  */
+static void
+parse_channels_info (xmlDocPtr sounds_file, gchar *sounds_file_name,
+		     xmlNodePtr channels_loc,
+		     struct sound_info *sound_data, GApplication *app)
+{
+  const xmlChar *channels_name, *channel_name;
+  xmlChar *channel_name_data;
+  gint64 long_data;
+  xmlNodePtr channel_loc;
+  struct channel_info *channel_data;
+  
+  /* We start at the children of a "channels" section.  Each child should
+   * be a "channel". */
+  while (channels_loc != NULL)
+    {
+      channels_name = channels_loc->name;
+      if (xmlStrEqual (channels_name, (const xmlChar *) "channel"))
+        {
+          /* This is a channel for this sound.  */
+          channel_loc = channels_loc->xmlChildrenNode;
+          /* Allocate a structure to hold channel information. */
+          channel_data = g_malloc (sizeof (struct channel_info));
+          /* Set the fields to their default values.  */
+          channel_data->number = -100;
+	  channel_data->speakers = NULL;
+	  
+          while (channel_loc != NULL)
+            {
+              channel_name = channel_loc->name;
+              if (xmlStrEqual (channel_name, (const xmlChar *) "number"))
+                {
+                  /* The channel number within the WAV file: 0, 1, ... */
+                  channel_name_data =
+                    xmlNodeListGetString (sounds_file,
+                                          channel_loc->xmlChildrenNode, 1);
+                  if (channel_name_data != NULL)
+                    {
+                      long_data  =
+			g_ascii_strtoll ((gchar *) channel_name_data, NULL, 10);
+                      xmlFree (channel_name_data);
+                      channel_name_data = NULL;
+                      channel_data->number = long_data;
+                    }
+                }
+
+	      if (xmlStrEqual (channel_name, (const xmlChar *) "speakers"))
+		{
+		  /* Process the per-speaker information about this sound
+		   * channel.
+		   */
+		  parse_speakers_info (sounds_file, sounds_file_name,
+				       channel_loc->xmlChildrenNode,
+				       sound_data, channel_data, app);
+		}
+	      
+              channel_loc = channel_loc->next;
+            }
+	  
+          /* Append this channel to the list of channels.  */
+          sound_append_channel (channel_data, sound_data, app);
+	  channel_data = NULL;
+        }
+      channels_loc = channels_loc->next;
+    }
+
+  return;
+}
+
+static void
+parse_sounds_info (xmlDocPtr sounds_file, gchar *sounds_file_name,
+                   xmlNodePtr sounds_loc, GApplication *app)
 {
   const xmlChar *name;
   xmlChar *name_data;
@@ -43,7 +188,7 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
   gint64 long_data;
   xmlNodePtr sound_loc;
   struct sound_info *sound_data;
-
+  
   file_dirname = NULL;
   absolute_file_name = NULL;
   name_data = NULL;
@@ -99,7 +244,14 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
           sound_data->function_key = NULL;
           sound_data->function_key_specified = FALSE;
           sound_data->omit_panning = FALSE;
+	  sound_data->channels = NULL;
+	  
+	  /* We will fill in this field by examining the sound's WAV file.  */
+	  sound_data->channel_count = 0;
 
+	  /* The value for this field depends on other sounds.  */
+	  sound_data->channel_mask = 0;
+	  
           /* These fields will be filled at run time.  */
           sound_data->sound_control = NULL;
           sound_data->cluster_widget = NULL;
@@ -167,6 +319,13 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
                                       absolute_file_name);
                           sound_data->disabled = TRUE;
                         }
+		      else
+			{
+			  /* Open the file and extract the number of channels.
+			   */
+			  sound_data->channel_count =
+			    sound_count_channels (absolute_file_name);
+			}
                       absolute_file_name = NULL;
                     }
                 }
@@ -453,8 +612,7 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
               if (xmlStrEqual (name, (const xmlChar *) "omit_panning"))
                 {
                   /* Do not allow the operator to pan this sound.
-                   * Needed for sounds with more than two channels, or
-                   * sounds with one channel that are directed at a
+                   * Needed for sounds with one channel that are directed at a
                    * specific speaker.  */
                   name_data =
                     xmlNodeListGetString (sounds_file,
@@ -466,6 +624,15 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar * sounds_file_name,
                   xmlFree (name_data);
                   name_data = NULL;
                 }
+
+              if (xmlStrEqual (name, (const xmlChar *) "channels"))
+                {
+		  /* Process the per-channel information about this sound.
+		   */
+		  parse_channels_info (sounds_file, absolute_file_name,
+				       sound_loc->xmlChildrenNode,
+				       sound_data, app);
+		}
 
               /* Ignore fields we don't recognize, so we can read future
                * XML files. */
@@ -1110,7 +1277,7 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
 }
 
 /* Dig through the sound_effects program section of an equipment file 
- * to find the network port, sound and sequence information.  */
+ * to find the network port, channel count, sound and sequence information.  */
 static void
 parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
                     xmlNodePtr program_loc, GApplication * app)
@@ -1126,12 +1293,13 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
   const xmlChar *sounds_name, *sequence_name;
   gboolean sounds_section_parsed, sequence_section_parsed;
   gchar *old_file_name;
-  xmlChar *key;
+  xmlChar *text_data;
   gint64 port_number, old_port_number;
+  gint64 speaker_count, old_speaker_count;
 
   /* We start at the children of a "program" section which has the
    * name "sound_effects". */
-  /* We are looking for port, sound and sequence sections.  */
+  /* We are looking for port, channel count, sound and sequence sections.  */
 
   file_name = NULL;
   file_dirname = NULL;
@@ -1145,10 +1313,17 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
       if (xmlStrEqual (name, (const xmlChar *) "port"))
         {
           /* This is the "port" section within "program"  */
-          key =
-            xmlNodeListGetString (equipment_file,
-                                  program_loc->xmlChildrenNode, 1);
-          port_number = g_ascii_strtoll ((gchar *) key, NULL, 10);
+          text_data = xmlNodeListGetString (equipment_file,
+					    program_loc->xmlChildrenNode, 1);
+          port_number = g_ascii_strtoll ((gchar *) text_data, NULL, 10);
+	  if ((port_number < 1) | (port_number > 65535))
+	    {
+	      g_printerr ("Network port specified as %s but it must be "
+			  "a number between 1 and 65535.\n", text_data);
+	      xmlFree (text_data);
+	      text_data = NULL;
+	      return;
+	    }
           /* Tell the network module the new network port number. */
           old_port_number = network_get_port (app);
           if (port_number != old_port_number)
@@ -1164,7 +1339,45 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
                 }
               sep_set_network_port_filename (equipment_file_name, app);
             }
-          xmlFree (key);
+          xmlFree (text_data);
+	  text_data = NULL;
+        }
+
+      if (xmlStrEqual (name, (const xmlChar *) "speaker_count"))
+        {
+          /* This is a "speaker_count" section. */
+	  text_data = xmlNodeListGetString (equipment_file,
+					    program_loc->xmlChildrenNode, 1);
+          speaker_count = g_ascii_strtoll ((gchar *) text_data, NULL, 10);
+	  if ((speaker_count < 1) | (speaker_count > 32))
+	    {
+	      g_printerr ("Speaker count is specified as %s but it must"
+			  " be an integer between 1 and 32.\n", text_data);
+	      xmlFree (text_data);
+	      text_data = NULL;
+	      return;		
+	    }
+	  if (TRACE_PARSE_XML)
+	    {
+	      g_print ("Speaker count = %ld.\n", speaker_count);
+	    }
+          /* Record the new speaker count. */
+          old_speaker_count = sep_get_speaker_count (app);
+          if (speaker_count != old_speaker_count)
+            {
+              sep_set_speaker_count (speaker_count, app);
+              old_file_name = sep_get_speaker_count_filename (app);
+              if (old_file_name != NULL)
+                {
+                  g_printerr ("Speaker count is set to %ld in file %s "
+                              "but was previously set to %ld in file %s.\n",
+                              speaker_count, equipment_file_name,
+                              old_speaker_count, old_file_name);
+                }
+              sep_set_speaker_count_filename (equipment_file_name, app);
+            }
+	  xmlFree (text_data);
+	  text_data = NULL;
         }
 
       if (xmlStrEqual (name, (const xmlChar *) "sounds"))
@@ -1207,6 +1420,10 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
               xmlThrDefIndentTreeOutput (1);
               xmlKeepBlanksDefault (0);
               xmlThrDefTreeIndentString ("    ");
+	      if (TRACE_PARSE_XML)
+		{
+		  g_print ("Parsing %s.\n", absolute_file_name);
+		}
               sounds_file = xmlParseFile (absolute_file_name);
               if (sounds_file == NULL)
                 {
@@ -1311,6 +1528,10 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
               xmlThrDefIndentTreeOutput (1);
               xmlKeepBlanksDefault (0);
               xmlThrDefTreeIndentString ("    ");
+	      if (TRACE_PARSE_XML)
+		{
+		  g_print ("Parsing %s.\n", absolute_file_name);
+		}
               sequence_file = xmlParseFile (absolute_file_name);
               if (sequence_file == NULL)
                 {
@@ -1382,8 +1603,10 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
 }
 
 /* Dig through an equipment xml file, or the equipment section of a project
- * xml file, looking for the sound effect player's sounds and network port.  
- * When we find the network port, tell the network module about it. 
+ * xml file, looking for the sound effect player's sounds and the number of
+ * sound channels.
+ * When we find the number of channels, note it so we can use it when
+ * we set up the gstreamer pipeline.
  * When we find sounds, parse the description.  */
 static void
 parse_equipment_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
@@ -1413,7 +1636,9 @@ parse_equipment_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
               return;
             }
           xmlFree (key);
+	  key = NULL;
         }
+
       if (xmlStrEqual (name, (const xmlChar *) "program"))
         {
           /* This is a "program" section.  We only care about the sound
@@ -1428,6 +1653,7 @@ parse_equipment_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
                                   program_loc, app);
             }
           xmlFree (program_id);
+	  program_id = NULL;
         }
       equipment_loc = equipment_loc->next;
     }
@@ -1524,6 +1750,10 @@ parse_project_info (xmlDocPtr project_file, gchar * project_file_name,
               xmlThrDefIndentTreeOutput (1);
               xmlKeepBlanksDefault (0);
               xmlThrDefTreeIndentString ("    ");
+	      if (TRACE_PARSE_XML)
+		{
+		  g_print ("Parsing %s.\n", absolute_file_name);
+		}
               equipment_file = xmlParseFile (absolute_file_name);
               if (equipment_file == NULL)
                 {
@@ -1801,6 +2031,10 @@ parse_xml_read_configuration_file (gchar * configuration_file_name,
   xmlThrDefIndentTreeOutput (1);
   xmlKeepBlanksDefault (0);
   xmlThrDefTreeIndentString ("    ");
+  if (TRACE_PARSE_XML)
+    {
+      g_print ("Parsing configuration file %s.\n", configuration_file_name);
+    }
   configuration_file = xmlParseFile (configuration_file_name);
   if (configuration_file == NULL)
     {
@@ -1988,6 +2222,10 @@ parse_xml_read_project_file (gchar * project_folder_name,
   xmlThrDefTreeIndentString ("    ");
   full_file_name =
     g_build_filename (project_folder_name, project_file_name, NULL);
+  if (TRACE_PARSE_XML)
+    {
+      g_print ("Parsing %s.\n", full_file_name);
+    }
   project_file = xmlParseFile (full_file_name);
   if (project_file == NULL)
     {

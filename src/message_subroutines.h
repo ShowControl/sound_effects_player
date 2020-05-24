@@ -1,7 +1,7 @@
 /*
  * message_subroutines.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,5 +20,5 @@
 #include <gst/gst.h>
 
 /* Subroutines declared in message_handler.c */
-gboolean message_handler (GstBus * bus_element, GstMessage * message,
+gboolean message_handler (GstBus *bus_element, GstMessage *message,
                           gpointer user_data);

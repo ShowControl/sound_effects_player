@@ -1,4 +1,4 @@
-.TH SOUND_EFFECTS_PLAYER 1 2019-10-12 ShowControl
+.TH SOUND_EFFECTS_PLAYER 1 2020-05-24 ShowControl
 .SH NAME
 sound_effects_player \- play sound effects for a live stage performance
 .SH SYNOPSIS
@@ -85,11 +85,15 @@ X display to use for sound effects operator interaction.
 .SH ENVIRONMENT
 This program makes heavy use of Gstreamer version 1, and provides
 two custom elements: gstlooper and gstenvelope.  When you install 
-sound_effects_player, these elements are stored on
+sound_effects_player from the source tarball, these elements are stored on
 \fI/usr/local/lib/gstreamer-1.0\fR.
 Therefore, to run sound_effects_player you will first have to type
 
 $ \fBexport GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0 \fR 
+
+This is not necessary if you install sound_effects_player
+from copr johnsauter / sound_effects_player or if you
+configure the source tarball with --prefix=/usr.
 
 Messages to the sound effects operator are displayed using 
 GTK version 3.
@@ -129,7 +133,7 @@ contains components for handling microphones and lights for
 community theatre.  However, like the other components, it 
 can be used on its own.
 
-.SH EXAMPLE
+.SH EXAMPLES
 .IP "sound_effects_player sample/Sample_project.xml"
 Read file Sample_project.xml in the sample directory,
 extract the sound effects from the description of the project,

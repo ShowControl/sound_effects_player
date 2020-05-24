@@ -21,14 +21,16 @@
 #include "display_subroutines.h"
 #include "sound_effects_player.h"
 
+#define TRACE_DISPLAY FALSE
+
 /* Update the VU meter. */
 void
-display_update_vu_meter (gpointer * user_data, gint channel,
+display_update_vu_meter (gpointer *user_data, gint channel,
                          gdouble new_value, gdouble peak_dB, gdouble decay_dB)
 {
   GtkWidget *common_area;
-  GList *children_list;
-  GList *grandchildren_list;
+  GList *children_list, *l1;
+  GList *grandchildren_list, *l2;
   const gchar *child_name;
   const gchar *grandchild_name;
   GtkWidget *VU_meter = NULL;
@@ -40,31 +42,33 @@ display_update_vu_meter (gpointer * user_data, gint channel,
 
   /* Find the VU meter in the common area. */
   children_list = gtk_container_get_children (GTK_CONTAINER (common_area));
-  while (children_list != NULL)
+  l1 = children_list;
+  while (l1 != NULL)
     {
-      child_name = gtk_widget_get_name (children_list->data);
+      child_name = gtk_widget_get_name (l1->data);
       if (g_ascii_strcasecmp (child_name, "global display") == 0)
         {
           grandchildren_list =
-            gtk_container_get_children (children_list->data);
-
-          while (grandchildren_list != NULL)
+            gtk_container_get_children (l1->data);
+	  l2 = grandchildren_list;
+	  
+          while (l2 != NULL)
             {
               grandchild_name =
-                gtk_widget_get_name (grandchildren_list->data);
+                gtk_widget_get_name (l2->data);
               if (g_ascii_strcasecmp (grandchild_name, "VU_meter") == 0)
                 {
-                  VU_meter = grandchildren_list->data;
+                  VU_meter = l2->data;
                   break;
                 }
-              grandchildren_list = grandchildren_list->next;
+              l2 = l2->next;
             }
           g_list_free (grandchildren_list);
         }
 
       if (VU_meter != NULL)
         break;
-      children_list = children_list->next;
+      l1 = l1->next;
     }
   g_list_free (children_list);
 
@@ -74,17 +78,23 @@ display_update_vu_meter (gpointer * user_data, gint channel,
   /* Within the VU_meter box is a level bar for each channel.  
    * Find the level bar for this channel. */
   children_list = gtk_container_get_children (GTK_CONTAINER (VU_meter));
-  while (children_list != NULL)
+  l1 = children_list;
+  while (l1 != NULL)
     {
-      channel_level_bar = GTK_LEVEL_BAR (children_list->data);
+      channel_level_bar = GTK_LEVEL_BAR (l1->data);
       child_name = gtk_widget_get_name (GTK_WIDGET (channel_level_bar));
+      if (TRACE_DISPLAY)
+	{
+	  g_print ("child name: %s.\n", child_name);
+	}
       channel_number = g_ascii_strtoll (child_name, NULL, 10);
       if (channel_number == channel)
         break;
-      children_list = children_list->next;
+      l1 = l1->next;
     }
   g_list_free (children_list);
-  if (channel_level_bar == NULL)
+
+  if (l1 == NULL)
     return;
 
   /* Set the value of the level bar, between 0 and 1.  
@@ -93,6 +103,12 @@ display_update_vu_meter (gpointer * user_data, gint channel,
   channel_value = new_value;
   if (channel_value < 0.01)
     channel_value = 0.01;
+
+  if (TRACE_DISPLAY)
+    {
+      g_print ("VU meter %d (%s) set to %f.\n",
+	       channel, child_name, channel_value);
+    }
   gtk_level_bar_set_value (channel_level_bar, channel_value);
 
   return;
@@ -174,8 +190,8 @@ display_current_activity (gchar * activity_text, GApplication * app)
 {
   GtkLabel *activity_label;
   GtkWidget *common_area;
-  GList *children_list;
-  GList *grandchildren_list;
+  GList *children_list, *l1;
+  GList *grandchildren_list, *l2;
   const gchar *child_name;
   const gchar *grandchild_name;
 
@@ -184,15 +200,17 @@ display_current_activity (gchar * activity_text, GApplication * app)
   /* Find the activity information in the common area. */
   activity_label = NULL;
   children_list = gtk_container_get_children (GTK_CONTAINER (common_area));
-  while (children_list != NULL)
+  l1 = children_list;
+  while (l1 != NULL)
     {
-      child_name = gtk_widget_get_name (children_list->data);
+      child_name = gtk_widget_get_name (l1->data);
       if (g_ascii_strcasecmp (child_name, "global display") == 0)
         {
           grandchildren_list =
             gtk_container_get_children (children_list->data);
-
-          while (grandchildren_list != NULL)
+	  l2 = grandchildren_list;
+	  
+          while (l2 != NULL)
             {
               grandchild_name =
                 gtk_widget_get_name (grandchildren_list->data);
@@ -201,17 +219,16 @@ display_current_activity (gchar * activity_text, GApplication * app)
                   activity_label = grandchildren_list->data;
                   break;
                 }
-              grandchildren_list = grandchildren_list->next;
+              l2 = l2->next;
             }
           g_list_free (grandchildren_list);
         }
 
       if (activity_label != NULL)
         break;
-      children_list = children_list->next;
+      l1 = l1->next;
     }
   g_list_free (children_list);
-
 
   if (activity_label == NULL)
     return;
@@ -220,3 +237,5 @@ display_current_activity (gchar * activity_text, GApplication * app)
   return;
 
 }
+
+/* End of file display_subroutines.c  */

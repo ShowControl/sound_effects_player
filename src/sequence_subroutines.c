@@ -1,7 +1,7 @@
 /*
  * sequence_subroutines.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,54 +72,54 @@ struct remember_info
 static struct sequence_item_info *find_item_by_name (gchar * item_name,
                                                      struct sequence_info
                                                      *sequence_data,
-                                                     GApplication * app);
+                                                     GApplication *app);
 
 static void execute_items (struct sequence_info *sequence_data,
-                           GApplication * app);
+                           GApplication *app);
 
 static void execute_item (struct sequence_item_info *the_item,
                           struct sequence_info *sequence_data,
-                          GApplication * app);
+                          GApplication *app);
 
 static void execute_start_sound (struct sequence_item_info *the_item,
                                  struct sequence_info *sequence_data,
-                                 GApplication * app);
+                                 GApplication *app);
 
 static void execute_stop_sound (struct sequence_item_info *the_item,
                                 struct sequence_info *sequence_data,
-                                GApplication * app);
+                                GApplication *app);
 
 static void execute_wait (struct sequence_item_info *the_item,
                           struct sequence_info *sequence_data,
-                          GApplication * app);
+                          GApplication *app);
 
-static void wait_completed (void *remember_data, GApplication * app);
+static void wait_completed (void *remember_data, GApplication *app);
 
 static void execute_offer_sound (struct sequence_item_info *the_item,
                                  struct sequence_info *sequence_data,
-                                 GApplication * app);
+                                 GApplication *app);
 
 static void execute_cease_offering_sound (struct sequence_item_info *the_item,
                                           struct sequence_info *sequence_data,
-                                          GApplication * app);
+                                          GApplication *app);
 
 static void execute_operator_wait (struct sequence_item_info *the_item,
                                    struct sequence_info *sequence_data,
-                                   GApplication * app);
+                                   GApplication *app);
 
 static void execute_cancel_wait (struct sequence_item_info *the_item,
                                  struct sequence_info *sequence_data,
-                                 GApplication * app);
+                                 GApplication *app);
 
 static void update_operator_display (struct sequence_info *sequence_data,
-                                     GApplication * app);
-static void clock_tick (void *sequence_data, GApplication * app);
+                                     GApplication *app);
+static void clock_tick (void *sequence_data, GApplication *app);
 
 /* Subroutines for handling sequence items.  */
 
 /* Initialize the internal sequencer.  */
 void *
-sequence_init (GApplication * app)
+sequence_init (GApplication *app)
 {
   struct sequence_info *sequence_data;
 
@@ -137,7 +137,7 @@ sequence_init (GApplication * app)
 
 /* Append a sequence item to the sequence. */
 void
-sequence_append_item (struct sequence_item_info *item, GApplication * app)
+sequence_append_item (struct sequence_item_info *item, GApplication *app)
 {
   struct sequence_info *sequence_data;
 
@@ -148,7 +148,7 @@ sequence_append_item (struct sequence_item_info *item, GApplication * app)
 
 /* Start running the sequencer.  */
 void
-sequence_start (GApplication * app)
+sequence_start (GApplication *app)
 {
   struct sequence_info *sequence_data;
   GList *item_list;
@@ -196,7 +196,7 @@ sequence_start (GApplication * app)
 /* Execute the named next item, and continue execution until we must
  * wait for something or we run out of items to execute.  */
 static void
-execute_items (struct sequence_info *sequence_data, GApplication * app)
+execute_items (struct sequence_info *sequence_data, GApplication *app)
 {
   struct sequence_item_info *next_item;
   gchar *display_text;
@@ -240,7 +240,7 @@ execute_items (struct sequence_info *sequence_data, GApplication * app)
  * returns NULL.  */
 struct sequence_item_info *
 find_item_by_name (gchar * item_name, struct sequence_info *sequence_data,
-                   GApplication * app)
+                   GApplication *app)
 {
 
   struct sequence_item_info *item, *found_item;
@@ -275,7 +275,7 @@ find_item_by_name (gchar * item_name, struct sequence_info *sequence_data,
 /* Execute a sequence item.  */
 void
 execute_item (struct sequence_item_info *the_item,
-              struct sequence_info *sequence_data, GApplication * app)
+              struct sequence_info *sequence_data, GApplication *app)
 {
   gchar *display_text;
 
@@ -328,7 +328,7 @@ execute_item (struct sequence_item_info *the_item,
 /* Execute a Start Sound sequence item.  */
 void
 execute_start_sound (struct sequence_item_info *the_item,
-                     struct sequence_info *sequence_data, GApplication * app)
+                     struct sequence_info *sequence_data, GApplication *app)
 {
   gint cluster_number;
   struct sound_info *sound_effect;
@@ -447,7 +447,7 @@ execute_start_sound (struct sequence_item_info *the_item,
 /* Execute a Stop Sound sequence item.  */
 void
 execute_stop_sound (struct sequence_item_info *the_item,
-                    struct sequence_info *sequence_data, GApplication * app)
+                    struct sequence_info *sequence_data, GApplication *app)
 {
 
   struct remember_info *remember_data;
@@ -507,7 +507,7 @@ execute_stop_sound (struct sequence_item_info *the_item,
 /* Execute a Wait sequence item.  */
 void
 execute_wait (struct sequence_item_info *the_item,
-              struct sequence_info *sequence_data, GApplication * app)
+              struct sequence_info *sequence_data, GApplication *app)
 {
   struct remember_info *remember_data;
   gchar *trace_text;
@@ -566,7 +566,7 @@ execute_wait (struct sequence_item_info *the_item,
 
 /* Call here from the timer when a wait is completed.  */
 static void
-wait_completed (void *user_data, GApplication * app)
+wait_completed (void *user_data, GApplication *app)
 {
   struct remember_info *remember_data = user_data;
   struct sequence_info *sequence_data;
@@ -629,7 +629,7 @@ wait_completed (void *user_data, GApplication * app)
 /* Execute an Offer Sound sequence item.  */
 void
 execute_offer_sound (struct sequence_item_info *the_item,
-                     struct sequence_info *sequence_data, GApplication * app)
+                     struct sequence_info *sequence_data, GApplication *app)
 {
   struct remember_info *remember_data;
   gchar *trace_text;
@@ -678,7 +678,7 @@ execute_offer_sound (struct sequence_item_info *the_item,
 void
 execute_cease_offering_sound (struct sequence_item_info *the_item,
                               struct sequence_info *sequence_data,
-                              GApplication * app)
+                              GApplication *app)
 {
   gint cluster_number;
   struct remember_info *remember_data;
@@ -743,7 +743,7 @@ execute_cease_offering_sound (struct sequence_item_info *the_item,
 void
 execute_operator_wait (struct sequence_item_info *the_item,
                        struct sequence_info *sequence_data,
-                       GApplication * app)
+                       GApplication *app)
 {
   struct remember_info *remember_data;
   gchar *trace_text;
@@ -796,7 +796,7 @@ execute_operator_wait (struct sequence_item_info *the_item,
 /* Execute a Cancel Wait sequence item.  */
 void
 execute_cancel_wait (struct sequence_item_info *the_item,
-                     struct sequence_info *sequence_data, GApplication * app)
+                     struct sequence_info *sequence_data, GApplication *app)
 {
   struct remember_info *remember_data;
   struct sequence_item_info *current_sequence_item;
@@ -906,7 +906,7 @@ execute_cancel_wait (struct sequence_item_info *the_item,
  * the current item in case of a tie.  */
 static void
 update_operator_display (struct sequence_info *sequence_data,
-                         GApplication * app)
+                         GApplication *app)
 {
   struct remember_info *remember_data;
   struct sequence_item_info *sequence_item;
@@ -1014,7 +1014,7 @@ update_operator_display (struct sequence_info *sequence_data,
 
 /* Come here when the 0.1-second clock ticks to update the activity display.  */
 static void
-clock_tick (void *user_data, GApplication * app)
+clock_tick (void *user_data, GApplication *app)
 {
   struct sequence_info *sequence_data = user_data;
   update_operator_display (sequence_data, app);
@@ -1024,7 +1024,7 @@ clock_tick (void *user_data, GApplication * app)
 /* Execute the Go command from an external sequencer issuing MIDI Show Control
  * commands.  */
 void
-sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app)
+sequence_MIDI_show_control_go (gchar * Q_number, GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1103,7 +1103,7 @@ sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app)
 /* Execute the Go_off command from an external sequencer issuing MIDI Show 
  * Control commands.  */
 void
-sequence_MIDI_show_control_go_off (gchar * Q_number, GApplication * app)
+sequence_MIDI_show_control_go_off (gchar * Q_number, GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1145,7 +1145,7 @@ sequence_MIDI_show_control_go_off (gchar * Q_number, GApplication * app)
 /* Execute the Open Sound Control (OSC) cue command
  * when the operand is a number.  */
 void
-sequence_OSC_cue_number (guint osc_cue_number, GApplication * app)
+sequence_OSC_cue_number (guint osc_cue_number, GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1210,7 +1210,7 @@ sequence_OSC_cue_number (guint osc_cue_number, GApplication * app)
 /* Execute the Open Sound Control (OSC) cue command
  * when the operand is a string.  */
 void
-sequence_OSC_cue_string (gchar * osc_cue_string, GApplication * app)
+sequence_OSC_cue_string (gchar * osc_cue_string, GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1274,7 +1274,7 @@ sequence_OSC_cue_string (gchar * osc_cue_string, GApplication * app)
 
 /* Process the Start button on a cluster.  */
 void
-sequence_cluster_start (guint cluster_number, GApplication * app)
+sequence_cluster_start (guint cluster_number, GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1335,7 +1335,7 @@ sequence_cluster_start (guint cluster_number, GApplication * app)
 
 /* Process the Stop button on a cluster.  */
 void
-sequence_cluster_stop (guint cluster_number, GApplication * app)
+sequence_cluster_stop (guint cluster_number, GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1396,7 +1396,7 @@ sequence_cluster_stop (guint cluster_number, GApplication * app)
 
 /* Process the Play button.  */
 void
-sequence_button_play (GApplication * app)
+sequence_button_play (GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1457,7 +1457,7 @@ sequence_button_play (GApplication * app)
 /* Process the completion of a sound.  */
 void
 sequence_sound_completion (struct sound_info *sound_effect,
-                           gboolean terminated, GApplication * app)
+                           gboolean terminated, GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;
@@ -1589,7 +1589,7 @@ sequence_sound_completion (struct sound_info *sound_effect,
 /* Process the start of the release stage of a sound.  */
 void
 sequence_sound_release_started (struct sound_info *sound_effect,
-                                GApplication * app)
+                                GApplication *app)
 {
   struct sequence_info *sequence_data;
   struct remember_info *remember_data;

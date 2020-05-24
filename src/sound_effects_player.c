@@ -61,9 +61,8 @@ struct _Sound_Effects_PlayerPrivate
   GtkStatusbar *status_bar;
   guint context_id;
 
-  /* The list of sounds we can make.  Each item of the GList points
-   * to a sound_info structure. */
-  GList *sound_list;
+  /* The persistent information for the sound subroutines.  */
+  void *sounds_data;
 
   /* The persistent information for the internal sequencer.  */
   void *sequence_data;
@@ -94,6 +93,13 @@ struct _Sound_Effects_PlayerPrivate
    * for warning messages about duplicate settings.  */
   gchar *network_port_filename;
 
+  /* The name of the file from which the speaker count was set,
+   * for warning messages about duplicate settings.  */
+  gchar *speaker_count_filename;
+
+  /* The number of independent speakers.  */
+  gint64 speaker_count;
+  
   /* The folder that holds the project file.  */
   gchar *project_folder_name;
 
@@ -113,7 +119,7 @@ G_DEFINE_TYPE_WITH_PRIVATE (Sound_Effects_Player, sound_effects_player,
 
 /* Create a new window loading a file. */
 static void
-sound_effects_player_new_window (GApplication * app, GFile * file)
+sound_effects_player_new_window (GApplication *app, GFile *file)
 {
   GtkWindow *top_window;
   GtkWidget *common_area;
@@ -228,8 +234,11 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
   /* Set up the remainder of the private data. */
   priv->gstreamer_pipeline = NULL;
   priv->gstreamer_ready = FALSE;
-  priv->sound_list = NULL;
+  priv->speaker_count = 0;
 
+  /* Initalize the sound subroutines.  */
+  priv->sounds_data = sound_init (app);
+  
   /* Initialize the internal sequencer.  */
   priv->sequence_data = sequence_init (app);
 
@@ -284,7 +293,7 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
       message_code = display_show_message ("Loading...", app);
       parse_xml_read_project_file (priv->project_folder_name,
                                    priv->project_file_name, app);
-      priv->gstreamer_pipeline = sound_init (app);
+      priv->gstreamer_pipeline = sound_start (app);
       display_remove_message (message_code, app);
       if (priv->gstreamer_pipeline != NULL)
         {
@@ -309,7 +318,7 @@ sound_effects_player_new_window (GApplication * app, GFile * file)
 
 /* GApplication implementation */
 static void
-sound_effects_player_activate (GApplication * application)
+sound_effects_player_activate (GApplication *application)
 {
   /* Some high security environments disable the adjtimex function,
    * even when it is just fetching information.  
@@ -329,8 +338,8 @@ sound_effects_player_activate (GApplication * application)
 }
 
 static void
-sound_effects_player_open (GApplication * application, GFile ** files,
-                           gint n_files, const gchar * hint)
+sound_effects_player_open (GApplication *application, GFile **files,
+                           gint n_files, const gchar *hint)
 {
   gint i;
 
@@ -353,19 +362,16 @@ sound_effects_player_open (GApplication * application, GFile ** files,
 }
 
 static void
-sound_effects_player_init (Sound_Effects_Player * object)
+sound_effects_player_init (Sound_Effects_Player *object)
 {
   object->priv = sound_effects_player_get_instance_private (object);
 }
 
 static void
-sound_effects_player_dispose (GObject * object)
+sound_effects_player_dispose (GObject *object)
 {
   GApplication *app = (GApplication *) object;
   Sound_Effects_Player *self = (Sound_Effects_Player *) object;
-  GList *sound_effect_list;
-  GList *next_sound_effect;
-  struct sound_info *sound_effect;
 
   /* Deallocate the gstreamer pipeline.  */
   if (self->priv->gstreamer_pipeline != NULL)
@@ -374,22 +380,9 @@ sound_effects_player_dispose (GObject * object)
     }
 
   /* Deallocate the list of sound effects. */
-  sound_effect_list = self->priv->sound_list;
-
-  while (sound_effect_list != NULL)
-    {
-      sound_effect = sound_effect_list->data;
-      next_sound_effect = sound_effect_list->next;
-      g_free (sound_effect->name);
-      g_free (sound_effect->wav_file_name);
-      g_free (sound_effect->wav_file_name_full);
-      g_free (sound_effect->function_key);
-      g_free (sound_effect);
-      self->priv->sound_list =
-        g_list_delete_link (self->priv->sound_list, sound_effect_list);
-      sound_effect_list = next_sound_effect;
-    }
-
+  sound_finish (app);
+  self->priv->sounds_data = NULL;
+  
   if (self->priv->project_folder_name != NULL)
     {
       g_free (self->priv->project_folder_name);
@@ -428,14 +421,14 @@ sound_effects_player_dispose (GObject * object)
 }
 
 static void
-sound_effects_player_finalize (GObject * object)
+sound_effects_player_finalize (GObject *object)
 {
   G_OBJECT_CLASS (sound_effects_player_parent_class)->finalize (object);
   return;
 }
 
 static void
-sound_effects_player_class_init (Sound_Effects_PlayerClass * klass)
+sound_effects_player_class_init (Sound_Effects_PlayerClass *klass)
 {
   G_APPLICATION_CLASS (klass)->activate = sound_effects_player_activate;
   G_APPLICATION_CLASS (klass)->open = sound_effects_player_open;
@@ -456,7 +449,7 @@ sound_effects_player_new (void)
 
 /* This is called when the gstreamer pipeline has completed initialization.  */
 void
-sep_gstreamer_ready (GApplication * app)
+sep_gstreamer_ready (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -480,7 +473,7 @@ sep_gstreamer_ready (GApplication * app)
 
 /* Create the gstreamer pipeline by reading an XML file.  */
 void
-sep_create_pipeline (gchar * filename, GApplication * app)
+sep_create_pipeline (gchar * filename, GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -488,7 +481,7 @@ sep_create_pipeline (gchar * filename, GApplication * app)
 
   local_filename = g_strdup (filename);
   parse_xml_read_configuration_file (local_filename, app);
-  priv->gstreamer_pipeline = sound_init (app);
+  priv->gstreamer_pipeline = sound_start (app);
   local_filename = NULL;
 
   return;
@@ -496,7 +489,7 @@ sep_create_pipeline (gchar * filename, GApplication * app)
 
 /* Find the gstreamer pipeline.  */
 GstPipeline *
-sep_get_pipeline_from_app (GApplication * app)
+sep_get_pipeline_from_app (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -509,7 +502,7 @@ sep_get_pipeline_from_app (GApplication * app)
 
 /* Find the application, given any widget in the application.  */
 GApplication *
-sep_get_application_from_widget (GtkWidget * object)
+sep_get_application_from_widget (GtkWidget *object)
 {
   GtkWidget *toplevel_widget;
   GtkWindow *toplevel_window;
@@ -527,7 +520,7 @@ sep_get_application_from_widget (GtkWidget * object)
 
 /* Find the cluster which contains the given widget.  */
 GtkWidget *
-sep_get_cluster_from_widget (GtkWidget * object)
+sep_get_cluster_from_widget (GtkWidget *object)
 {
   GtkWidget *this_object;
   const gchar *widget_name;
@@ -557,19 +550,15 @@ sep_get_cluster_from_widget (GtkWidget * object)
  * given a widget inside that cluster. Return NULL if
  * the cluster is not running a sound effect. */
 struct sound_info *
-sep_get_sound_effect (GtkWidget * object)
+sep_get_sound_effect (GtkWidget *object)
 {
   GtkWidget *this_object;
   const gchar *widget_name;
   GtkWidget *cluster_widget = NULL;
   GtkWidget *toplevel_widget;
   GtkWindow *toplevel_window;
-  GtkApplication *app;
-  Sound_Effects_Player *self;
-  Sound_Effects_PlayerPrivate *priv;
-  GList *sound_effect_list;
-  struct sound_info *sound_effect = NULL;
-  gboolean sound_effect_found;
+  GtkApplication *gtk_app;
+  struct sound_info *sound_effect;
 
   /* Work up from the given widget until we find one whose name starts
    * with "cluster_". */
@@ -593,33 +582,18 @@ sep_get_sound_effect (GtkWidget * object)
   toplevel_widget = gtk_widget_get_toplevel (object);
   toplevel_window = GTK_WINDOW (toplevel_widget);
   /* Work through the pointer structure to the private data. */
-  app = gtk_window_get_application (toplevel_window);
-  self = SOUND_EFFECTS_PLAYER_APPLICATION (app);
-  priv = self->priv;
+  gtk_app = gtk_window_get_application (toplevel_window);
 
   /* Then we search through the sound effects for the one attached
    * to this cluster. */
-  sound_effect_list = priv->sound_list;
-  sound_effect_found = FALSE;
-  while (sound_effect_list != NULL)
-    {
-      sound_effect = sound_effect_list->data;
-      if (sound_effect->cluster_widget == cluster_widget)
-        {
-          sound_effect_found = TRUE;
-          break;
-        }
-      sound_effect_list = sound_effect_list->next;
-    }
-  if (sound_effect_found)
-    return (sound_effect);
-
-  return NULL;
+  sound_effect = sound_get_sound_effect_from_widget (cluster_widget,
+						     (GApplication *) gtk_app);
+  return (sound_effect);
 }
 
 /* Find a cluster, given its number.  */
 GtkWidget *
-sep_get_cluster_from_number (guint cluster_number, GApplication * app)
+sep_get_cluster_from_number (guint cluster_number, GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -649,7 +623,7 @@ sep_get_cluster_from_number (guint cluster_number, GApplication * app)
 
 /* Given a cluster, find its cluster number.  */
 guint
-sep_get_cluster_number (GtkWidget * cluster_widget)
+sep_get_cluster_number (GtkWidget *cluster_widget)
 {
   const gchar *widget_name;
   guint cluster_number;
@@ -671,7 +645,7 @@ sep_get_cluster_number (GtkWidget * cluster_widget)
  * was passed through gstreamer_setup and the gstreamer signaling system
  * as an opaque value.  */
 GtkWidget *
-sep_get_common_area (GApplication * app)
+sep_get_common_area (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -685,7 +659,7 @@ sep_get_common_area (GApplication * app)
 /* Find the network information.  The parameter passed is the application, which
  * was passed through the various gio callbacks as an opaque value.  */
 void *
-sep_get_network_data (GApplication * app)
+sep_get_network_data (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -697,7 +671,7 @@ sep_get_network_data (GApplication * app)
 
 /* Find the trace subroutines' persistent data.  */
 void *
-sep_get_trace_data (GApplication * app)
+sep_get_trace_data (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -710,7 +684,7 @@ sep_get_trace_data (GApplication * app)
 /* Find the network commands parser information.  
  * The parameter passed is the application.  */
 void *
-sep_get_parse_net_data (GApplication * app)
+sep_get_parse_net_data (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -723,7 +697,7 @@ sep_get_parse_net_data (GApplication * app)
 /* Find the top-level window, to use as the transient parent for
  * dialogs. */
 GtkWindow *
-sep_get_top_window (GApplication * app)
+sep_get_top_window (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -736,7 +710,7 @@ sep_get_top_window (GApplication * app)
 /* Find the operator text label widget, which is used to display
  * text from the sequencer to the operator.  */
 GtkLabel *
-sep_get_operator_text (GApplication * app)
+sep_get_operator_text (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -748,7 +722,7 @@ sep_get_operator_text (GApplication * app)
 
 /* Find the status bar, which is used for messages.  */
 GtkStatusbar *
-sep_get_status_bar (GApplication * app)
+sep_get_status_bar (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -760,7 +734,7 @@ sep_get_status_bar (GApplication * app)
 
 /* Find the context ID, which is also needed for messages.  */
 guint
-sep_get_context_id (GApplication * app)
+sep_get_context_id (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -772,7 +746,7 @@ sep_get_context_id (GApplication * app)
 
 /* Find the configuration file. */
 xmlDocPtr
-sep_get_configuration_file (GApplication * app)
+sep_get_configuration_file (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -784,7 +758,7 @@ sep_get_configuration_file (GApplication * app)
 
 /* Remember the configuration file. */
 void
-sep_set_configuration_file (xmlDocPtr configuration_file, GApplication * app)
+sep_set_configuration_file (xmlDocPtr configuration_file, GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -801,7 +775,7 @@ sep_set_configuration_file (xmlDocPtr configuration_file, GApplication * app)
 
 /* Find the file where the network port was set. */
 gchar *
-sep_get_network_port_filename (GApplication * app)
+sep_get_network_port_filename (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -814,7 +788,7 @@ sep_get_network_port_filename (GApplication * app)
 /* Remember the file name where the network port was set. */
 void
 sep_set_network_port_filename (gchar * network_port_filename,
-                               GApplication * app)
+                               GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -828,9 +802,57 @@ sep_set_network_port_filename (gchar * network_port_filename,
   return;
 }
 
+/* Set the speaker count.  */
+void
+sep_set_speaker_count (gint64 speaker_count, GApplication *app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+  priv->speaker_count = speaker_count;
+  return;
+}
+
+/* Fetch the speaker count.  */
+gint64
+sep_get_speaker_count (GApplication *app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+  return (priv->speaker_count);
+}
+
+/* Find the file where the speaker count was set. */
+gchar *
+sep_get_speaker_count_filename (GApplication *app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+  gchar *speaker_count_filename;
+
+  speaker_count_filename = priv->speaker_count_filename;
+  return (speaker_count_filename);
+}
+
+/* Remember the file name where the speaker count was set. */
+void
+sep_set_speaker_count_filename (gchar * speaker_count_filename,
+                               GApplication *app)
+{
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+
+  if (priv->speaker_count_filename != NULL)
+    {
+      g_free (priv->speaker_count_filename);
+      priv->speaker_count_filename = NULL;
+    }
+  priv->speaker_count_filename = g_strdup (speaker_count_filename);
+  return;
+}
+
 /* Find the name of the project folder. */
 gchar *
-sep_get_project_folder_name (GApplication * app)
+sep_get_project_folder_name (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -842,7 +864,7 @@ sep_get_project_folder_name (GApplication * app)
 
 /* Remember the name of the project folder. */
 void
-sep_set_project_folder_name (gchar * project_folder_name, GApplication * app)
+sep_set_project_folder_name (gchar * project_folder_name, GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -859,7 +881,7 @@ sep_set_project_folder_name (gchar * project_folder_name, GApplication * app)
 
 /* Find the name of the project file. */
 gchar *
-sep_get_project_file_name (GApplication * app)
+sep_get_project_file_name (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -871,7 +893,7 @@ sep_get_project_file_name (GApplication * app)
 
 /* Remember the name of the project file. */
 void
-sep_set_project_file_name (gchar * project_file_name, GApplication * app)
+sep_set_project_file_name (gchar * project_file_name, GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -888,7 +910,7 @@ sep_set_project_file_name (gchar * project_file_name, GApplication * app)
 
 /* Find the name of the configuration file. */
 gchar *
-sep_get_configuration_filename (GApplication * app)
+sep_get_configuration_filename (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -900,7 +922,7 @@ sep_get_configuration_filename (GApplication * app)
 
 /* Find the path to the user interface files. */
 gchar *
-sep_get_ui_path (GApplication * app)
+sep_get_ui_path (GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -912,7 +934,7 @@ sep_get_ui_path (GApplication * app)
 
 /* Set the name of the configuration file. */
 void
-sep_set_configuration_filename (gchar * filename, GApplication * app)
+sep_set_configuration_filename (gchar *filename, GApplication *app)
 {
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
@@ -927,33 +949,21 @@ sep_set_configuration_filename (gchar * filename, GApplication * app)
   return;
 }
 
-/* Find the list of sound effects.  */
-GList *
-sep_get_sound_list (GApplication * app)
+/* Find the persistent data for the sound subroutines.  */
+void *
+sep_get_sounds_data (GApplication *app)
 {
-  GList *sound_list;
-
+  void *sounds_data;
   Sound_Effects_PlayerPrivate *priv =
     SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
 
-  sound_list = priv->sound_list;
-  return (sound_list);
-}
-
-/* Update the list of sound effects.  */
-void
-sep_set_sound_list (GList * sound_list, GApplication * app)
-{
-  Sound_Effects_PlayerPrivate *priv =
-    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
-
-  priv->sound_list = sound_list;
-  return;
+  sounds_data = priv->sounds_data;
+  return (sounds_data);
 }
 
 /* Find the persistent data for the internal sequencer.  */
 void *
-sep_get_sequence_data (GApplication * app)
+sep_get_sequence_data (GApplication *app)
 {
   void *sequence_data;
   Sound_Effects_PlayerPrivate *priv =
@@ -965,7 +975,7 @@ sep_get_sequence_data (GApplication * app)
 
 /* Find the persistent data for the signal handler.  */
 void *
-sep_get_signal_data (GApplication * app)
+sep_get_signal_data (GApplication *app)
 {
   void *signal_data;
   Sound_Effects_PlayerPrivate *priv =
@@ -977,7 +987,7 @@ sep_get_signal_data (GApplication * app)
 
 /* Find the persistent data for the timer.  */
 void *
-sep_get_timer_data (GApplication * app)
+sep_get_timer_data (GApplication *app)
 {
   void *timer_data;
   Sound_Effects_PlayerPrivate *priv =
@@ -986,3 +996,5 @@ sep_get_timer_data (GApplication * app)
   timer_data = priv->timer_data;
   return (timer_data);
 }
+
+/* End of file sound_effects_player.c */

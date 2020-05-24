@@ -62,7 +62,7 @@ static struct keyword_value_pairs keywords_with_values[] = {
 /* Initialize the network messages parser */
 
 void *
-parse_net_init (GApplication * app)
+parse_net_init (GApplication *app)
 {
   struct parse_net_info *parse_net_data;
   int i;
@@ -92,7 +92,7 @@ parse_net_init (GApplication * app)
 /* Receive a datagram from the network.  Parse and execute the command.
  */
 void
-parse_net_text (guint nread, gchar * text, GApplication * app)
+parse_net_text (guint nread, gchar *text, GApplication *app)
 {
   struct parse_net_info *parse_net_data;
   int command_length;
@@ -246,7 +246,6 @@ parse_net_text (guint nread, gchar * text, GApplication * app)
           g_print ("unknown command\n");
         }
 
-
       g_free (keyword_string);
       g_free (extra_text);
       g_free (parameter_text);
@@ -254,3 +253,5 @@ parse_net_text (guint nread, gchar * text, GApplication * app)
 
   return;
 }
+
+/* End of file parse_net_subroutines.c */

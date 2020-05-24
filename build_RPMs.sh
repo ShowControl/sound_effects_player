@@ -1,15 +1,16 @@
 #!/bin/bash
-# File: build_RPMs.sh, author: John Sauter, date: April 11, 2020.
+# File: build_RPMs.sh, author: John Sauter, date: May 16, 2020.
 # Build the RPMs for sound_effects_player
 
 # Requires fedora-packager, rpmdevtools, copr-cli.
 # Don't forget to tell copr-cli about your copr API token.
 # See https://developer.fedoraproject.org/deployment/copr/copr-cli.html.
 
+rm -rf ~/rpmbuild
 mkdir -p ~/rpmbuild
 mkdir -p ~/rpmbuild/SOURCES
 mkdir -p ~/rpmbuild/SRPMS
-mkdir -p ~/rpmbuild/RPMS/X84_64
+mkdir -p ~/rpmbuild/RPMS/x84_64
 
 pushd ~/rpmbuild
 # Set the umask so files created will not have strange permissions.
@@ -43,6 +44,6 @@ popd
 #mock -r fedora-31-x86_64 --rebuild --no-clean sound_effects_player-*.src.rpm
 
 # now that all local tests have passed, see if it builds on copr
-copr-cli build test sound_effects_player-*.src.rpm
+#copr-cli build test sound_effects_player-*.src.rpm
 
 # End of file build_RPMs.sh

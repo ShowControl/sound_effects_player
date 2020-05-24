@@ -1,7 +1,7 @@
 /*
  * sound_structure.h
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,7 +69,26 @@ struct sound_info
   gboolean running;             /* The sound is playing.  */
   gboolean release_sent;        /* A Release command was given.  */
   gboolean release_has_started; /* The sound has started its release stage.  */
+  gint channel_count;           /* The number of channels in this sound's wav
+				 * file.  Momo = 1, stereo = 2, etc.  */
+  guint64 channel_mask;         /* A bit set for each speaker.  */
+  GList *channels;              /* Information about each channel.  */
 };
 
+struct channel_info
+{
+  gint number;                  /* 0, 1, ... */
+  GList *speakers;              /* Information about each speaker.  */
+};
+
+struct speaker_info
+{
+  gchar *name;                 /* front_left, front_right, ... */
+  gint speaker_code;           /* code for speaker name */
+  gint output_channel;         /* number of output channel, based on
+				* the overall channel mask.  */
+  gfloat volume_level;         /* 1.0 means passthrough.  */
+};
+  
 #endif /* ifndef SOUND_STRUCTURE_H */
 /* End of file sound_structure.h */

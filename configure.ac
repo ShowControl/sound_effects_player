@@ -4,8 +4,8 @@ dnl Created originally by the Anjuta application wizard.
 dnl required version of autoconf
 AC_PREREQ([2.53])
 
-AC_INIT(sound_effects_player, [0.112], [John_Sauter@systemeyescomputerstore.com], sound_effects_player, [git@github.com:ShowControl/sound_effects_player.git])
-AC_DEFINE([MODIFICATION_DATE], ["April 11, 2020"], [last modification date])
+AC_INIT(sound_effects_player, [0.113], [John_Sauter@systemeyescomputerstore.com], sound_effects_player, [git@github.com:ShowControl/sound_effects_player.git])
+AC_DEFINE([MODIFICATION_DATE], ["May 24, 2020"], [last modification date])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE([1.11])
@@ -72,8 +72,8 @@ AC_CHECK_PROG(HAVE_PKGCONFIG, pkg-config, [ ], [
 ])
 
 dnl required versions of gstreamer and plugins-base
-GST_REQUIRED=1.0.0
-GSTPB_REQUIRED=1.0.0
+GST_REQUIRED=1.14.0
+GSTPB_REQUIRED=1.14.0
 
 
 dnl Check for the required version of GStreamer core (and gst-plugins-base)
@@ -107,7 +107,10 @@ PKG_CHECK_MODULES(GST, [
   ])
 ])
 
-PKG_CHECK_MODULES(SOUND_EFFECTS_PLAYER, [gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0 gtk-doc >= 1.14])
+PKG_CHECK_MODULES(SOUND_EFFECTS_PLAYER, \
+[gtk+-3.0 >= 3.14 gstreamer-1.0 gtk+-3.0 gstreamer-allocators-1.0 \
+gstreamer-plugins-base-1.0 gstreamer-base-1.0 gstreamer-app-1.0 \
+gstreamer-controller-1.0 gstreamer-audio-1.0 libxml-2.0 gtk-doc >= 1.14])
 
 dnl check if compiler understands -Wall (if yes, add -Wall to GST_CFLAGS)
 AC_MSG_CHECKING([to see if compiler understands -Wall])
@@ -129,7 +132,8 @@ fi
 AC_SUBST(plugindir)
 
 dnl set proper LDFLAGS for plugins
-GST_PLUGIN_LDFLAGS='-module -avoid-version -export-symbols-regex [_]*\(gst_\|Gst\|GST_\).*'
+GST_PLUGIN_LDFLAGS='-module -avoid-version \
+-export-symbols-regex [_]*\(gst_\|Gst\|GST_\).*'
 AC_SUBST(GST_PLUGIN_LDFLAGS)
 
 # check for gtk-doc
@@ -145,10 +149,12 @@ GST_LICENSE="LGPL"
 AC_DEFINE_UNQUOTED(GST_LICENSE, "$GST_LICENSE", [Gstreamer license])
 AC_SUBST(GST_LICENSE)
 GST_PACKAGE_NAME="Gstreamer source release"
-AC_DEFINE_UNQUOTED(GST_PACKAGE_NAME, "$GST_PACKAGE_NAME", [Gstreamer package name])
+AC_DEFINE_UNQUOTED(GST_PACKAGE_NAME, "$GST_PACKAGE_NAME", \
+[Gstreamer package name])
 AC_SUBST(GST_PACKAGE_NAME)
 GST_PACKAGE_ORIGIN="https://developer.gnome.org/gstreamer/"
-AC_DEFINE_UNQUOTED(GST_PACKAGE_ORIGIN, "$GST_PACKAGE_ORIGIN", [Gstreamer package origin])
+AC_DEFINE_UNQUOTED(GST_PACKAGE_ORIGIN, "$GST_PACKAGE_ORIGIN", \
+[Gstreamer package origin])
 AC_SUBST(GST_PACKAGE_ORIGIN)
 
 AC_CONFIG_FILES([
@@ -164,3 +170,5 @@ example_02/Makefile
 example_03/Makefile
 ])
 AC_OUTPUT
+
+# End of file configure.ac

@@ -44,6 +44,27 @@
       <!-- if no internal sequencer, function key to activate by sound
 	   effects operator -->
       <function_key></function_key>
+      <channels>
+	<!-- Channel 0 to speaker front_left, 1 to front_right.  -->
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume>1.0</volume>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume>1.0</volume>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
     </sound>
 
     <routing></routing>
