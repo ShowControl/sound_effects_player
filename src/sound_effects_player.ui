@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 
+<!-- Generated with glade 3.36.0 
 
 Copyright © 2020 by John Sauter
 
@@ -23,11 +23,6 @@ Author: John Sauter
 -->
 <interface>
   <requires lib="gtk+" version="3.14"/>
-  <!-- interface-license-type gplv3 -->
-  <!-- interface-name sound_effects_player -->
-  <!-- interface-description A program to play sound effects for live theatre. -->
-  <!-- interface-copyright 2019 by John Sauter -->
-  <!-- interface-authors John Sauter -->
   <object class="GtkApplicationWindow" id="top_level_window">
     <property name="width_request">600</property>
     <property name="can_focus">False</property>
@@ -37,9 +32,6 @@ Author: John Sauter
     <property name="default_height">600</property>
     <property name="icon_name">applications-multimedia</property>
     <signal name="delete-event" handler="menu_delete_top_window" object="top_box" swapped="no"/>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
     <child>
       <object class="GtkBox" id="top_box">
         <property name="name">top_box</property>
@@ -62,6 +54,7 @@ Author: John Sauter
                     <property name="name">activity</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Description of the current activiey</property>
                     <property name="wrap">True</property>
                     <property name="ellipsize">middle</property>
                     <property name="width_chars">29</property>
@@ -77,6 +70,7 @@ Author: John Sauter
                     <property name="name">VU_meter</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Indicates how loud the sound is in each channel</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkLevelBar" id="channel_00">
@@ -84,8 +78,6 @@ Author: John Sauter
                         <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_left">1</property>
-                        <property name="margin_right">1</property>
                         <property name="margin_top">1</property>
                         <property name="margin_bottom">1</property>
                         <property name="value">0.01</property>
@@ -102,8 +94,6 @@ Author: John Sauter
                         <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_left">1</property>
-                        <property name="margin_right">1</property>
                         <property name="margin_top">1</property>
                         <property name="margin_bottom">1</property>
                         <property name="value">0.01</property>
@@ -235,6 +225,7 @@ Author: John Sauter
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">stop making sound</property>
                     <signal name="toggled" handler="button_mute_toggled" object="top_level_window" swapped="no"/>
                   </object>
                   <packing>
@@ -245,12 +236,12 @@ Author: John Sauter
                 </child>
                 <child>
                   <object class="GtkButton" id="Pause">
-                    <property name="label">gtk-media-pause</property>
+                    <property name="label">Pause</property>
                     <property name="name">Pause</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="use_stock">True</property>
+                    <property name="tooltip_text" translatable="yes">stop progressing through the timeline</property>
                     <signal name="clicked" handler="button_pause_clicked" object="top_level_window" swapped="no"/>
                   </object>
                   <packing>
@@ -266,6 +257,7 @@ Author: John Sauter
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip_text" translatable="yes">resume progressing through the timeline</property>
                     <signal name="clicked" handler="button_continue_clicked" object="top_level_window" swapped="no"/>
                   </object>
                   <packing>
@@ -276,12 +268,12 @@ Author: John Sauter
                 </child>
                 <child>
                   <object class="GtkButton" id="play">
-                    <property name="label">gtk-media-play</property>
+                    <property name="label">Play</property>
                     <property name="name">play</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="use_stock">True</property>
+                    <property name="tooltip_text" translatable="yes">Do the next item on the schedule</property>
                     <signal name="clicked" handler="button_play_clicked" object="top_level_window" swapped="no"/>
                   </object>
                   <packing>
@@ -300,6 +292,7 @@ Author: John Sauter
                         <property name="name">volume_label</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">adjust the overall volume</property>
                         <property name="label" translatable="yes">volume</property>
                         <property name="width_chars">8</property>
                         <property name="max_width_chars">8</property>
@@ -358,6 +351,7 @@ audio-volume-medium-symbolic</property>
                     <property name="name">operator_text</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="tooltip_text" translatable="yes">Operator message</property>
                     <property name="width_chars">20</property>
                   </object>
                   <packing>
@@ -428,8 +422,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="name">cluster_00</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">5</property>
-                                    <property name="margin_right">5</property>
                                     <property name="margin_start">5</property>
                                     <property name="margin_end">5</property>
                                     <property name="margin_top">5</property>
@@ -1046,8 +1038,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="name">cluster_03</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">5</property>
-                                    <property name="margin_right">5</property>
                                     <property name="margin_start">5</property>
                                     <property name="margin_end">5</property>
                                     <property name="margin_top">5</property>
@@ -1255,8 +1245,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="name">cluster_04</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">5</property>
-                                    <property name="margin_right">5</property>
                                     <property name="margin_start">5</property>
                                     <property name="margin_end">5</property>
                                     <property name="margin_top">5</property>
@@ -1871,8 +1859,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="name">cluster_07</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">5</property>
-                                    <property name="margin_right">5</property>
                                     <property name="margin_start">5</property>
                                     <property name="margin_end">5</property>
                                     <property name="margin_top">5</property>
@@ -2080,8 +2066,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="name">cluster_08</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">5</property>
-                                    <property name="margin_right">5</property>
                                     <property name="margin_start">5</property>
                                     <property name="margin_end">5</property>
                                     <property name="margin_top">5</property>
@@ -2696,8 +2680,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="name">cluster_11</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">5</property>
-                                    <property name="margin_right">5</property>
                                     <property name="margin_start">5</property>
                                     <property name="margin_end">5</property>
                                     <property name="margin_top">5</property>
@@ -2905,8 +2887,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="name">cluster_12</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">5</property>
-                                    <property name="margin_right">5</property>
                                     <property name="margin_start">5</property>
                                     <property name="margin_end">5</property>
                                     <property name="margin_top">5</property>
@@ -3521,8 +3501,6 @@ audio-volume-medium-symbolic</property>
                                     <property name="name">cluster_15</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">5</property>
-                                    <property name="margin_right">5</property>
                                     <property name="margin_start">5</property>
                                     <property name="margin_end">5</property>
                                     <property name="margin_top">5</property>
@@ -3725,6 +3703,7 @@ audio-volume-medium-symbolic</property>
             <property name="name">status_bar</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="tooltip_text" translatable="yes">current status of the Sound Effects Player</property>
             <property name="margin_start">10</property>
             <property name="margin_end">10</property>
             <property name="margin_top">6</property>
@@ -3740,6 +3719,9 @@ audio-volume-medium-symbolic</property>
           </packing>
         </child>
       </object>
+    </child>
+    <child type="titlebar">
+      <placeholder/>
     </child>
   </object>
 </interface>

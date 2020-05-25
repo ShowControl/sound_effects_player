@@ -3,8 +3,8 @@ rm /tmp/0*.dot
 export GST_DEBUG_FILE=gstreamer_trace.txt
 export GST_DEBUG_DUMP_DOT_DIR="/tmp"
 export G_SLICE=debug-blocks
-#sound_effects_player --gst-debug=*:5 --process-id-file sep.txt --monitor-file monitor.wav ../The_Perils_of_Pauline/Pauline_project.xml
-sound_effects_player --gst-debug=*:5 --process-id-file sep.txt --monitor-file monitor.wav --configuration-file ../multichannel_test/Pauline_config.xml ../multichannel_test/Pauline_project.xml
+sound_effects_player --gst-debug=*:5 --process-id-file sep.txt --monitor-file monitor.wav ../The_Perils_of_Pauline/Pauline_project.xml
+#sound_effects_player --gst-debug=*:5 --process-id-file sep.txt --monitor-file monitor.wav --configuration-file ../multichannel_test/Pauline_config.xml ../multichannel_test/Pauline_project.xml
 #sound_effects_player --gst-debug=*:5 --process-id-file sep.txt ../The_Perils_of_Pauline/Pauline_project.xml
 #sound_effects_player --gst-debug=*:5 --process-id-file sep.txt --monitor-file monitor.wav --audio-output=none sample/Sample_project.xml
 #sound_effects_player --gst-debug=*:6 --process-id-file sep.txt sample/Sample_project.xml
