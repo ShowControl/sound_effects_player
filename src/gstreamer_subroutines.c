@@ -442,7 +442,7 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
   GstElement *source_element, *parse_element, *convert1_element;
   GstElement *resample_element, *looper_element;
   GstElement *envelope_element, *pan_element, *volume_element;
-  GstElement *convert2_element;
+  GstElement *convert2_element, *convert3_element;
   GstElement *bin_element, *final_bin_element;
   gchar *sound_name, *pad_name, *element_name;
   GstPad *source_pad, *sink_pad;
@@ -453,8 +453,9 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
   GValue v2 = G_VALUE_INIT;
   GValue v3 = G_VALUE_INIT;
   gint in_chan, out_chan;
-  GstCaps *caps_filter;
+  GstCaps *caps_filter1, *caps_filter2;
   gfloat volume_level;
+  guint64 channel_mask;
   gchar string_buffer[G_ASCII_DTOSTR_BUF_SIZE];
   
   /* Create the bin, source and various filter elements for this sound effect. 
@@ -481,15 +482,6 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
   if (parse_element == NULL)
     {
       g_print ("Unable to create the wave file parse element.\n");
-      return NULL;
-    }
-  g_free (element_name);
-
-  element_name = g_strconcat (sound_name, (gchar *) "/looper", NULL);
-  looper_element = gst_element_factory_make ("looper", element_name);
-  if (looper_element == NULL)
-    {
-      g_print ("Unable to create the looper element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -527,6 +519,50 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
       g_value_unset (&v2);
     }
   g_object_set_property (G_OBJECT (convert1_element), "mix-matrix", &v);
+  g_value_unset (&v);
+
+  element_name = g_strconcat (sound_name, (gchar *) "/looper", NULL);
+  looper_element = gst_element_factory_make ("looper", element_name);
+  if (looper_element == NULL)
+    {
+      g_print ("Unable to create the looper element.\n");
+      return NULL;
+    }
+  g_free (element_name);
+
+  element_name = g_strconcat (sound_name, (gchar *) "/convert2", NULL);
+  convert2_element = gst_element_factory_make ("audioconvert", element_name);
+  if (convert2_element == NULL)
+    {
+      g_print ("Unable to create the audio convert2 element.\n");
+      return NULL;
+    }
+  g_free (element_name);
+
+  /* Create a 1-1 mix matrix from the incoming to the outgoing channels.
+   */
+  g_value_init (&v, GST_TYPE_ARRAY);
+  for (out_chan=0; out_chan < sound_data->channel_count; out_chan++)
+    {
+      g_value_init (&v2, GST_TYPE_ARRAY);
+      for (in_chan=0; in_chan < sound_data->channel_count; in_chan++)
+	{
+	  g_value_init (&v3, G_TYPE_FLOAT);
+	  if (in_chan == out_chan)
+	    {
+	      g_value_set_float (&v3, (gfloat) 1.0);
+	    }
+	  else
+	    {
+	      g_value_set_float (&v3, (gfloat) 0.0);
+	    }
+	  gst_value_array_append_value (&v2, &v3);
+	  g_value_unset (&v3);
+	}
+      gst_value_array_append_value (&v, &v2);
+      g_value_unset (&v2);
+    }
+  g_object_set_property (G_OBJECT (convert2_element), "mix-matrix", &v);
   g_value_unset (&v);
 
   element_name = g_strconcat (sound_name, (gchar *) "/resample", NULL);
@@ -575,12 +611,12 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
     }
   g_free (element_name);
 
-  element_name = g_strconcat (sound_name, (gchar *) "/convert2", NULL);
-  convert2_element =
+  element_name = g_strconcat (sound_name, (gchar *) "/convert3", NULL);
+  convert3_element =
     gst_element_factory_make ("audioconvert", element_name);
-  if (convert2_element == NULL)
+  if (convert3_element == NULL)
     {
-      g_print ("Unable to create the convert2 element.\n");
+      g_print ("Unable to create the convert3 element.\n");
       return NULL;
     }
   g_free (element_name);
@@ -649,6 +685,7 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
       in_channels = 2;
     }
   out_channels = sep_get_speaker_count (app);
+  
   /* Create a mix matrix from the incoming to the outgoing channels.  */
   g_value_init (&v, GST_TYPE_ARRAY);
   for (out_chan=0; out_chan < out_channels; out_chan++)
@@ -666,48 +703,62 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
       gst_value_array_append_value (&v, &v2);
       g_value_unset (&v2);
     }
-  g_object_set_property (G_OBJECT (convert2_element), "mix-matrix", &v);
+  g_object_set_property (G_OBJECT (convert3_element), "mix-matrix", &v);
   g_value_unset (&v);
 
   /* Place the various elements in the bin. */
   gst_bin_add_many (GST_BIN (bin_element), source_element, parse_element,
-                    looper_element, convert1_element, resample_element,
-                    envelope_element, volume_element, convert2_element,
-                    NULL);
+                    convert1_element, looper_element, convert2_element,
+		    resample_element, envelope_element, volume_element,
+		    convert3_element, NULL);
   if (pan_element != NULL)
     {
       gst_bin_add_many (GST_BIN (bin_element), pan_element, NULL);
     }
 
   /* Link them together in this order: 
-   * source->parse->looper->convert1->resample->envelope->pan->volume->convert2.
+   * source->parse->convert1->looper->convert2->resample->envelope->pan->
+   * volume->convert3.
    * Note that because the looper reads the wave file directly, as well
-   * as getting it through the pipeline, the first audio converter must be
-   * after it.  It is for this reason that the looper handles a variety
-   * of audio formats.  Note also that the pan element is optional.  */
+   * as getting it through the pipeline, the first audio converter must
+   * provide the format that corresponds to the WAV file format, since
+   * otherwise the F32LE format later in the pipeline will be propagated
+   * up to it.  We must have the filter to specify the channel mask,
+   * else we get a warning message from Gstreamer about a missing
+   * channel mask for 4-channel WAV files.
+   * It is for this reason that the looper handles a variety of audio formats.  
+   * Note also that the pan element is optional.  */
 
-  /* When its input has more than two channels, the audio convert element
-   * prints a warning message "Upstream caps contain no channel mask".
-   * If I provide a channel mask, gstreamer fails to negotiate when
-   * there is a two-channel sound that plays on the rear left and
-   * rear right speakers.  I will submit this as a bug
-   * if I can reproduce it using just gstreamer facilities.  In the
-   * mean time just ignore the warning because everything seems to work.
-   */
-  caps_filter =
+  channel_mask = sound_data->channel_mask;
+  caps_filter1 =
     gst_caps_new_simple ("audio/x-raw",
+			 "format", G_TYPE_STRING, sound_data->format_name,
 			 "channels", G_TYPE_INT, sound_data->channel_count,
+			 "channel-mask", GST_TYPE_BITMASK, channel_mask,
 			 NULL);
-  if (caps_filter == NULL)
+  if (caps_filter1 == NULL)
     {
-      g_print ("Unable to create the caps filter for sound %s.\n",
+      g_print ("Unable to create caps filter 1 for sound %s.\n",
 	       sound_data->name);
     }
 
+  caps_filter2 =
+    gst_caps_new_simple ("audio/x-raw",
+			 "format", G_TYPE_STRING, "F32LE",
+			 "channels", G_TYPE_INT, sound_data->channel_count,
+			 "channel-mask", GST_TYPE_BITMASK, channel_mask,
+			 NULL);
+  if (caps_filter2 == NULL)
+    {
+      g_print ("Unable to create caps filter 2 for sound %s.\n",
+	       sound_data->name);
+    }
+  
   gst_element_link (source_element, parse_element);
-  gst_element_link (parse_element, looper_element);
-  gst_element_link_filtered (looper_element, convert1_element, caps_filter);
-  gst_element_link (convert1_element, resample_element);
+  gst_element_link (parse_element, convert1_element);
+  gst_element_link_filtered (convert1_element, looper_element, caps_filter1);
+  gst_element_link_filtered (looper_element, convert2_element, caps_filter1);
+  gst_element_link_filtered (convert2_element, resample_element, caps_filter2);
   gst_element_link (resample_element, envelope_element);
   if (pan_element != NULL)
     {
@@ -718,13 +769,15 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
     {
       gst_element_link (envelope_element, volume_element);
     }
-  gst_element_link (volume_element, convert2_element);
+  gst_element_link (volume_element, convert3_element);
 
-  gst_caps_unref (caps_filter);
-  caps_filter = NULL;
+  gst_caps_unref (caps_filter1);
+  caps_filter1 = NULL;
+  gst_caps_unref (caps_filter2);
+  caps_filter2 = NULL;
   
   /* The output of the bin is the output of the last element. */
-  source_pad = gst_element_get_static_pad (convert2_element, "src");
+  source_pad = gst_element_get_static_pad (convert3_element, "src");
   gst_element_add_pad (bin_element,
                        gst_ghost_pad_new ("src", source_pad));
 

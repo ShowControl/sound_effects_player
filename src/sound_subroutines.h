@@ -80,8 +80,12 @@ void sound_button_pause (GApplication *app);
 /* The Continue button has been pushed.  */
 void sound_button_continue (GApplication *app);
 
-/* Count the number of sound channels in a WAV file.  */
-gint sound_count_channels (const gchar *wav_file_name);
+/* Count the bit depth and number of sound channels in a WAV file.
+ * Return 1 on success, 0 on failure.  */
+gint
+sound_parse_wav_file_header (const gchar *wav_file_name,
+			     struct sound_info *sound_effect,
+			     GApplication *app);
 
 /* Add a channel description to a sound.  */
 void sound_append_channel (struct channel_info *channel_data,

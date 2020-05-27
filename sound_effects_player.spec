@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.114
+Version:        0.115
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -93,6 +93,8 @@ document for sound_effects_player.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Wed May 27 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.115-1 Avoid a warning when processing 4-channel sound files.
 * Mon May 25 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.114-1 Add tooltips to the GUI.
 * Sun May 24 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>

@@ -6,7 +6,6 @@
     <version>1.0</version>
     
     <program id="sound_effects">
-      <speaker_count>1</speaker_count>
       <sounds href="Sample_sounds.xml">
       </sounds>
       <sound_sequence href="Sample_sound_sequence.xml"/>

@@ -1,3 +1,7 @@
+Version 0.115, May 27, 2020
+  Avoid a warning message from Gstreamer when processing 4-channel sound files
+  by making sure the channel mask is propagated.
+  
 Version 0.114, May 25, 2020
   Add tooltips to the GUI.
   

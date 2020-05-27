@@ -69,6 +69,7 @@ struct sound_info
   gboolean running;             /* The sound is playing.  */
   gboolean release_sent;        /* A Release command was given.  */
   gboolean release_has_started; /* The sound has started its release stage.  */
+  gchar *format_name;           /* The format of the WAV file.  */
   gint channel_count;           /* The number of channels in this sound's wav
 				 * file.  Momo = 1, stereo = 2, etc.  */
   guint64 channel_mask;         /* A bit set for each speaker.  */

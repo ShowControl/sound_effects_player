@@ -1602,16 +1602,23 @@ sound_button_continue (GApplication *app)
   return;
 }
 
-/* Count the number of sound channels in a WAV file.  */
+/* Count the bit depth and number of sound channels in a WAV file.
+ * Return 1 on success, 0 on failure.  */
 gint
-sound_count_channels (const gchar *wav_file_name)
+sound_parse_wav_file_header (const gchar *wav_file_name,
+			     struct sound_info *sound_effect,
+			     GApplication *app)
 {
   FILE *file_stream;
   size_t amount_read;
   gint stream_status;
   gboolean file_open = FALSE;
-  gchar header [24];
+  gint channel_count;
+  gint format_code;
+  gchar *format_name;
+  gint bits_per_sample;
   gint return_value = 0;
+  gchar header [36];
   
   file_stream = fopen (wav_file_name, "rb");
   if (file_stream == NULL)
@@ -1622,12 +1629,12 @@ sound_count_channels (const gchar *wav_file_name)
     }
   file_open = TRUE;
 
-  /* Read the first 24 bytes of the file, which will give us everything
-   * we need to do some validation and find the number of channels.  */
-  amount_read = fread (&header, 1, 24, file_stream);
-  if (amount_read != 24)
+  /* Read the first 36 bytes of the file, which will give us everything
+   * we need to do some validation and find the information we need.  */
+  amount_read = fread (&header, 1, 36, file_stream);
+  if (amount_read != 36)
     {
-      g_printerr ("Failed to read the first 24 bytes of file \"%s\"; "
+      g_printerr ("Failed to read the first 36 bytes of file \"%s\"; "
 		  "got %lu bytes.", wav_file_name, amount_read);
       goto common_exit;
     }
@@ -1646,8 +1653,65 @@ sound_count_channels (const gchar *wav_file_name)
       goto common_exit;
     }
 
-  return_value = (header[23] * 256) + header[22];
+  /* the number of channels is a 2-byte integer at offset 22.  */
+  channel_count = header[22] + (header[23] * 256);
+
+  /* To find the format, we need the number of bits per sample
+   * at offset 34, and the format code at offset 20.  */
+  bits_per_sample = header[34] + (header[35] * 256);
+  format_code = header[20] + (header[21] * 256);
+
+  /* Note that whether a sample is signed or unsigned is not indicated
+   * in the WAV file format, so the convention is that 8-bit samples
+   * are unsigned and all the rest are signed.  */
+  format_name = NULL;
+  switch (bits_per_sample)
+    {
+    case 8:
+      format_name = "U8";
+      break;
+    case 16:
+      format_name = "S16LE";
+      break;
+    case 24:
+      format_name = "S24LE";
+    case 32:
+      if (format_code == 1)
+	{
+	  format_name = "S32LE";
+	  break;
+	}
+      if (format_code == 3)
+	{
+	  format_name = "F32LE";
+	  break;
+	}
+      break;
+    case 64:
+      format_name = "F64LE";
+      break;
+    default:
+      break;
+    }
+
+  if (format_name == NULL)
+    {
+      g_printerr ("Unparsable WAV file: "
+		  "format code %d, bits per sample %d, file name %s.\n",
+		  format_code, bits_per_sample, wav_file_name);
+      goto common_exit;
+    }
+
+  sound_effect->format_name = format_name;
+  sound_effect->channel_count = channel_count;
   
+  if (TRACE_SOUND)
+    {
+      g_print ("File %s is %s with %d channels.\n",
+	       wav_file_name, format_name, channel_count);
+    }
+  return_value = 1;
+
  common_exit:
   if (file_open)
     {
@@ -1656,6 +1720,7 @@ sound_count_channels (const gchar *wav_file_name)
         {
           g_printerr ("Failed to close file \"%s\".",
 		      wav_file_name);
+	  return_value = 0;
         }
       file_open = FALSE;
     }
@@ -1673,8 +1738,15 @@ sound_append_channel (struct channel_info *channel_data,
       g_print ("Channel %d in sound %s.\n",
 	       channel_data->number, sound_data->name);
     }
+  if (channel_data->number >= sound_data->channel_count)
+    {
+      g_printerr ("Sound %s has %d channels but specifies more.\n",
+		  sound_data->wav_file_name, sound_data->channel_count);
+      sound_data->disabled = TRUE;
+    }
   sound_data->channels = g_list_prepend (sound_data->channels,
 					 channel_data);
+  
   return;
 }
 

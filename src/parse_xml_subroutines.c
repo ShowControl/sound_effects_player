@@ -248,6 +248,7 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar *sounds_file_name,
 	  
 	  /* We will fill in this field by examining the sound's WAV file.  */
 	  sound_data->channel_count = 0;
+	  sound_data->format_name = NULL;
 
 	  /* The value for this field depends on other sounds.  */
 	  sound_data->channel_mask = 0;
@@ -321,10 +322,12 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar *sounds_file_name,
                         }
 		      else
 			{
-			  /* Open the file and extract the number of channels.
+			  /* Open the file WAV and extract the number of 
+			   * channels and file format.
 			   */
-			  sound_data->channel_count =
-			    sound_count_channels (absolute_file_name);
+			  sound_parse_wav_file_header (absolute_file_name,
+						       sound_data,
+						       app);
 			}
                       absolute_file_name = NULL;
                     }

@@ -12,8 +12,27 @@
       <wav_file_name>background_music.wav</wav_file_name>
       <designer_volume_level>0.33</designer_volume_level>
       <designer_pan>0.00</designer_pan>
+      <channels>	
+	<!-- Channel 0 to speaker front_left, 1 to front_right.  -->
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume>1.0</volume>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume>1.0</volume>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
     </sound>
-    
-    <routing></routing>
   </sounds>
 </show_control>
