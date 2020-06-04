@@ -19,43 +19,79 @@
 
 #include <gtk/gtk.h>
 #include "display_subroutines.h"
+#include "sound_subroutines.h"
 #include "sound_effects_player.h"
 
 #define TRACE_DISPLAY FALSE
 
-/* Update the VU meter. */
-void
-display_update_vu_meter (gpointer *user_data, gint channel,
-                         gdouble new_value, gdouble peak_dB, gdouble decay_dB)
+/* The persistent data used by the display subroutines.  */
+struct display_info
 {
+  GtkWidget *VU_meter;
+  gint initialized;
+};
+
+/* Subroutines for display progessing.  */
+void *
+display_init (GApplication *app)
+{
+  struct display_info *display_data;
+
+  display_data = g_malloc (sizeof (struct display_info));
+  display_data->VU_meter = NULL;
+  display_data->initialized = 0;
+  return (display_data);
+}
+
+void
+display_finish (GApplication *app)
+{
+  struct display_info *display_data;
+
+  display_data = sep_get_display_data (app);
+  g_free (display_data);
+  display_data = NULL;
+  return;
+}
+
+/* Initialize the display data.  We need the sound data to be complete,
+ * so we defer this until the first time we update the VU meter.  */
+void
+initialize_display_data (GApplication *app)
+{
+  struct display_info *display_data;
   GtkWidget *common_area;
   GList *children_list, *l1;
   GList *grandchildren_list, *l2;
+  GtkWidget *child_widget;
+  GtkWidget *grandchild_widget;
   const gchar *child_name;
   const gchar *grandchild_name;
   GtkWidget *VU_meter = NULL;
-  GtkLevelBar *channel_level_bar = NULL;
+  GtkLabel *text_label;
   gint64 channel_number;
-  gdouble channel_value;
+  gchar *speaker_abbreviation;
 
-  common_area = sep_get_common_area (G_APPLICATION (user_data));
-
+  display_data = sep_get_display_data (app);
+  
   /* Find the VU meter in the common area. */
+  common_area = sep_get_common_area (app);
   children_list = gtk_container_get_children (GTK_CONTAINER (common_area));
   l1 = children_list;
   while (l1 != NULL)
     {
-      child_name = gtk_widget_get_name (l1->data);
+      child_widget = l1->data;
+      child_name = gtk_widget_get_name (child_widget);
       if (g_ascii_strcasecmp (child_name, "global display") == 0)
         {
           grandchildren_list =
-            gtk_container_get_children (l1->data);
+	    gtk_container_get_children (GTK_CONTAINER (child_widget));
 	  l2 = grandchildren_list;
 	  
           while (l2 != NULL)
             {
-              grandchild_name =
-                gtk_widget_get_name (l2->data);
+	      grandchild_widget = l2->data;
+              grandchild_name = gtk_widget_get_name (grandchild_widget);
               if (g_ascii_strcasecmp (grandchild_name, "VU_meter") == 0)
                 {
                   VU_meter = l2->data;
@@ -64,6 +100,7 @@ display_update_vu_meter (gpointer *user_data, gint channel,
               l2 = l2->next;
             }
           g_list_free (grandchildren_list);
+	  grandchildren_list = NULL;
         }
 
       if (VU_meter != NULL)
@@ -71,32 +108,128 @@ display_update_vu_meter (gpointer *user_data, gint channel,
       l1 = l1->next;
     }
   g_list_free (children_list);
+  children_list = NULL;
 
+  /* If we didn't find the VU meter, do nothing.  */
   if (VU_meter == NULL)
     return;
 
-  /* Within the VU_meter box is a level bar for each channel.  
-   * Find the level bar for this channel. */
+  /* Within the VU_meter box is a label and a level bar for each channel.  
+   * Set the name of each output channel.  */
   children_list = gtk_container_get_children (GTK_CONTAINER (VU_meter));
   l1 = children_list;
+
   while (l1 != NULL)
     {
-      channel_level_bar = GTK_LEVEL_BAR (l1->data);
-      child_name = gtk_widget_get_name (GTK_WIDGET (channel_level_bar));
-      if (TRACE_DISPLAY)
-	{
-	  g_print ("child name: %s.\n", child_name);
-	}
+      child_widget = l1->data;
+      child_name = gtk_widget_get_name (child_widget);
       channel_number = g_ascii_strtoll (child_name, NULL, 10);
-      if (channel_number == channel)
-        break;
+      speaker_abbreviation = sound_output_channel_name (channel_number, app);
+      grandchildren_list =
+	gtk_container_get_children (GTK_CONTAINER (child_widget));
+      l2 = grandchildren_list;
+      while (l2 != NULL)
+	{
+	  grandchild_widget = l2->data;
+	  grandchild_name = gtk_widget_get_name (grandchild_widget);
+	  if (g_ascii_strcasecmp (grandchild_name, "label") == 0)
+	    {
+	      if (TRACE_DISPLAY)
+		{
+		  g_print ("Setting the name of channel %ld to \"%s\".\n",
+			   channel_number, speaker_abbreviation);
+		}
+	      text_label = GTK_LABEL (grandchild_widget);
+	      gtk_label_set_text (text_label, speaker_abbreviation);
+	    }
+	  l2 = l2->next;
+	}
+      g_list_free (grandchildren_list);
+      grandchildren_list = NULL;
       l1 = l1->next;
     }
   g_list_free (children_list);
+  children_list = NULL;
 
-  if (l1 == NULL)
+  /* Remember where the VU meter is.  */
+  display_data->VU_meter = VU_meter;
+  
+  /* We don't need to do this again.  */
+  display_data->initialized = 1;
+}
+
+/* Update the VU meter. */
+void
+display_update_vu_meter (gpointer *user_data, gint channel,
+                         gdouble new_value, gdouble peak_dB, gdouble decay_dB)
+{
+  struct display_info *display_data;
+  GList *children_list, *l1;
+  GtkWidget *child_widget;
+  const gchar *child_name;
+  GtkWidget *VU_meter = NULL;
+  GtkWidget *this_meter = NULL;
+  GtkLevelBar *channel_level_bar = NULL;
+  gint64 channel_number;
+  gdouble channel_value;
+  GApplication *app;
+
+  app = G_APPLICATION (user_data);
+  display_data = sep_get_display_data (app);
+
+  /* If we haven't done so already, find the VU meter and set the names
+   * of the output channels.  */
+  if (display_data->initialized == 0)
+    {
+      initialize_display_data (app);
+    }
+  VU_meter = display_data->VU_meter;
+  
+  /* Find the box for this channel. */
+  children_list = gtk_container_get_children (GTK_CONTAINER (VU_meter));
+  this_meter = NULL;
+  l1 = children_list;
+  
+  while (l1 != NULL)
+    {
+      child_widget = l1->data;
+      child_name = gtk_widget_get_name (child_widget);
+      channel_number = g_ascii_strtoll (child_name, NULL, 10);
+      if (channel_number == channel)
+	{
+	  this_meter = child_widget;
+	  break;
+	}
+      l1 = l1->next;
+    }
+  g_list_free (children_list);
+  children_list = NULL;
+  
+  if (this_meter == NULL)
     return;
 
+  /* Now find the level bar within the box for this output channel.  */
+  children_list = gtk_container_get_children (GTK_CONTAINER (this_meter));
+  channel_level_bar = NULL;
+  l1 = children_list;
+  
+  while (l1 != NULL)
+    {
+      child_widget = l1->data;
+      child_name = gtk_widget_get_name (child_widget);
+      if (g_ascii_strcasecmp (child_name, "LEVEL_BAR") == 0)
+	{
+	  channel_level_bar = GTK_LEVEL_BAR (child_widget);
+	  break;
+	}
+      l1 = l1->next;
+    }
+  g_list_free (children_list);
+  children_list = NULL;
+  
+  if (channel_level_bar == NULL)
+    return;
+  	  
   /* Set the value of the level bar, between 0 and 1.  
    * Due to what appears to be a bug in level_bar, do not set it very small.  
    */
@@ -106,8 +239,7 @@ display_update_vu_meter (gpointer *user_data, gint channel,
 
   if (TRACE_DISPLAY)
     {
-      g_print ("VU meter %d (%s) set to %f.\n",
-	       channel, child_name, channel_value);
+      g_print ("VU meter %d set to %f.\n", channel, channel_value);
     }
   gtk_level_bar_set_value (channel_level_bar, channel_value);
 
@@ -117,7 +249,7 @@ display_update_vu_meter (gpointer *user_data, gint channel,
 /* Show the user a message.  The return value is a message ID, which
  * can be used to remove the message.  */
 guint
-display_show_message (gchar * message_text, GApplication * app)
+display_show_message (gchar * message_text, GApplication *app)
 {
   GtkStatusbar *status_bar;
   guint context_id;
@@ -137,7 +269,7 @@ display_show_message (gchar * message_text, GApplication * app)
 
 /* Remove a previously-displayed message.  */
 void
-display_remove_message (guint message_id, GApplication * app)
+display_remove_message (guint message_id, GApplication *app)
 {
   GtkStatusbar *status_bar;
   guint context_id;
@@ -156,7 +288,7 @@ display_remove_message (guint message_id, GApplication * app)
 
 /* Display a message to the operator.  */
 void
-display_set_operator_text (gchar * text_to_display, GApplication * app)
+display_set_operator_text (gchar *text_to_display, GApplication *app)
 {
   GtkLabel *text_label;
 
@@ -171,7 +303,7 @@ display_set_operator_text (gchar * text_to_display, GApplication * app)
 
 /* Erase any operator message.  */
 void
-display_clear_operator_text (GApplication * app)
+display_clear_operator_text (GApplication *app)
 {
   GtkLabel *text_label;
 
@@ -186,10 +318,12 @@ display_clear_operator_text (GApplication * app)
 
 /* Update the current activity information.  */
 void
-display_current_activity (gchar * activity_text, GApplication * app)
+display_current_activity (gchar * activity_text, GApplication *app)
 {
   GtkLabel *activity_label;
   GtkWidget *common_area;
+  GtkWidget *child_widget;
+  GtkWidget *grandchild_widget;
   GList *children_list, *l1;
   GList *grandchildren_list, *l2;
   const gchar *child_name;
@@ -203,20 +337,22 @@ display_current_activity (gchar * activity_text, GApplication * app)
   l1 = children_list;
   while (l1 != NULL)
     {
-      child_name = gtk_widget_get_name (l1->data);
+      child_widget = l1->data;
+      child_name = gtk_widget_get_name (child_widget);
       if (g_ascii_strcasecmp (child_name, "global display") == 0)
         {
           grandchildren_list =
-            gtk_container_get_children (children_list->data);
+            gtk_container_get_children (GTK_CONTAINER (child_widget));
 	  l2 = grandchildren_list;
 	  
           while (l2 != NULL)
             {
+	      grandchild_widget = l2->data;
               grandchild_name =
-                gtk_widget_get_name (grandchildren_list->data);
+                gtk_widget_get_name (grandchild_widget);
               if (g_ascii_strcasecmp (grandchild_name, "activity") == 0)
                 {
-                  activity_label = grandchildren_list->data;
+                  activity_label = GTK_LABEL (grandchild_widget);
                   break;
                 }
               l2 = l2->next;

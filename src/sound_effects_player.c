@@ -64,6 +64,9 @@ struct _Sound_Effects_PlayerPrivate
   /* The persistent information for the sound subroutines.  */
   void *sounds_data;
 
+  /* The persistent information for the display subroutines.  */
+  void *display_data;
+  
   /* The persistent information for the internal sequencer.  */
   void *sequence_data;
 
@@ -236,6 +239,9 @@ sound_effects_player_new_window (GApplication *app, GFile *file)
   priv->gstreamer_ready = FALSE;
   priv->speaker_count = 0;
 
+  /* Initialize the display subroutines.  */
+  priv->display_data = display_init (app);
+  
   /* Initalize the sound subroutines.  */
   priv->sounds_data = sound_init (app);
   
@@ -379,6 +385,9 @@ sound_effects_player_dispose (GObject *object)
       self->priv->gstreamer_pipeline = gstreamer_dispose (app);
     }
 
+  /* Deallocate the persistent data used by the display subroutines.  */
+  display_finish (app);
+  
   /* Deallocate the list of sound effects. */
   sound_finish (app);
   self->priv->sounds_data = NULL;
@@ -959,6 +968,18 @@ sep_get_sounds_data (GApplication *app)
 
   sounds_data = priv->sounds_data;
   return (sounds_data);
+}
+
+/* Find the persistent data for the display subroutines.  */
+void *
+sep_get_display_data (GApplication *app)
+{
+  void *display_data;
+  Sound_Effects_PlayerPrivate *priv =
+    SOUND_EFFECTS_PLAYER_APPLICATION (app)->priv;
+
+  display_data = priv->display_data;
+  return (display_data);
 }
 
 /* Find the persistent data for the internal sequencer.  */

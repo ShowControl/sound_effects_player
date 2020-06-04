@@ -107,4 +107,9 @@ gfloat
 sound_mix_matrix_volume (gint in_chan, gint out_chan,
 			 struct sound_info *sound_effect, GApplication *app);
 
+/* Return the appreviated name of the speaker connected to the specified
+ * output channel.  */
+gchar *
+sound_output_channel_name (gint output_channel, GApplication *app);
+
 /* End of file sound_subroutines.h */

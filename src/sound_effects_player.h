@@ -160,6 +160,9 @@ gchar *sep_get_ui_path (GApplication *app);
 /* Find the persistent data for the sound subroutines.  */
 void *sep_get_sounds_data (GApplication *app);
 
+/* Find the persistent data for the display subroutines.  */
+void *sep_get_display_data (GApplication *app);
+
 /* Find the sequence information.  */
 void *sep_get_sequence_data (GApplication *app);
 

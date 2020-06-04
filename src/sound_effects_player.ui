@@ -73,14 +73,41 @@ Author: John Sauter
                     <property name="tooltip_text" translatable="yes">Indicates how loud the sound is in each channel</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkLevelBar" id="channel_00">
+                      <object class="GtkBox">
                         <property name="name">00</property>
-                        <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="value">0.01</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="name">label</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">label</property>
+                            <property name="width_chars">4</property>
+                            <property name="max_width_chars">4</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLevelBar" id="channel_00">
+                            <property name="name">LEVEL_BAR</property>
+                            <property name="height_request">10</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <property name="value">0.01</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -89,14 +116,41 @@ Author: John Sauter
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLevelBar" id="channel_01">
+                      <object class="GtkBox">
                         <property name="name">01</property>
-                        <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="value">0.01</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="name">label</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">label</property>
+                            <property name="width_chars">4</property>
+                            <property name="max_width_chars">4</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLevelBar" id="channel_01">
+                            <property name="name">LEVEL_BAR</property>
+                            <property name="height_request">10</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <property name="value">0.01</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -105,14 +159,41 @@ Author: John Sauter
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLevelBar" id="channel_02">
+                      <object class="GtkBox">
                         <property name="name">02</property>
-                        <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="value">0.01</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="name">label</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">label</property>
+                            <property name="width_chars">4</property>
+                            <property name="max_width_chars">4</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLevelBar" id="channel_02">
+                            <property name="name">LEVEL_BAR</property>
+                            <property name="height_request">10</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <property name="value">0.01</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -121,14 +202,41 @@ Author: John Sauter
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLevelBar" id="channel_03">
+                      <object class="GtkBox">
                         <property name="name">03</property>
-                        <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="value">0.01</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="name">label</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">label</property>
+                            <property name="width_chars">4</property>
+                            <property name="max_width_chars">4</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLevelBar" id="channel_03">
+                            <property name="name">LEVEL_BAR</property>
+                            <property name="height_request">10</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <property name="value">0.01</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -137,14 +245,41 @@ Author: John Sauter
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLevelBar" id="channel_04">
+                      <object class="GtkBox">
                         <property name="name">04</property>
-                        <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="value">0.01</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="name">label</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">label</property>
+                            <property name="width_chars">4</property>
+                            <property name="max_width_chars">4</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLevelBar" id="channel_04">
+                            <property name="name">LEVEL_BAR</property>
+                            <property name="height_request">10</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <property name="value">0.01</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -153,14 +288,41 @@ Author: John Sauter
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLevelBar" id="channel_05">
+                      <object class="GtkBox">
                         <property name="name">05</property>
-                        <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="value">0.01</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="name">label</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">label</property>
+                            <property name="width_chars">4</property>
+                            <property name="max_width_chars">4</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLevelBar" id="channel_05">
+                            <property name="name">LEVEL_BAR</property>
+                            <property name="height_request">10</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <property name="value">0.01</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -169,14 +331,41 @@ Author: John Sauter
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLevelBar" id="channel_06">
+                      <object class="GtkBox">
                         <property name="name">06</property>
-                        <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="value">0.01</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="name">label</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">label</property>
+                            <property name="width_chars">4</property>
+                            <property name="max_width_chars">4</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLevelBar" id="channel_06">
+                            <property name="name">LEVEL_BAR</property>
+                            <property name="height_request">10</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <property name="value">0.01</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -185,14 +374,41 @@ Author: John Sauter
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLevelBar" id="channel_07">
+                      <object class="GtkBox">
                         <property name="name">07</property>
-                        <property name="height_request">10</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_top">1</property>
-                        <property name="margin_bottom">1</property>
-                        <property name="value">0.01</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="name">label</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="label" translatable="yes">label</property>
+                            <property name="width_chars">4</property>
+                            <property name="max_width_chars">4</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLevelBar" id="channel_07">
+                            <property name="name">LEVEL_BAR</property>
+                            <property name="height_request">10</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_top">1</property>
+                            <property name="margin_bottom">1</property>
+                            <property name="value">0.01</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>

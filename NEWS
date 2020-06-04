@@ -1,3 +1,6 @@
+Version 0.116, June 3, 2020
+  Add speaker names to the VU meter.
+  
 Version 0.115, May 27, 2020
   Avoid a warning message from Gstreamer when processing 4-channel sound files
   by making sure the channel mask is propagated.

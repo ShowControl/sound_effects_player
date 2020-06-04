@@ -32,8 +32,11 @@
 /* The persistent data used by the sound subroutines.  */
 struct sounds_info
 {
-  GList *sounds_list;           /* The list of sounds.  */
-  guint64 channel_mask;        /* a bit set for each speaker */
+  GList *sounds_list;              /* The list of sounds.  */
+  guint64 channel_mask;            /* a bit set for each speaker */
+  gpointer *speaker_abbreviations; /* A speaker name for each output channel.
+                                    */
+  gint speaker_count;              /* The number of speakers.  */
 };
   
 /* Subroutines for processing sounds.  */
@@ -47,6 +50,7 @@ sound_init (GApplication *app)
   sounds_data = g_malloc (sizeof (struct sounds_info));
   sounds_data->sounds_list = NULL;
   sounds_data->channel_mask = 0;
+  sounds_data->speaker_abbreviations = NULL;
   return (sounds_data);
 }
 
@@ -60,7 +64,7 @@ sound_finish (GApplication *app)
   struct speaker_info *this_speaker;
   GList *sound_effect_list, *channel_list, *speaker_list;
   GList *next_sound_effect, *next_channel, *next_speaker;
-
+  
   /* Free all the heap storage allocated by the sound subroutines.  */
   sounds_data = sep_get_sounds_data (app);
   sound_effect_list = sounds_data->sounds_list;
@@ -100,7 +104,10 @@ sound_finish (GApplication *app)
       sound_effect_list = next_sound_effect;
     }
 
+  g_free (sounds_data->speaker_abbreviations);
+  sounds_data->speaker_abbreviations = NULL;
   g_free (sounds_data);
+  sounds_data = NULL;
   return;
 }
 
@@ -128,6 +135,8 @@ sound_process_speakers (struct sounds_info *sounds_data,
   gint out_chan;
   gint local_speaker_count;
   gint *map_table;
+  gpointer *speaker_abbreviations;
+  gchar *speaker_abbreviation;
   
   /* a hash table containing the valid speaker names */
   enum speaker_codes
@@ -141,7 +150,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
    speaker_top_front_center = 14, speaker_top_center = 15,
    speaker_top_rear_left = 16, speaker_top_rear_right = 17,
    speaker_top_side_left = 18, speaker_top_side_right = 19,
-   speaker_top_read_center = 20, speaker_bottom_front_center = 21,
+   speaker_top_rear_center = 20, speaker_bottom_front_center = 21,
    speaker_bottom_front_left = 22, speaker_bottom_front_right = 23,
    speaker_wide_left = 24, speaker_wide_right = 25,
    speaker_surround_left = 26, speaker_surround_right = 27,
@@ -160,7 +169,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
       speaker_top_front_center, speaker_top_center,
       speaker_top_rear_left, speaker_top_rear_right,
       speaker_top_side_left, speaker_top_side_right,
-      speaker_top_read_center, speaker_bottom_front_center,
+      speaker_top_rear_center, speaker_bottom_front_center,
       speaker_bottom_front_left, speaker_bottom_front_right,
       speaker_wide_left, speaker_wide_right,
       speaker_surround_left, speaker_surround_right,
@@ -195,7 +204,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
      {"top_rear_right", &speaker_values[17]},
      {"top_side_left", &speaker_values[18]},
      {"top_side_right", &speaker_values[19]},
-     {"top_read_center", &speaker_values[20]},
+     {"top_rear_center", &speaker_values[20]},
      {"bottom_front_center", &speaker_values[21]},
      {"bottom_front_left", &speaker_values[22]},
      {"bottom_front_right", &speaker_values[23]},
@@ -227,7 +236,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
 
   /* For each sound channel that does not have speakers assigned,
    * assign them the default speakers.  The default speaker layout
-   * is based on the number of channels.  */
+   * for a sound is based on the number of channels.  */
 
   sounds_list = sounds_data->sounds_list;
   while (sounds_list != NULL)
@@ -846,7 +855,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
 			  this_speaker->speaker_code = speaker_code;
 			  if (speaker_code > max_speaker_code)
 			    max_speaker_code = speaker_code;
-			  speaker_bit = 1 << speaker_code;
+			  speaker_bit = 1U << speaker_code;
 			  sound_effect->channel_mask =
 			    sound_effect->channel_mask | speaker_bit;
 			  if ((channel_mask & speaker_bit) == 0)
@@ -869,7 +878,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
 			  if ((speaker_code != speaker_all) &&
 			      (speaker_code != speaker_none))
 			    {
-			      speaker_bit = 1 << speaker_code;
+			      speaker_bit = 1U << speaker_code;
 			      sound_effect->channel_mask =
 				sound_effect->channel_mask | speaker_bit;
 			      if ((channel_mask & speaker_bit) == 0)
@@ -925,59 +934,59 @@ sound_process_speakers (struct sounds_info *sounds_data,
 	/* When there is just one speaker all outputs will go there.
 	 * If we don't have any speakers yet, Call it front_center.  */
 	if (channel_mask == 0)
-	  channel_mask = 1 << speaker_front_center;
+	  channel_mask = 1U << speaker_front_center;
 	break;
     
       case 2:
 	/* Stereo implies front_left and front_right.  */
-	channel_mask = (channel_mask | 1 << speaker_front_left |
-			1 << speaker_front_right);
+	channel_mask = (channel_mask | 1U << speaker_front_left |
+			1U << speaker_front_right);
 	break;
     
       case 3:
 	/* Three speakers is probably 2.1, meaning add an LFE channel.  */
-	channel_mask = (channel_mask | 1 << speaker_front_left |
-			1 << speaker_front_right | 1 << speaker_LFE1);
+	channel_mask = (channel_mask | 1U << speaker_front_left |
+			1U << speaker_front_right | 1U << speaker_LFE1);
 	break;
     
       case 4:
 	/* Four speakers are front and read left and right.  */
-	channel_mask = (channel_mask | 1 << speaker_front_left |
-			1 << speaker_front_right | 1 << speaker_rear_left |
-			1 << speaker_rear_right);
+	channel_mask = (channel_mask | 1U << speaker_front_left |
+			1U << speaker_front_right | 1U << speaker_rear_left |
+			1U << speaker_rear_right);
 	break;
     
       case 5:
 	/* Add front_center.  */
-	channel_mask = (channel_mask | 1 << speaker_front_left |
-			1 << speaker_front_right | 1 << speaker_rear_left |
-			1 << speaker_rear_right | 1 << speaker_front_center);
+	channel_mask = (channel_mask | 1U << speaker_front_left |
+			1U << speaker_front_right | 1U << speaker_rear_left |
+			1U << speaker_rear_right | 1U << speaker_front_center);
 	break;
     
       case 6:
 	/* This is a probably a 5.1 surround sound system.  
 	 * Add an LFE channel.  */
-	channel_mask = (channel_mask | 1 << speaker_front_left |
-			1 << speaker_front_right | 1 << speaker_rear_left |
-			1 << speaker_rear_right | 1 << speaker_front_center |
-			1 << speaker_LFE1);
+	channel_mask = (channel_mask | 1U << speaker_front_left |
+			1U << speaker_front_right | 1U << speaker_rear_left |
+			1U << speaker_rear_right | 1U << speaker_front_center |
+			1U << speaker_LFE1);
 	break;
     
       case 7:
 	/* Add rear center.  */
-	channel_mask = (channel_mask | 1 << speaker_front_left |
-			1 << speaker_front_right | 1 << speaker_rear_left |
-			1 << speaker_rear_right | 1 << speaker_front_center |
-			1 << speaker_LFE1 | 1 << speaker_rear_center);
+	channel_mask = (channel_mask | 1U << speaker_front_left |
+			1U << speaker_front_right | 1U << speaker_rear_left |
+			1U << speaker_rear_right | 1U << speaker_front_center |
+			1U << speaker_LFE1 | 1U << speaker_rear_center);
 	break;
 	
       case 8:
 	/* This is probably a 7.1 surround system.  */
-	channel_mask = (channel_mask | 1 << speaker_front_left |
-			1 << speaker_front_right | 1 << speaker_rear_left |
-			1 << speaker_rear_right | 1 << speaker_front_center |
-			1 << speaker_LFE1 | 1 << speaker_side_left |
-			1 << speaker_side_right);
+	channel_mask = (channel_mask | 1U << speaker_front_left |
+			1U << speaker_front_right | 1U << speaker_rear_left |
+			1U << speaker_rear_right | 1U << speaker_front_center |
+			1U << speaker_LFE1 | 1U << speaker_side_left |
+			1U << speaker_side_right);
 	break;
     
       default:
@@ -985,7 +994,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
 	 * 1-to-1 onto speakers.  */
 	for (i = 0; i < speaker_count; i++)
 	  {
-	    channel_mask = channel_mask | 1 << i;
+	    channel_mask = channel_mask | 1U << i;
 	  }
 	break;
     
@@ -1006,7 +1015,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
   local_speaker_count = 0;
   for (i = 0; i <= max_speaker_code; i++)
     {
-      speaker_bit = 1 << i;
+      speaker_bit = 1U << i;
       if ((channel_mask & speaker_bit) != 0)
 	local_speaker_count = local_speaker_count + 1;
     }
@@ -1025,23 +1034,134 @@ sound_process_speakers (struct sounds_info *sounds_data,
     
   /* Now that we have the global channel mask, we can create a map from
    * speaker number to output channel.  We will use this when
-   * constructing the mix-matrix in the "final" bin.  */
+   * constructing the mix-matrix for the "final" bin.  Also, create
+   * the reverse map, from output channel to an abbreviated speaker
+   * name, for labeling the channels on the VU meter.  */
   
   out_chan = 0;
   map_table = g_malloc ((max_speaker_code + 1) * (sizeof (gint)));
+  speaker_abbreviations = g_malloc (speaker_count * (sizeof (gpointer)));
+  for (i=0; i < speaker_count; i++)
+    speaker_abbreviations[i] = NULL;
+				    
   for (i=0; i <= max_speaker_code; i++)
     {
-      speaker_bit = 1 << i;
+      speaker_bit = 1U << i;
       if ((channel_mask & speaker_bit) != 0)
 	{
 	  map_table[i] = out_chan;
+	  if (out_chan < speaker_count)
+	    {
+	      switch (i) {
+	      case speaker_front_left:
+		speaker_abbreviations[out_chan] = "FL  ";
+		break;
+	      case speaker_front_right:
+		speaker_abbreviations[out_chan] = "FR  ";
+		break;
+	      case speaker_front_center:
+		speaker_abbreviations[out_chan] = "FC  ";
+		break;
+	      case speaker_LFE1:
+		speaker_abbreviations[out_chan] = "LFE1";
+		break;
+	      case speaker_rear_left:
+		speaker_abbreviations[out_chan] = "RL  ";
+		break;
+	      case speaker_rear_right:
+		speaker_abbreviations[out_chan] = "RR  ";
+		break;
+	      case speaker_front_left_of_center:
+		speaker_abbreviations[out_chan] = "FLC ";
+		break;
+	      case speaker_front_right_of_center:
+		speaker_abbreviations[out_chan] = "FRC ";
+		break;
+	      case speaker_rear_center:
+		speaker_abbreviations[out_chan] = "RC  ";
+		break;
+	      case speaker_LFE2:
+		speaker_abbreviations[out_chan] = "LFE2";
+		break;
+	      case speaker_side_left:
+		speaker_abbreviations[out_chan] = "SL  ";
+		break;
+	      case speaker_side_right:
+		speaker_abbreviations[out_chan] = "SR  ";
+		break;
+	      case speaker_top_front_left:
+		speaker_abbreviations[out_chan] = "TFL ";
+		break;
+	      case speaker_top_front_right:
+		speaker_abbreviations[out_chan] = "TFR ";
+		break;
+	      case speaker_top_front_center:
+		speaker_abbreviations[out_chan] = "TFC ";
+		break;
+	      case speaker_top_center:
+		speaker_abbreviations[out_chan] = "TC  ";
+		break;
+	      case speaker_top_rear_left:
+		speaker_abbreviations[out_chan] = "TRL ";
+		break;
+	      case speaker_top_rear_right:
+		speaker_abbreviations[out_chan] = "TRR ";
+		break;
+	      case speaker_top_side_left:
+		speaker_abbreviations[out_chan] = "TSL ";
+		break;
+	      case speaker_top_side_right:
+		speaker_abbreviations[out_chan] = "TSR ";
+		break;
+	      case speaker_top_rear_center:
+		speaker_abbreviations[out_chan] = "TRC ";
+		break;
+	      case speaker_bottom_front_center:
+		speaker_abbreviations[out_chan] = "BFC ";
+		break;
+	      case speaker_bottom_front_left:
+		speaker_abbreviations[out_chan] = "BFL ";
+		break;
+	      case speaker_bottom_front_right:
+		speaker_abbreviations[out_chan] = "BFR ";
+		break;
+	      case speaker_wide_left:
+		speaker_abbreviations[out_chan] = "WL  ";
+		break;
+	      case speaker_wide_right:
+		speaker_abbreviations[out_chan] = "WR  ";
+		break;
+	      case speaker_surround_left:
+		speaker_abbreviations[out_chan] = "SL  ";
+		break;
+	      case speaker_surround_right:
+		speaker_abbreviations[out_chan] = "SR  ";
+		break;
+	      default:
+		speaker_abbreviations[out_chan] = NULL;
+	      }
+	    }
 	  out_chan = out_chan + 1;
 	}
     }
 
+  sounds_data->speaker_abbreviations = speaker_abbreviations;
+  sounds_data->speaker_count = speaker_count;
+  
+  if (TRACE_SOUND)
+    {
+      printf ("Output channl to speaker correspondence:\n");
+      for (i=0; i < speaker_count; i++)
+	{
+	  speaker_abbreviation = speaker_abbreviations[i];
+	  printf ("%d: %s.\n", i, speaker_abbreviation);
+	}
+    } 
+  
   /* Tell each reference to a speaker which "final" output channel it is on.
    * This data structure is used in sound_mix_matrix_volume to construct
-   * the mix matrix for the audioconvert element.  */
+   * the mix matrix for the audioconvert element which feeds the
+   * "final" bin.  */
   sounds_list = sounds_data->sounds_list;
   while (sounds_list != NULL)
     {
@@ -1779,7 +1899,8 @@ sound_get_channel_mask (GApplication *app)
 }
 
 /* Determine the volume of sound from the specified input channel
- * to the specified output channel.  */
+ * to the specified output channel.  This is used to construct the mix matrix
+ * that feeds from this sound effect to the "final" gstreamer bin.  */
 gfloat
 sound_mix_matrix_volume (gint in_chan, gint out_chan,
 			 struct sound_info *sound_effect, GApplication *app)
@@ -1823,6 +1944,27 @@ sound_mix_matrix_volume (gint in_chan, gint out_chan,
 
   /* If we don't find the channel, send silence.  */
   return ((gfloat) 0.0);
+}
+
+/* Return the abbreviated speaker name for the requested output channel.
+ * This is used to label the level bars in the VU meter.  */
+gchar *
+sound_output_channel_name (gint output_channel, GApplication *app)
+{
+  struct sounds_info *sounds_data;
+  gpointer *speaker_abbreviations;
+  gchar *speaker_abbreviation;
+
+  sounds_data = sep_get_sounds_data (app);
+
+  /* If an output channel does not have a speaker assigned to it,
+   * the label is blank.  */
+  if (output_channel >= sounds_data->speaker_count)
+    return ("    ");
+  
+  speaker_abbreviations = sounds_data->speaker_abbreviations;
+  speaker_abbreviation = speaker_abbreviations[output_channel];
+  return (speaker_abbreviation);
 }
 
 /* End of file sound_subroutines.c */
