@@ -1,7 +1,7 @@
 /*
  * sequence_subroutines.h
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,42 +25,42 @@
 /* Subroutines defined in sequence_subroutines.c */
 
 /* Initialize the internal sequencer */
-void *sequence_init (GApplication * app);
+void *sequence_init (GApplication *app);
 
 /* Append a sequence item to the sequence.  */
 void sequence_append_item (struct sequence_item_info *sequence_item_data,
-                           GApplication * app);
+                           GApplication *app);
 
 /* Start the internal sequencer.  */
-void sequence_start (GApplication * app);
+void sequence_start (GApplication *app);
 
 /* Execute the MIDI Show Control command Go.  */
-void sequence_MIDI_show_control_go (gchar * Q_number, GApplication * app);
+void sequence_MIDI_show_control_go (gchar *Q_number, GApplication *app);
 
 /* Execute the MIDI Show Control command Go_off.  */
-void sequence_MIDI_show_control_go_off (gchar * Q_number, GApplication * app);
+void sequence_MIDI_show_control_go_off (gchar *Q_number, GApplication *app);
 
 /* Execute an Open Sound Control (OSC) cue command with a numeric operand.  */
-void sequence_OSC_cue_number (guint osc_cue_number, GApplication * app);
+void sequence_OSC_cue_number (guint osc_cue_number, GApplication *app);
 
 /* Execute an Open Sound Control (OSC) cue command with a string operand.  */
-void sequence_OSC_cue_string (gchar * osc_cue_string, GApplication * app);
+void sequence_OSC_cue_string (gchar *osc_cue_string, GApplication *app);
 
 /* Start the sound offered on a cluster.  */
-void sequence_cluster_start (guint cluster_number, GApplication * app);
+void sequence_cluster_start (guint cluster_number, GApplication *app);
 
 /* Stop the sound offered on a cluster.  */
-void sequence_cluster_stop (guint cluster_number, GApplication * app);
+void sequence_cluster_stop (guint cluster_number, GApplication *app);
 
 /* Operator pushed the Play button.  */
-void sequence_button_play (GApplication * app);
+void sequence_button_play (GApplication *app);
 
 /* A sound has completed.  */
 void sequence_sound_completion (struct sound_info *sound_effect,
-                                gboolean terminated, GApplication * app);
+                                gboolean terminated, GApplication *app);
 
 /* A sound has reached its release stage.  */
 void sequence_sound_release_started (struct sound_info *sound_effect,
-                                     GApplication * app);
+                                     GApplication *app);
 
 /* End of file sequence_subroutines.h */

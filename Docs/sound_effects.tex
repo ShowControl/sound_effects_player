@@ -1,0 +1,248 @@
+% Main LaTeX source file for sound_effects.pdf
+
+% Copyright © 2020 by John Sauter.
+% Licensed under the Creative Commons Attribution-ShareAlike 4.0 International
+% license.  See https://creativecommons.org/license/by-sa/4.0/.
+
+\documentclass[letterpaper,twoside]{article}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usepackage[english]{babel}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{embedfile}
+\usepackage{enumitem}
+\usepackage[super]{nth}
+\usepackage{fancyhdr}
+\usepackage{xfrac}
+\usepackage{fnpct}
+\usepackage{siunitx}
+\usepackage{graphics}
+\usepackage{natbib}
+\usepackage{hyperxmp}
+\usepackage[tracking]{microtype}
+\usepackage{hyphenat}
+\usepackage{verbatim}
+\usepackage[kpsewhich=true]{minted}
+%\usepackage[usenames,dvipsnames]{color}
+
+% Font choices: pick one.
+% 1. Latin Modern matches Don Knuth's Computer Modern
+%\setmainfont{Latin Modern Roman}[SmallCapsFont={Latin Modern Roman Caps}]
+%\usepackage{unicode-math}
+
+% 2. Libertine
+\setmainfont[Ligatures={Common},Numbers=Proportional]{Linux Libertine O}
+\setsansfont{Linux Biolinum O}
+\usepackage{unicode-math}
+\setmathfont[Scale=MatchUppercase]{libertinusmath-regular.otf}
+
+% 3. Old Standard
+%\setmainfont{Old Standard}[SmallCapsFont={Latin Modern Roman Caps}]
+
+\usepackage[pdfencoding=unicode,pagebackref]{hyperref}
+\bibliographystyle{plainnat}
+\setcitestyle{numbers,square}
+% Pages styles
+%\setlength{\headheight}{22.5pt}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LE]{\thepage}
+\fancyhead[CE]{{\scshape John Sauter}}
+\fancyhead[CO]{{\scshape Sound Effects for Live Theatre}}
+\fancyhead[RO]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot{}
+\setlength\tabcolsep{1mm}
+\renewcommand\arraystretch{1.3}
+
+\begin{document}
+\embedfile[desc={Sound Effects for Live Theatre},
+  mimetype={text/plain}]{sound_effects.tex}
+\title{Sound Effects for Live Theatre\footnote{Copyright
+    {\copyright} 2020 by John Sauter.
+    This paper is made available under a
+    Creative Commons Attribution-ShareAlike 4.0 International License.
+    You can read a human-readable summary of the license at
+    \url{https://creativecommons.org/licenses/by-sa/4.0}, which contains
+    a link to the full text of the license.
+    See also section \ref{section:Licensing} of this paper.}
+}
+\author{John Sauter\footnote{
+    System Eyes Computer Store,
+    20A Northwest Blvd.  Ste 345,
+    Nashua, NH  03063-4066,
+    e-mail: John\_Sauter@systemeyescomputerstore.com,
+    telephone: (603) 424-1188}}
+\hypersetup{unicode=true,
+  pdfauthor={John Sauter},
+  pdftitle={Sound Effects for Live Theatre},
+  pdfsubject={Sound Effects for Live Theatre},
+  pdfkeywords={Sound Effects, show\_control, sound\_effects\_player,
+    Community Theatre},
+  pdfcontactaddress={System Eyes Computer Store, 20A Northwest Blvd.  Ste 345},
+  pdfcontactcity={Nashua},
+  pdfcontactcountry={USA},
+  pdfcontactemail={John\_Sauter@systemeyescomputerstore.com},
+  pdfcontactphone={603-424-1188},
+  pdfcontactpostcode={03063-4066},
+  pdfcontactregion={New Hampshire},
+  pdfcontacturl={https://www.systemeyescomputerstore.com},
+  pdfcopyright={Copyright {\copyright} 2020 by John Sauter},
+  pdfdate={2020-06-08},
+  pdflicenseurl={https://creativecommons.org/licenses/by-sa/4.0},
+  pdfmetalang={en-US}  
+}
+\date{2020-06-08}
+\maketitle
+\begin{abstract}
+  How to produce sound effects for live theatrical performances
+  on a small budget,
+  for example for a Community Theatre production.
+\end{abstract}
+\begin{description}
+\item[Keywords:]Sound Effects, Community Theatre.
+\end{description}
+  
+%\tableofcontents
+\newpage
+\section{Motivation}
+Low-budget live theatre uses recordings for music, rather than live
+musicians, and leverages the music playing equipment (speakers,
+amplifiers, a CD or similar music player) for sound effects.
+The sound effects can be recorded on a CD or USB stick, and played
+when needed during the performance.  This is adequate for background
+sounds, but the timing is not good enough for a spot sound, such
+as a slap.  In some cases these spot sounds can be made by the actors
+or a backstage person using objects, but for others, such as a gun
+shot, this is undesirable.  In addition, background sounds are
+severely constrained: if an automobile must start its engine
+while the background sounds are playing, you need a second CD
+player.
+
+Computers have become inexpensive enough in recent years that it
+is reasonable to consider using one in place of the CD player
+during a live performance.  With suitable software, a computer
+can play both background and spot sounds, and mix them together
+as needed.
+
+I will describe how to use the sound\_effects\_player component
+of the show\_control project to produce the sounds needed for
+a live theatre production.
+
+\section{What You Will Need}
+
+To run the sound\_effects\_player you will need a computer running
+the Fedora distribution of GNU/Linux.  The computer must also have
+a sound card so it can output sound.  Sound\_effects\_player supports
+up to eight channels of sound, but two are usually enough for Community
+Theatre productions.
+
+To get the sound\_effects\_player software, download the source tarball
+from github.  It is a component of the show\_control project, at this
+URL: \url{https://github.com/ShowControl/sound\_effects\_player}.
+Sound\_effects\_player also requires libtime, another component of
+show\_control.  Details are in the {\ttfamily .spec} file.
+Alternatively, you can install the sound\_effects\_player
+from copr, using john\_sauter / sound\_effects\_player.
+
+Once you have the software installed you can look at the sample
+configuration and the first three examples to learn about the
+mechanics of the sound\_effects\_player and see how to make simple sounds.
+
+\section{A Show with Complex Sound Effects}
+Let us suppose that you have been asked to provide the sound effects
+for a show with a challenging set of sound effects.  In addition to
+the usual pre-show music and environment sounds during each scene,
+there are also a variety of spot sounds that must be played
+when an on-stage action happens, and some sounds must come from
+the back of the audience.
+
+The XML files developed in this paper are included with the distribution
+of the sound\_effects\_player as example 4.
+
+In order to make sounds come from behind the audience you have
+borrowed two self-powered speakers on stands and positioned them
+at the back of the theater.  You are using body microphones on
+the actors.  These microphones go through the audio mixer and
+the sound is sent equally to the two front speakers, so it seems
+to the audience that it coming from the center of the stage.
+The sound effects enter four channels of the audio mixer from
+the computer running sound\_effects\_player.  In order to get
+four sound channels out of the computer you are using a USB
+sound device such as the M-Audio Fast Track Ultea 8R.
+The audio mixer routes the four channels from the computer
+directly to the four speakers.
+
+The first thing we need in any sound project is the project file.
+
+
+
+% Avoid a problem with the URL in the next section being broken across a page.
+\newpage
+
+\section{Licensing}
+\label{section:Licensing}
+As noted on the first page, this paper is licensed under a Creative
+Commons Attribution-ShareAlike 4.0 International License.
+
+The full text of the Creative Commons Attribution-ShareAlike 4.0
+International license is at this web site:
+\url{https://creativecommons.org/licenses/by-sa/4.0/legalcode}%
+\embedfile[desc={Plaintext version of Creative Commons BY-SA 4.0 license},
+  mimetype={text/plain}]{legalcode.txt}, and is embedded in this
+PDF file.  What follows is a human-readable summary of it.
+
+\subsection{You are free to:}
+\begin{description}
+\item[Share ---]copy and redistribute the material in any medium or format, and
+\item[Adapt ---]remix, transform, and build upon the material
+\end{description}
+for any purpose, even commercially.  The licensor cannot revoke these
+freedoms as long as you follow the license terms.
+\subsection{Under the following terms:}
+\begin{description}
+\item[Attribution ---]You must give appropriate credit\footnote{If supplied,
+  you must provide the name of the creator and attribution parties,
+  a copyright notice, a license notice, a disclaimer notice, and a link
+  to the material.}, provide a link to
+  the license, and indicate if changes were made\footnote{You must indicate if
+    you modified the material and retain an indication of previous
+    modifications.}.  You may do so in any
+  reasonable manner, but not in any that suggests the licensor endorses you
+  or your use.
+\item[ShareAlike ---]If you remix, transform, or build upon the material,
+  you must distribute your contributions under the same
+  license\footnote{You may also use any of the licenses listed as compatible
+    at the following web site:
+    \url{https://creativecommons.org/compatiblelicenses}}
+  as the original.
+\item[No additional restrictions ---]You may not apply legal terms or
+  technological measures\footnote{The license prohibits application of
+    effective technological measures, defined with reference to Article 11
+    of the WIPO Copyright Treaty.}
+  that legally restrict others from doing anything
+  the license permits.
+\end{description}
+\subsection{Notices:}
+\begin{itemize}
+\item{You do not have to comply with the license for elements of the
+  material in the public domain or where your use is permitted by an
+  exception or limitation.}
+\item{No warranties are given.  The license may not give you all of the
+  permissions necessary for your intended use.  For example, other rights
+  such as publicity, privacy or moral rights may limit how you use the
+  material.}
+\end{itemize}
+
+% The bibliography contains URLs, and it is difficult to break URLs across
+% a page boundary, particularly when there are footnotes.  To avoid this
+% problem, put the bibliography on its own page.
+\newpage
+
+\bibliography{references}
+\embedfile[desc={Bibliography},mimetype={text/plain}]{references.bib}
+
+\end{document}

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+
+  <sound_sequence>
+    <version>1.0</version>
+
+    <sequence_item>
+      <name>start_of_sequence</name>
+      <type>start_sequence</type>
+      <next>offer_tests</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>offer_tests</name>
+      <type>offer_sound</type>
+      <next_to_start>4-channel-id</next_to_start>
+      <cluster_number>0</cluster_number>
+      <text_to_display>4-channel ID</text_to_display>
+      <tag>tests</tag>
+      <next>wait_for_house</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>4-channel-id</name>
+      <type>start_sound</type>
+      <sound_name>4-channel_ID</sound_name>
+      <cluster_number>0</cluster_number>
+      <text_to_display>naming four speakers; "stop" to end</text_to_display>
+      <tag>tests</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>wait_for_house</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when the house opens</text_to_display>
+      <next_play>stop_tests_1</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>stop_tests_1</name>
+      <type>stop_sound</type>
+      <tag>tests</tag>
+      <next>stop_tests_2</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>stop_tests_2</name>
+      <type>cease_offering_sound</type>
+      <tag>tests</tag>
+      <next>house_is_open</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>house_is_open</name>
+      <type>start_sound</type>
+      <sound_name>pre-show music</sound_name>
+      <cluster_number>15</cluster_number>
+      <text_to_display>pre-show music</text_to_display>
+      <tag>pre-show music</tag>
+      <next_starts>wait_for_curtain</next_starts>
+    </sequence_item>
+
+    <sequence_item>
+      <name>wait_for_curtain</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when the curtain opens</text_to_display>
+      <next_play>house_quiet_1</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>house_quiet_1</name>
+      <type>stop_sound</type>
+      <tag>pre-show music</tag>
+      <next>house_quiet_2</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>house_quiet_2</name>
+      <type>cease_offering_sound</type>
+      <tag>pre-show music</tag>
+      <next>Act_01_Scene_01</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Act_01_Scene_01</name>
+      <type>offer_sound</type>
+      <next_to_start>Automobile</next_to_start>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Automobile Starts</text_to_display>
+      <tag>Automobile</tag>
+      <next>wait for end of Act 01 Scene 01</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Automobile</name>
+      <type>start_sound</type>
+      <sound_name>Automobile</sound_name>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Automobile Running</text_to_display>
+      <importance>1</importance>
+      <tag>Automobile</tag>
+      <next_sound_stopped>Automobile_end</next_sound_stopped>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Automobile_end</name>
+      <type>start_sound</type>
+      <sound_name>Automobile_end</sound_name>
+      <next_to_start>Automobile</next_to_start>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Automobile Stopping</text_to_display>
+      <importance>1</importance>
+      <tag>Automobile</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>wait for end of Act 01 Scene 01</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when the scene ends</text_to_display>
+      <next_play>end of Act 01 Scene 01</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>end of Act 01 Scene 01</name>
+      <type>cease_offering_sound</type>
+      <tag>Automobile</tag>
+      <next>stop_auto</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>stop_auto</name>
+      <type>stop_sound</type>
+      <tag>Automobile</tag>
+      <next>wait_for_Act_01_Scene_02</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>wait_for_Act_01_Scene_02</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when Act 01 Scene 02 starts</text_to_display>
+      <next_play></next_play>
+    </sequence_item>
+    
+  </sound_sequence>
+</show_control>

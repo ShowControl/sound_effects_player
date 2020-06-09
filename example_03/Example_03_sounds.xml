@@ -13,13 +13,13 @@
       <designer_volume_level>0.33</designer_volume_level>
       <designer_pan>0.00</designer_pan>
       <channels>	
-	<!-- Channel 0 to speaker front_left, 1 to front_right.  -->
+	<!-- Channel 0 to speaker rear_left, 1 to rear_right.  -->
 	<channel>
 	  <number>0</number>
 	  <speakers>
 	    <speaker>
 	      <name>rear_left</name>
-	      <volume>1.0</volume>
+	      <volume_level>1.0</volume_level>
 	    </speaker>
 	  </speakers>
 	</channel>
@@ -28,7 +28,7 @@
 	  <speakers>
 	    <speaker>
 	      <name>rear_right</name>
-	      <volume>1.0</volume>
+	      <volume_level>1.0</volume_level>
 	    </speaker>
 	  </speakers>
 	</channel>

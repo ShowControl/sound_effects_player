@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <show_control>
 
-  <!-- These sound sequence items are common to many shows in the theater.  -->
+  <!-- These sound sequence items are common to many shows in the theater.
+       In the main sound sequence file we can offer telephone ring.
+       It will appear on clusters 0 and 1.  -->
   
   <sound_sequence>
     <version>1.0</version>
@@ -12,10 +14,10 @@
       <sound_name>ring</sound_name>
       <cluster_number>0</cluster_number>
       <tag>telephone-ring</tag>
-      <text_to_display>Telephone ring</text_to_display>
+      <text_to_display>Telephone ringing</text_to_display>
       <importance>2</importance>
       <next_release_started>telephone-ring-5</next_release_started>
-      <next_termination>telephone-ring-7</next_termination>
+      <next_sound_stopped>telephone-ring-7</next_sound_stopped>
     </sequence_item>
 
     <sequence_item>
@@ -24,24 +26,12 @@
       <sound_name>ringout</sound_name>
       <cluster_number>0</cluster_number>
       <tag>telephone-ring</tag>
-      <text_to_display>Telephone ring pause</text_to_display>
+      <text_to_display>Telephone ringout</text_to_display>
       <importance>2</importance>
-      <next_completion>telephone-ring-6</next_completion>
+      <next_completion>telephone-ring</next_completion>
       <next_termination>telephone-ring-8</next_termination>
     </sequence_item>
     
-    <sequence_item>
-      <name>telephone-ring-6</name>
-      <type>start_sound</type>
-      <sound_name>ring</sound_name>
-      <cluster_number>0</cluster_number>
-      <tag>telephone-ring</tag>
-      <text_to_display>Telephone ring</text_to_display>
-      <importance>2</importance>
-      <next_release_started>telephone-ring-5</next_release_started>
-      <next_termination>telephone-ring-7</next_termination>
-    </sequence_item>
-
     <sequence_item>
       <name>telephone-ring-7</name>
       <type>start_sound</type>

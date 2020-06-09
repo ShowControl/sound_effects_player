@@ -1,3 +1,8 @@
+Version 0.117, June 9, 2020
+  Fix sounds with more speakers than output channels.  Allow the sequencer
+  to respond to the operator pressing a stop button.  Re-write the telephone
+  example to take advantage of this.  Add support for S24LE format.
+  
 Version 0.116, June 3, 2020
   Add speaker names to the VU meter.
   

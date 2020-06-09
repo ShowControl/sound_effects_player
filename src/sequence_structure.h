@@ -1,7 +1,7 @@
 /*
  * sequence_structure.h
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,8 +60,12 @@ struct sequence_item_info
   gchar *next_termination;      /* sequence item to execute on termination.  */
   gchar *next_starts;           /* sequence item to execute when this sound 
                                  * starts.  */
+  gchar *next_sound_stopped;    /* sequence item to execute when this sound
+				 * has been stopped by the operator.  */
   gchar *next_release_started;  /* sequence item to execute when this sound
-                                 * starts the release stage of its envelope. */
+                                 * starts the release stage of its envelope
+				 * without having been stopped by the operator.
+				 */
   guint importance;             /* importance of this sound, 
                                  * for display purposes.  */
   gchar *Q_number;              /* The Q_number is used by MIDI Show 

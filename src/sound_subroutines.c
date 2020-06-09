@@ -826,7 +826,74 @@ sound_process_speakers (struct sounds_info *sounds_data,
 	    }
 	  if (max_channels < sound_effect->channel_count)
 	    max_channels = sound_effect->channel_count;
-	  
+
+	  /* The channel mask for a particular sound effect is based on
+	   * the number of output channels.  They will be re-routed
+	   * to the correct speakers (possibly more speakers than
+	   * output channels) just before being mixed with the
+	   * other sound effects.  */
+	  switch (sound_effect->channel_count)
+	    {
+	    case 1:
+	      sound_effect->channel_mask = 1U << speaker_front_center;
+	      break;
+
+	    case 2:
+	      sound_effect->channel_mask =
+		(1U << speaker_front_left | 1U << speaker_front_right);
+	      break;
+
+	    case 3:
+	      sound_effect->channel_mask =
+		(1U << speaker_front_left | 1U << speaker_front_right |
+		 1U << speaker_LFE1);
+	      break;
+    
+	    case 4:
+	      sound_effect->channel_mask =
+		(1U << speaker_front_left | 1U << speaker_front_right |
+		 1U << speaker_rear_left | 1U << speaker_rear_right);
+	      break;
+    
+	    case 5:
+	      sound_effect->channel_mask =
+		(1U << speaker_front_left | 1U << speaker_front_right |
+		 1U << speaker_rear_left | 1U << speaker_rear_right |
+		 1U << speaker_front_center);
+	      break;
+    
+	    case 6:
+	      sound_effect->channel_mask =
+		(1U << speaker_front_left | 1U << speaker_front_right |
+		 1U << speaker_rear_left | 1U << speaker_rear_right |
+		 1U << speaker_front_center | 1U << speaker_LFE1);
+	      break;
+    
+	    case 7:
+	      sound_effect->channel_mask =
+		(1U << speaker_front_left | 1U << speaker_front_right |
+		 1U << speaker_rear_left | 1U << speaker_rear_right |
+		 1U << speaker_front_center | 1U << speaker_LFE1 |
+		 1U << speaker_rear_center);
+	      break;
+	      
+	    case 8:
+	      sound_effect->channel_mask =
+		(1U << speaker_front_left | 1U << speaker_front_right |
+		 1U << speaker_rear_left | 1U << speaker_rear_right |
+		 1U << speaker_front_center | 1U << speaker_LFE1 |
+		 1U << speaker_side_left | 1U << speaker_side_right);
+	      break;
+    
+	    default:
+	      sound_effect->channel_mask = 0;
+	      for (i = 0; i < sound_effect->channel_count; i++)
+		{
+		  sound_effect->channel_mask =
+		    sound_effect->channel_mask | 1U << i;
+		}
+	      break;	      
+	    }
 	  channels_list = sound_effect->channels;
 	  while (channels_list != NULL)
 	    {
@@ -856,8 +923,6 @@ sound_process_speakers (struct sounds_info *sounds_data,
 			  if (speaker_code > max_speaker_code)
 			    max_speaker_code = speaker_code;
 			  speaker_bit = 1U << speaker_code;
-			  sound_effect->channel_mask =
-			    sound_effect->channel_mask | speaker_bit;
 			  if ((channel_mask & speaker_bit) == 0)
 			    {
 			      unique_speakers = unique_speakers + 1;
@@ -879,8 +944,6 @@ sound_process_speakers (struct sounds_info *sounds_data,
 			      (speaker_code != speaker_none))
 			    {
 			      speaker_bit = 1U << speaker_code;
-			      sound_effect->channel_mask =
-				sound_effect->channel_mask | speaker_bit;
 			      if ((channel_mask & speaker_bit) == 0)
 				{
 				  unique_speakers = unique_speakers + 1;
@@ -1150,7 +1213,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
   
   if (TRACE_SOUND)
     {
-      printf ("Output channl to speaker correspondence:\n");
+      printf ("Output channel to speaker correspondence:\n");
       for (i=0; i < speaker_count; i++)
 	{
 	  speaker_abbreviation = speaker_abbreviations[i];
@@ -1795,6 +1858,7 @@ sound_parse_wav_file_header (const gchar *wav_file_name,
       break;
     case 24:
       format_name = "S24LE";
+      break;
     case 32:
       if (format_code == 1)
 	{
@@ -1829,6 +1893,9 @@ sound_parse_wav_file_header (const gchar *wav_file_name,
     {
       g_print ("File %s is %s with %d channels.\n",
 	       wav_file_name, format_name, channel_count);
+      g_print ("Byte 20: %d, 21: %d, 22: %d, 23: %d, 34: %d, 35: %d.\n",
+	       header[20], header[21], header[22], header[23],
+	       header[34], header[35]);
     }
   return_value = 1;
 
@@ -1879,8 +1946,9 @@ sound_append_speaker (struct speaker_info *speaker_data,
 {
   if (TRACE_SOUND)
     {
-      g_print ("Speaker %s in channel %d in sound %s.\n",
-	       speaker_data->name, channel_data->number, sound_data->name);
+      g_print ("Speaker %s in channel %d volume %f in sound %s.\n",
+	       speaker_data->name, channel_data->number,
+	       speaker_data->volume_level, sound_data->name);
     }
   channel_data->speakers = g_list_prepend (channel_data->speakers,
 					   speaker_data);

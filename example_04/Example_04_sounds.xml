@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+
+  <sounds>
+    <version>1.0</version>
+
+    <sound>
+      <name>4-channel_ID</name>
+      <wav_file_name>4_Channel_ID.wav</wav_file_name>
+      <loop_from_time>6.0</loop_from_time>
+      <loop_to_time>0.0</loop_to_time>
+      <loop_limit>0</loop_limit>
+    </sound>
+    
+    <sound>
+      <name>pre-show music</name>
+      <wav_file_name>pre_show_music.wav</wav_file_name>
+      <attack_duration_time>5.0</attack_duration_time>
+      <designer_volume_level>0.5</designer_volume_level>
+      <designer_pan>0.00</designer_pan>
+      <release_duration_time>5.0</release_duration_time>
+      <channels>	
+	<!-- Channel 0 to speakers front_left and rear_left, 
+	     1 to front_right and rear_right.  
+	     Rear speakers at low volume.
+	-->
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.5</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.5</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <sound>
+      <name>Automobile</name>
+      <wav_file_name>Automobile.wav</wav_file_name>
+      <loop_from_time>16.578</loop_from_time>
+      <loop_to_time>1.263</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <release_duration_time>3.0</release_duration_time>
+    </sound>
+    <sound>
+      <name>Automobile_end</name>
+      <wav_file_name>Automobile.wav</wav_file_name>
+      <start_time>16.578</start_time>
+      <attack_duration_time>0.1</attack_duration_time>
+    </sound>
+  </sounds>
+</show_control>

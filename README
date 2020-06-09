@@ -35,7 +35,8 @@ export GST_PLUGIN_PATH=/usr/local/lib/gstreamer-1.0
 
 Note that /usr/local/lib is the default location for the provided
 gstreamer plugins; if you override libdir to install them elsewhere,
-change the command line as appropriate.
+change the command line as appropriate.  If you install from COPR
+you do not need this command.
 
 If you get an error when starting the sound effects player saying that
 it cannot create an element, check that this command has been executed.

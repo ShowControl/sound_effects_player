@@ -3,7 +3,8 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man po doc icons sample example_01 example_02 example_03
+SUBDIRS = src man po doc icons sample \
+example_01 example_02 example_03 
 
 dist_doc_DATA = \
 	README \

@@ -711,6 +711,7 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
           sequence_item_data->next_termination = NULL;
           sequence_item_data->next_starts = NULL;
           sequence_item_data->next_release_started = NULL;
+	  sequence_item_data->next_sound_stopped = NULL;
           sequence_item_data->importance = 1;
           sequence_item_data->Q_number = NULL;
           sequence_item_data->OSC_cue_number = 0;
@@ -1020,7 +1021,8 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                   (name, (const xmlChar *) "next_release_started"))
                 {
                   /* The next sequence item to execute when this sound has
-                   * reached the release stage of its amplitude envelope.  
+                   * reached the release stage of its amplitude envelope
+		   * without having been stopped by the operator.
                    * This can be used to fork the sequencer.
                    */
                   name_data =
@@ -1028,6 +1030,23 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                                           sequence_item_loc->xmlChildrenNode,
                                           1);
                   sequence_item_data->next_release_started =
+                    g_strdup ((gchar *) name_data);
+                  xmlFree (name_data);
+                  name_data = NULL;
+                }
+
+              if (xmlStrEqual
+                  (name, (const xmlChar *) "next_sound_stopped"))
+                {
+                  /* The next sequence item to execute when this sound has
+                   * been stopped by the operator.  
+                   * This can be used to fork the sequencer.
+                   */
+                  name_data =
+                    xmlNodeListGetString (sequence_file,
+                                          sequence_item_loc->xmlChildrenNode,
+                                          1);
+                  sequence_item_data->next_sound_stopped =
                     g_strdup ((gchar *) name_data);
                   xmlFree (name_data);
                   name_data = NULL;

@@ -3,7 +3,7 @@
  * which is a Gstreamer application.  Much of the code in this file is based
  * on Gstreamer examples and tutorials.
  *
- * Copyright © 2017 John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -113,7 +113,8 @@
 
 #define STATIC_CAPS \
   GST_STATIC_CAPS (GST_AUDIO_CAPS_MAKE \
-		   (" { S8, U8, " GST_AUDIO_NE (S16) "," GST_AUDIO_NE (S32) \
+		   (" { S8, U8, " GST_AUDIO_NE (S16) "," GST_AUDIO_NE (S24) \
+                   "," GST_AUDIO_NE (S32) \
 		    "," GST_AUDIO_NE (F32) "," GST_AUDIO_NE (F64)" } ") \
 		   ", layout = (string) interleaved")
 #define SINK_TEMPLATE \
@@ -2517,7 +2518,7 @@ compute_remaining_time (GstLooper * object)
 
   /* We are looping a definite number of times, and have not received
    * a release.  The total time is increased by the length of the loop
-   * and the number of time we will repeat it.  */
+   * and the number of times we will repeat it.  */
   time_inside_loop =
     (self->loop_from - self->loop_to) * (self->loop_limit - 1);
   total_time_int = total_time_int + time_inside_loop;

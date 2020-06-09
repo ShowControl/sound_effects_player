@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<show_control>
+  <project>
+    <version>1.0</version>
+    <title>Example_04</title>
+    <equipment href="Theater_equipment.xml"/>
+    <equipment href="Example_04_equipment.xml"/>
+  </project>
+</show_control>
