@@ -811,6 +811,11 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
                     }
 
                   sequence_item_data->type = item_type;
+		  if (item_type == unknown)
+		    {
+		      g_printerr ("Unknown sequence item type: %s.\n",
+				  name_data);
+		    }
                   xmlFree (name_data);
                   name_data = NULL;
                 }

@@ -38,9 +38,41 @@
       <cluster_number>0</cluster_number>
       <text_to_display>Telephone ring</text_to_display>
       <tag>telephone-ring</tag>
+      <next>offer_automobile</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>offer_automobile</name>
+      <type>offer_sound</type>
+      <next_to_start>Automobile_start</next_to_start>
+      <cluster_number>1</cluster_number>
+      <text_to_display>Automobile</text_to_display>
+      <tag>Automobile</tag>
       <next>wait for end of scene 1</next>
     </sequence_item>
 
+    <sequence_item>
+      <name>Automobile_start</name>
+      <type>start_sound</type>
+      <sound_name>Automobile</sound_name>
+      <cluster_number>1</cluster_number>
+      <text_to_display>Automobile Running</text_to_display>
+      <importance>2</importance>
+      <tag>Automobile</tag>
+      <next_sound_stopped>Automobile_end</next_sound_stopped>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Automobile_end</name>
+      <type>start_sound</type>
+      <sound_name>Automobile_end</sound_name>
+      <next_to_start>Automobile</next_to_start>
+      <cluster_number>1</cluster_number>
+      <text_to_display>Automobile Stopping</text_to_display>
+      <importance>2</importance>
+      <tag>Automobile</tag>
+    </sequence_item>
+    
     <sequence_item>
       <name>wait for end of scene 1</name>
       <type>operator_wait</type>
@@ -50,6 +82,20 @@
 
     <sequence_item>
       <name>end of scene 1</name>
+      <type>cease_offering_sound</type>
+      <tag>Automobile</tag>
+      <next>stop_automobile</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>stop_automobile</name>
+      <type>stop_sound</type>
+      <tag>Automobile</tag>
+      <next>cease_telephone</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>cease_telephone</name>
       <type>cease_offering_sound</type>
       <tag>telephone-ring</tag>
       <next>stop_telephone</next>

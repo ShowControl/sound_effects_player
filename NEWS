@@ -1,3 +1,9 @@
+Version 0.119, June 18, 2020
+  Fix a race between shutting down an old sound and starting up a new one.
+  
+Version 0.118, June 13, 2020
+  Add information in the sequencer trace.
+
 Version 0.117, June 9, 2020
   Fix sounds with more speakers than output channels.  Allow the sequencer
   to respond to the operator pressing a stop button.  Re-write the telephone

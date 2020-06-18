@@ -3,5 +3,157 @@
   <sound_sequence>
     <version>1.0</version>
 
+    <sequence_item>
+      <name>offer_tests</name>
+      <type>offer_sound</type>
+      <next_to_start>6-channel-id</next_to_start>
+      <cluster_number>0</cluster_number>
+      <text_to_display>6-channel ID</text_to_display>
+      <tag>tests</tag>
+      <next>wait_for_house_to_open</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>6-channel-id</name>
+      <type>start_sound</type>
+      <sound_name>6-channel_ID</sound_name>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Naming six speakers; press "stop" to end.</text_to_display>
+      <tag>tests</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>offer_announcements</name>
+      <type>offer_sound</type>
+      <next_to_start>announcement_evening_long</next_to_start>
+      <text_to_display>Evening Long</text_to_display>
+      <cluster_number>0</cluster_number>
+      <tag>announcements</tag>
+      <next>offer_announcement_2</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>announcement_evening_long</name>
+      <type>start_sound</type>
+      <sound_name>Announcement Evening Long</sound_name>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Evening Long</text_to_display>
+      <tag>announcements</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>offer_announcement_2</name>
+      <type>offer_sound</type>
+      <next_to_start>announcement_evening_short</next_to_start>
+      <text_to_display>Evening Short</text_to_display>
+      <cluster_number>1</cluster_number>
+      <tag>announcements</tag>
+      <next>offer_announcement_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>announcement_evening_short</name>
+      <type>start_sound</type>
+      <sound_name>Announcement Evening Short</sound_name>
+      <cluster_number>1</cluster_number>
+      <text_to_display>Evening Short</text_to_display>
+      <tag>announcements</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>offer_announcement_3</name>
+      <type>offer_sound</type>
+      <next_to_start>announcement_evening_long_humorous</next_to_start>
+      <text_to_display>Evening Long Humorous</text_to_display>
+      <cluster_number>2</cluster_number>
+      <tag>announcements</tag>
+      <next>offer_announcement_4</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>announcement_evening_long_humorous</name>
+      <type>start_sound</type>
+      <sound_name>Announcement Evening Long Humorous</sound_name>
+      <cluster_number>2</cluster_number>
+      <text_to_display>Evening Long Humorous</text_to_display>
+      <tag>announcements</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>offer_announcement_4</name>
+      <type>offer_sound</type>
+      <next_to_start>announcement_afternoon_long</next_to_start>
+      <text_to_display>Afternoon Long</text_to_display>
+      <cluster_number>3</cluster_number>
+      <tag>announcements</tag>
+      <next>offer_announcement_5</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>announcement_afternoon_long</name>
+      <type>start_sound</type>
+      <sound_name>Announcement Afternoon Long</sound_name>
+      <cluster_number>3</cluster_number>
+      <text_to_display>Afternoon Long</text_to_display>
+      <tag>announcements</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>offer_announcement_5</name>
+      <type>offer_sound</type>
+      <next_to_start>announcement_afternoon_short</next_to_start>
+      <text_to_display>Afternoon Short</text_to_display>
+      <cluster_number>4</cluster_number>
+      <tag>announcements</tag>
+      <next>offer_announcement_6</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>announcement_afternoon_short</name>
+      <type>start_sound</type>
+      <sound_name>Announcement Afternoon Short</sound_name>
+      <cluster_number>4</cluster_number>
+      <text_to_display>Afternoon Short</text_to_display>
+      <tag>announcements</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>offer_announcement_6</name>
+      <type>offer_sound</type>
+      <next_to_start>announcement_afternoon_long_humorous</next_to_start>
+      <text_to_display>Afternoon Long Humorous</text_to_display>
+      <cluster_number>5</cluster_number>
+      <tag>announcements</tag>
+      <next>offer_announcement_7</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>announcement_afternoon_long_humorous</name>
+      <type>start_sound</type>
+      <sound_name>Announcement Afternoon Long Humorous</sound_name>
+      <cluster_number>5</cluster_number>
+      <text_to_display>Afternoon Long Humorous</text_to_display>
+      <tag>announcements</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>offer_announcement_7</name>
+      <type>offer_sound</type>
+      <next_to_start>announcement_morning_short</next_to_start>
+      <text_to_display>Morning Short</text_to_display>
+      <cluster_number>6</cluster_number>
+      <tag>announcements</tag>
+      <next>wait_for_curtain_1</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>announcement_morning_short</name>
+      <type>start_sound</type>
+      <sound_name>Announcement Morning Short</sound_name>
+      <cluster_number>6</cluster_number>
+      <text_to_display>Morning Short</text_to_display>
+      <tag>announcements</tag>
+    </sequence_item>
+
   </sound_sequence>
 </show_control>

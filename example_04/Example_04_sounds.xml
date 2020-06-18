@@ -3,23 +3,20 @@
 
   <sounds>
     <version>1.0</version>
-
-    <sound>
-      <name>4-channel_ID</name>
-      <wav_file_name>4_Channel_ID.wav</wav_file_name>
-      <loop_from_time>6.0</loop_from_time>
-      <loop_to_time>0.0</loop_to_time>
-      <loop_limit>0</loop_limit>
-    </sound>
-    
+    <!-- 
+	 Play this music from house open to ready for announcements.
+    -->
     <sound>
       <name>pre-show music</name>
       <wav_file_name>pre_show_music.wav</wav_file_name>
       <attack_duration_time>5.0</attack_duration_time>
       <designer_volume_level>0.5</designer_volume_level>
       <designer_pan>0.00</designer_pan>
-      <release_duration_time>5.0</release_duration_time>
-      <channels>	
+      <loop_from_time>386</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <release_duration_time>1.0</release_duration_time>
+      <channels>
 	<!-- Channel 0 to speakers front_left and rear_left, 
 	     1 to front_right and rear_right.  
 	     Rear speakers at low volume.
@@ -44,8 +41,6 @@
 	      <name>front_right</name>
 	      <volume_level>1.0</volume_level>
 	    </speaker>
-	  </speakers>
-	  <speakers>
 	    <speaker>
 	      <name>rear_right</name>
 	      <volume_level>0.5</volume_level>
@@ -55,19 +50,601 @@
       </channels>
     </sound>
 
+    <!--
+	Play this garden sound while Adam and Eve
+	are in the Garden of Eden.
+    -->
     <sound>
-      <name>Automobile</name>
-      <wav_file_name>Automobile.wav</wav_file_name>
-      <loop_from_time>16.578</loop_from_time>
-      <loop_to_time>1.263</loop_to_time>
+      <name>Garden ambience</name>
+      <wav_file_name>garden_ambience.wav</wav_file_name>
+      <attack_duration_time>1.0</attack_duration_time>
+      <designer_volume_level>0.25</designer_volume_level>
+      <release_duration_time>1.0</release_duration_time>
+      <loop_from_time>53.5</loop_from_time>
+      <loop_to_time>0.75</loop_to_time>
       <loop_limit>0</loop_limit>
-      <release_duration_time>3.0</release_duration_time>
+      <channels>	
+	<!-- This is a quadrophonic sound, so we send
+	     channel 0 to front left, 1 to front right,
+	     2 to rear left and 3 to rear right.
+	-->
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>2</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>3</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <!--
+	These four sounds together constitute running water.
+	They are independent stereo recordings played in
+	adjacent pairs of speakers.
+    -->
+    <sound>
+      <name>Water_01</name>
+      <wav_file_name>water/water1.wav</wav_file_name>
+      <attack_duration_time>1.0</attack_duration_time>
+      <designer_volume_level>0.05</designer_volume_level>
+      <release_duration_time>1.0</release_duration_time>
+      <loop_from_time>59</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>	
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
     </sound>
     <sound>
-      <name>Automobile_end</name>
-      <wav_file_name>Automobile.wav</wav_file_name>
-      <start_time>16.578</start_time>
-      <attack_duration_time>0.1</attack_duration_time>
+      <name>Water_02</name>
+      <wav_file_name>water/water2.wav</wav_file_name>
+      <attack_duration_time>1.0</attack_duration_time>
+      <designer_volume_level>0.05</designer_volume_level>
+      <release_duration_time>1.0</release_duration_time>
+      <loop_from_time>24</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>	
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
     </sound>
+    <sound>
+      <name>Water_03</name>
+      <wav_file_name>water/water3.wav</wav_file_name>
+      <attack_duration_time>1.0</attack_duration_time>
+      <designer_volume_level>0.05</designer_volume_level>
+      <release_duration_time>1.0</release_duration_time>
+      <loop_from_time>24.5</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>	
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>Water_04</name>
+      <wav_file_name>water/water4.wav</wav_file_name>
+      <attack_duration_time>1.0</attack_duration_time>
+      <designer_volume_level>0.05</designer_volume_level>
+      <release_duration_time>1.0</release_duration_time>
+      <loop_from_time>28</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>	
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    
+    <!--
+	The lightning strike and consequent thunder when Father
+	destroys the tree.
+    -->
+    <sound>
+      <name>lightning_crash</name>
+      <wav_file_name>Weather/lightning_crash.wav</wav_file_name>
+      <start_time>4.0</start_time>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>2</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>3</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>4</number>
+	  <speakers>
+	    <speaker>
+	      <name>LFE1</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <!--
+	Adam and Eve bite the apple.
+    -->
+    <sound>
+      <name>Apple</name>
+      <wav_file_name>apple.wav</wav_file_name>
+    </sound>
+
+    <!-- background sound when in the wasteland.  -->
+    
+    <sound>
+      <name>Wasteland ambience</name>
+      <wav_file_name>Wasteland/Wasteland.wav</wav_file_name>
+      <designer_volume_level>0.02</designer_volume_level>
+      <attack_duration_time>1.0</attack_duration_time>
+      <release_duration_time>1.0</release_duration_time>
+      <loop_from_time>230</loop_from_time>
+      <loop_to_time>1.0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.5</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.5</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <!-- Two baby cry sounds, for Cain and Abel.  -->
+    
+    <sound>
+      <name>baby_cry_1</name>
+      <wav_file_name>baby_cry_1.wav</wav_file_name>
+    </sound>
+    <sound>
+      <name>baby_cry_2</name>
+      <wav_file_name>baby_cry_2.wav</wav_file_name>
+    </sound>
+
+    <!--
+	Page 063: Added ambience when the family is in the standing
+	stones.  This is a quiet version of the Garden of Eden
+	ambience, with channels swapped.
+    -->
+    
+    <sound>
+      <name>Standing Stones ambience</name>
+      <wav_file_name>garden_ambience.wav</wav_file_name>
+      <attack_duration_time>1.0</attack_duration_time>
+      <designer_volume_level>0.125</designer_volume_level>
+      <release_duration_time>1.0</release_duration_time>
+      <loop_from_time>53.5</loop_from_time>
+      <loop_to_time>0.75</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>	
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>2</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>3</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <!-- 
+	 Page 069: Adam slaps Cain.
+    -->
+    <sound>
+      <name>slap</name>
+      <wav_file_name>slap.wav</wav_file_name>
+    </sound>
+
+    <!-- 
+	 Page 071: Cain beats Abel.
+    -->
+    <sound>
+      <name>bonk</name>
+      <wav_file_name>bonk.wav</wav_file_name>
+    </sound>
+
+    
+    <!--
+	Page 101: these sounds introduce the various animals.  Put them all in
+	the front two speakers.
+    -->
+    <sound>
+      <name>rabbit</name>
+      <wav_file_name>animals/101a_rabbit_purring.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>turtle</name>
+      <wav_file_name>animals/101b_Egyptian_turtle.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>chimp</name>
+      <wav_file_name>animals/101c_chimp.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>panther</name>
+      <wav_file_name>animals/101d_panther.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>bird</name>
+      <wav_file_name>animals/101e_bird.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>frog</name>
+      <wav_file_name>animals/101f_frog.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>mice</name>
+      <wav_file_name>animals/101g_mice.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>zebra</name>
+      <wav_file_name>animals/101h_zebra.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>ostrich</name>
+      <wav_file_name>animals/101i_ostrich.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>giraffe</name>
+      <wav_file_name>animals/101j_newborn_giraffe.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>elephant</name>
+      <wav_file_name>animals/101k_elephant.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
   </sounds>
 </show_control>

@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.117
+Version:        0.119
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -93,6 +93,10 @@ document for sound_effects_player.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Thu Jun 18 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.119-1 Fix a race condition in the sequencer.
+* Sat Jun 13 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.118-1 Add information in the sequencer trace.
 * Mon Jun 08 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.117-1 Fix sounds with more speakers than output channels.
 * Wed Jun 03 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>

@@ -201,6 +201,7 @@ execute_items (struct sequence_info *sequence_data, GApplication *app)
 {
   struct sequence_item_info *next_item;
   gchar *display_text;
+  gchar *trace_text;
 
   while (sequence_data->next_item_name != NULL)
     {
@@ -213,6 +214,10 @@ execute_items (struct sequence_info *sequence_data, GApplication *app)
             g_strdup_printf ("Next item, %s, not found.",
                              sequence_data->next_item_name);
           display_show_message (display_text, app);
+	  if (trace_sequencer_level (app) > 0)
+	    {
+	      trace_sequencer_write (display_text, app);
+	    }
           g_free (display_text);
           display_text = NULL;
           break;
@@ -231,6 +236,14 @@ execute_items (struct sequence_info *sequence_data, GApplication *app)
     {
       /* Signal the application to quit.  This first shuts down the
        * Gstreamer pipeline, then exits.  */
+      if (trace_sequencer_level (app) > 0)
+	{
+	  trace_text = g_strdup_printf ("Nothing left to do; exiting.");
+	  trace_sequencer_write (trace_text, app);
+	  g_free (trace_text);
+	  trace_text = NULL;
+	}
+
       g_application_quit (app);
     }
 
@@ -279,13 +292,26 @@ execute_item (struct sequence_item_info *the_item,
               struct sequence_info *sequence_data, GApplication *app)
 {
   gchar *display_text;
+  gchar *trace_text;
+
+  if (trace_sequencer_level (app) > 0)
+    {
+      trace_text = g_strdup_printf ("Executing item %s.", the_item->name);
+      trace_sequencer_write (trace_text, app);
+      g_free (trace_text);
+      trace_text = NULL;
+    }
 
   switch (the_item->type)
     {
     case unknown:
       display_text =
-        g_strdup_printf ("Unknown sequence item: %s", the_item->name);
+        g_strdup_printf ("Unknown type of sequence item: %s.", the_item->name);
       display_show_message (display_text, app);
+      if (trace_sequencer_level (app) > 0)
+	{
+	  trace_sequencer_write (display_text, app);
+	}
       g_free (display_text);
       display_text = NULL;
       break;
@@ -320,7 +346,16 @@ execute_item (struct sequence_item_info *the_item,
     case start_sequence:
       display_show_message ("Start sequence", app);
       break;
+    }
 
+  if (trace_sequencer_level (app) > 0)
+    {
+      trace_text =
+	g_strdup_printf ("Finished executing item %s, next is %s.",
+			 the_item->name, sequence_data->next_item_name);
+      trace_sequencer_write (trace_text, app);
+      g_free (trace_text);
+      trace_text = NULL;
     }
 
   return;
@@ -737,6 +772,7 @@ execute_cease_offering_sound (struct sequence_item_info *the_item,
 
           g_list_free (list_element);
           g_free (remember_data);
+	  remember_data = NULL;
         }
       list_element = next_list_element;
     }
@@ -1316,7 +1352,8 @@ sequence_cluster_start (guint cluster_number, GApplication *app)
        item_list = item_list->next)
     {
       remember_data = item_list->data;
-      if (remember_data->cluster_number == cluster_number)
+      if ((remember_data->cluster_number == cluster_number) &&
+	  (!remember_data->off_cluster))
         {
           found_item = TRUE;
           break;
@@ -1476,7 +1513,7 @@ sequence_button_play (GApplication *app)
   return;
 }
 
-/* Process the completion of a sound.  */
+/* Process the completion or termination of a sound.  */
 void
 sequence_sound_completion (struct sound_info *sound_effect,
                            gboolean terminated, GApplication *app)
@@ -1494,14 +1531,23 @@ sequence_sound_completion (struct sound_info *sound_effect,
 
   if (trace_sequencer_level (app) > 0)
     {
-      trace_text =
-        g_strdup_printf ("completion of sound %s on cluster %d.",
-                         sound_effect->name, sound_effect->cluster_number);
+      if (terminated)
+	{
+	  trace_text =
+	    g_strdup_printf ("Termination of sound %s on cluster %d.",
+			     sound_effect->name, sound_effect->cluster_number);
+	}
+      else
+	{
+	  trace_text =
+	    g_strdup_printf ("Completion of sound %s on cluster %d.",
+			     sound_effect->name, sound_effect->cluster_number);
+	}
       trace_sequencer_write (trace_text, app);
       g_free (trace_text);
       trace_text = NULL;
     }
-
+  
   /* See if there is a Start Sound sequence item outstanding which names
    * this sound.  */
   item_found = FALSE;
@@ -1521,16 +1567,16 @@ sequence_sound_completion (struct sound_info *sound_effect,
   if (!item_found)
     {
       /* There isn't.  Ignore the completion.  */
-      display_show_message ("Completion but sound not running.", app);
+      display_show_message ("Sound is not running.", app);
       if (trace_sequencer_level (app) > 0)
         {
-          trace_sequencer_write ("completion but sound not running.", app);
+          trace_sequencer_write ("Sound is not running.", app);
         }
       return;
     }
 
   /* We have a Start Sound sequence item for this sound.  It has
-   * completed.  */
+   * completed or terminated.  */
   start_sound_sequence_item = remember_data->sequence_item;
 
   /* If this sound is still showing on the cluster, set the start label 
@@ -1667,14 +1713,16 @@ sequence_sound_release_started (struct sound_info *sound_effect,
    * started the release stage of its amplitude envelope.  */
   start_sound_sequence_item = remember_data->sequence_item;
 
-  /* Show the operator that the sound is now releasing.  */
-  button_set_cluster_releasing (sound_effect, app);
+  /* Show the operator that the sound is now releasing, if it is still
+   * attached to its cluster.  */
+  if (!remember_data->off_cluster)
+    button_set_cluster_releasing (sound_effect, app);
 
   /* If there is another sound running, show its status.  */
   update_operator_display (sequence_data, app);
 
   /* Run the sequencer from the release_started label unless the
-   * sound was stooped by the operator.  If we have already sent
+   * sound was stopped by the operator.  If we have already sent
    * a release command to the sound, don't run from the release started
    * label but instead wait for the termination or completion
    * of the sound and run from the appropriate label at that time.
