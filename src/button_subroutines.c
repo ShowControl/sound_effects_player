@@ -1,7 +1,7 @@
 /*
  * button_subroutines.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,11 @@
 #include "sound_structure.h"
 #include "sequence_subroutines.h"
 
+#define BUTTON_TRACE FALSE
+
 /* The Mute button has been toggled.  */
 void
-button_mute_toggled (GtkToggleButton * button, gpointer user_data)
+button_mute_toggled (GtkToggleButton *button, gpointer user_data)
 {
   GApplication *app;
   gboolean button_state;
@@ -60,17 +62,18 @@ button_mute_toggled (GtkToggleButton * button, gpointer user_data)
 /* The master volume slider has been moved.  Update the volume and the display. 
  * The user data is the widget being controlled. */
 void
-button_master_volume_changed (GtkButton * button, gpointer user_data)
+button_master_volume_changed (GtkButton *button, gpointer user_data)
 {
   GApplication *app;
   GstPipeline *pipeline_element;
   GstElement *volume_element;
   GstElement *final_bin_element;
-  GtkLabel *volume_label = NULL;
+  GtkLabel *volume_label;
   gdouble new_value;
   gchar *value_string;
   GtkWidget *parent_container;
   GList *children_list = NULL;
+  GList *l;
   const gchar *child_name = NULL;
 
   app = sep_get_application_from_widget (user_data);
@@ -97,15 +100,17 @@ button_master_volume_changed (GtkButton * button, gpointer user_data)
   parent_container = gtk_widget_get_parent (GTK_WIDGET (button));
   children_list =
     gtk_container_get_children (GTK_CONTAINER (parent_container));
-  while (children_list != NULL)
+  l = children_list;
+  volume_label = NULL;
+  while (l != NULL)
     {
-      child_name = gtk_widget_get_name (children_list->data);
+      child_name = gtk_widget_get_name (l->data);
       if (g_strcmp0 (child_name, "volume_label") == 0)
         {
-          volume_label = children_list->data;
+          volume_label = l->data;
           break;
         }
-      children_list = children_list->next;
+      l = l->next;
     }
   g_list_free (children_list);
 
@@ -127,7 +132,7 @@ button_master_volume_changed (GtkButton * button, gpointer user_data)
 
 /* The Pause button has been pushed.  */
 void
-button_pause_clicked (GtkButton * button, gpointer user_data)
+button_pause_clicked (GtkButton *button, gpointer user_data)
 {
   GApplication *app;
 
@@ -139,7 +144,7 @@ button_pause_clicked (GtkButton * button, gpointer user_data)
 
 /* The Continue button has been pushed.  */
 void
-button_continue_clicked (GtkButton * button, gpointer user_data)
+button_continue_clicked (GtkButton *button, gpointer user_data)
 {
   GApplication *app;
 
@@ -151,7 +156,7 @@ button_continue_clicked (GtkButton * button, gpointer user_data)
 
 /* The Play button has been pushed.  */
 void
-button_play_clicked (GtkButton * button, gpointer user_data)
+button_play_clicked (GtkButton *button, gpointer user_data)
 {
   GApplication *app;
 
@@ -164,7 +169,7 @@ button_play_clicked (GtkButton * button, gpointer user_data)
 
 /* The Start button in a cluster has been pushed.  */
 void
-button_start_clicked (GtkButton * button, gpointer user_data)
+button_start_clicked (GtkButton *button, gpointer user_data)
 {
   GApplication *app;
   GtkWidget *cluster_widget;
@@ -181,7 +186,7 @@ button_start_clicked (GtkButton * button, gpointer user_data)
 
 /* The Stop button in a cluster has been pushed.  */
 void
-button_stop_clicked (GtkButton * button, gpointer user_data)
+button_stop_clicked (GtkButton *button, gpointer user_data)
 {
   GApplication *app;
   GtkWidget *cluster_widget;
@@ -198,12 +203,23 @@ button_stop_clicked (GtkButton * button, gpointer user_data)
 
 /* Show that the Start button has been pushed.  */
 void
-button_set_cluster_playing (struct sound_info *sound_data, GApplication * app)
+button_set_cluster_playing (struct sound_info *sound_data, GApplication *app)
 {
-  GtkButton *start_button = NULL;
+  GtkButton *start_button;
+  GtkLabel *volume_label, *pan_label;
+  GstElement *volume_element, *pan_element;
+  gdouble volume_level_value, pan_value;
+  GstBin *bin_element;
+  GtkScaleButton *volume_button, *pan_button;
   GtkWidget *parent_container;
-  GList *children_list = NULL;
-  const gchar *child_name = NULL;
+  GList *children_list, *grandchildren_list;
+  GList *l, *ll;
+  const gchar *child_name, *grandchild_name;
+
+  if (BUTTON_TRACE)
+    {
+      g_print ("Set sound %s to playing.\n", sound_data->name);
+    }
 
   /* Find the start button and set its text to "Playing...". 
    * The start button will be a child of the cluster, and will be named
@@ -212,22 +228,97 @@ button_set_cluster_playing (struct sound_info *sound_data, GApplication * app)
 
   /* It is possible, though unlikely, that the sound will no longer
    * be in a cluster.  */
-  if (parent_container != NULL)
+  if (parent_container == NULL)
+    return;
+    
+  start_button = NULL;
+  pan_label = NULL;
+  volume_label = NULL;
+  pan_button = NULL;
+  volume_button = NULL;
+  children_list = gtk_container_get_children (GTK_CONTAINER (parent_container));
+  l = children_list;
+  while (l != NULL)
     {
-      children_list =
-        gtk_container_get_children (GTK_CONTAINER (parent_container));
-      while (children_list != NULL)
-        {
-          child_name = gtk_widget_get_name (children_list->data);
-          if (g_strcmp0 (child_name, "start_button") == 0)
-            {
-              start_button = children_list->data;
-              break;
-            }
-          children_list = children_list->next;
-        }
-      g_list_free (children_list);
-      gtk_button_set_label (start_button, "Playing...");
+      child_name = gtk_widget_get_name (l->data);
+      if (BUTTON_TRACE)
+	g_print (" child name is %s\n", child_name);
+      if (GTK_IS_CONTAINER (l->data))
+	{
+	  if (BUTTON_TRACE)
+	    g_print (" container\n");
+	  grandchildren_list = gtk_container_get_children (l->data);
+	  ll = grandchildren_list;
+	  while (ll != NULL)
+	    {
+	      grandchild_name = gtk_widget_get_name (ll->data);
+	      if (BUTTON_TRACE)
+		g_print (" grandchild name is %s\n", grandchild_name);
+	      if (g_strcmp0 (grandchild_name, "pan_label") == 0)
+		pan_label = ll->data;
+	      if (g_strcmp0 (grandchild_name, "pan_button") == 0)
+		pan_button = ll->data;
+	      if (g_strcmp0 (grandchild_name, "volume_label") == 0)
+		volume_label = ll->data;
+	      if (g_strcmp0 (grandchild_name, "volume") == 0)
+		volume_button = ll->data;
+	      ll = ll->next;
+	    }
+	  g_list_free (grandchildren_list);
+	  grandchildren_list = NULL;
+	}
+      if (g_strcmp0 (child_name, "start_button") == 0)
+	  start_button = l->data;
+      l = l->next;
+    }
+  g_list_free (children_list);
+  children_list = NULL;
+    
+  if (BUTTON_TRACE)
+    {
+      if (start_button != NULL)
+	g_print (" found start button\n");
+      if (pan_label != NULL)
+	g_print (" found pan label\n");
+      if (pan_button != NULL)
+	g_print (" found pan button\n");
+      if (volume_label != NULL)
+	g_print (" found volume label\n");
+      if (volume_button != NULL)
+	g_print (" found volume button\n");
+    }
+  
+  if (start_button != NULL)
+    gtk_button_set_label (start_button, "Playing...");
+  
+  /* The sound_effect structure records where the Gstreamer bin is
+   * for this sound effect.  That bin contains the volume and pan
+   * controls. */
+  bin_element = sound_data->sound_control;
+  volume_element = gstreamer_get_volume (bin_element);
+  if ((volume_element != NULL) && (volume_button != NULL))
+    {
+      volume_level_value = sound_data->default_volume_level;
+      if (BUTTON_TRACE)
+	{
+	  g_print (" set volume to %4.3f.\n", volume_level_value);
+	}
+      gtk_scale_button_set_value (volume_button, volume_level_value);
+    }
+  
+  pan_element = gstreamer_get_pan (bin_element);
+  if ((pan_element != NULL) && (pan_button != NULL))
+    {
+      pan_value = sound_data->designer_pan;
+      /* -1.0 is full left, 0.0 is center, 1.0 is full right.
+       * convert to 0.0 to 100.0  */
+      pan_value = (pan_value * 50.0) + 50.0;
+  
+      if (BUTTON_TRACE)
+	{
+	  g_print (" set pan to %4.0f.\n", pan_value);
+	}
+      gtk_scale_button_set_value (pan_button, pan_value);
     }
 
   return;
@@ -236,36 +327,44 @@ button_set_cluster_playing (struct sound_info *sound_data, GApplication * app)
 /* Show that the release stage of a sound is running.  */
 void
 button_set_cluster_releasing (struct sound_info *sound_data,
-                              GApplication * app)
+                              GApplication *app)
 {
-  GtkButton *start_button = NULL;
+  GtkButton *start_button;
   GtkWidget *parent_container;
-  GList *children_list = NULL;
-  const gchar *child_name = NULL;
+  GList *children_list;
+  GList *l;
+  const gchar *child_name;
+
+    if (BUTTON_TRACE)
+    {
+      g_print ("Set sound %s to releasing.\n", sound_data->name);
+    }
 
   /* Find the start button and set its text to "Releasing...". 
    * The start button will be a child of the cluster, and will be named
    * "start_button".  */
   parent_container = sound_data->cluster_widget;
 
-  /* It is possible, though unlikely, that the sound will no longer
-   * be in a cluster.  */
+  /* It is possible that the sound will no longer be in a cluster.  */
   if (parent_container != NULL)
     {
+      start_button = NULL;
       children_list =
         gtk_container_get_children (GTK_CONTAINER (parent_container));
-      while (children_list != NULL)
+      l = children_list;
+      while (l != NULL)
         {
-          child_name = gtk_widget_get_name (children_list->data);
+          child_name = gtk_widget_get_name (l->data);
           if (g_strcmp0 (child_name, "start_button") == 0)
             {
-              start_button = children_list->data;
+              start_button = l->data;
               break;
             }
-          children_list = children_list->next;
+          l = l->next;
         }
       g_list_free (children_list);
-      gtk_button_set_label (start_button, "Releasing...");
+      if (start_button != NULL)
+	gtk_button_set_label (start_button, "Releasing...");
     }
 
   return;
@@ -273,36 +372,44 @@ button_set_cluster_releasing (struct sound_info *sound_data,
 
 /* Reset the appearance of a cluster after its sound has finished playing. */
 void
-button_reset_cluster (struct sound_info *sound_data, GApplication * app)
+button_reset_cluster (struct sound_info *sound_data, GApplication *app)
 {
-  GtkButton *start_button = NULL;
+  GtkButton *start_button;
   GtkWidget *parent_container;
-  GList *children_list = NULL;
-  const gchar *child_name = NULL;
+  GList *children_list;
+  GList *l;
+  const gchar *child_name;
+
+  if (BUTTON_TRACE)
+    {
+      g_print ("Set sound %s to initial appearance.\n", sound_data->name);
+    }
 
   /* Find the start button and set its text back to "Start". 
    * The start button will be a child of the cluster, and will be named
    * "start_button".  */
   parent_container = sound_data->cluster_widget;
 
-  /* It is possible, though unlikely, that the sound will no longer
-   * be in a cluster.  */
+  /* It is possible that the sound will no longer be in a cluster.  */
   if (parent_container != NULL)
     {
+      start_button = NULL;
       children_list =
         gtk_container_get_children (GTK_CONTAINER (parent_container));
-      while (children_list != NULL)
+      l = children_list;
+      while (l != NULL)
         {
-          child_name = gtk_widget_get_name (children_list->data);
+          child_name = gtk_widget_get_name (l->data);
           if (g_strcmp0 (child_name, "start_button") == 0)
             {
-              start_button = children_list->data;
+              start_button = l->data;
               break;
             }
-          children_list = children_list->next;
+          l = l->next;
         }
       g_list_free (children_list);
-      gtk_button_set_label (start_button, "Start");
+      if (start_button != NULL)
+	gtk_button_set_label (start_button, "Start");
     }
 
   return;
@@ -311,32 +418,40 @@ button_reset_cluster (struct sound_info *sound_data, GApplication * app)
 /* The volume slider has been moved.  Update the volume and the display. 
  * The user data is the widget being controlled. */
 void
-button_volume_changed (GtkButton * button, gpointer user_data)
+button_volume_changed (GtkButton *button, gpointer user_data)
 {
   GtkLabel *volume_label = NULL;
   GtkWidget *parent_container;
   GList *children_list = NULL;
+  GList *l;
   const gchar *child_name = NULL;
   struct sound_info *sound_data;
   GstBin *bin_element;
   GstElement *volume_element;
-  gdouble new_value;
+  gdouble old_value, new_value;
   gchar *value_string;
+
+  if (BUTTON_TRACE)
+    {
+      g_print ("Volume slider changed.\n");
+    }
 
   /* Find the volume label associated with this volume widget.
    * It will be a child of this widget's parent. */
+  volume_label = NULL;
   parent_container = gtk_widget_get_parent (GTK_WIDGET (button));
   children_list =
     gtk_container_get_children (GTK_CONTAINER (parent_container));
-  while (children_list != NULL)
+  l = children_list;
+  while (l != NULL)
     {
-      child_name = gtk_widget_get_name (children_list->data);
+      child_name = gtk_widget_get_name (l->data);
       if (g_strcmp0 (child_name, "volume_label") == 0)
         {
-          volume_label = children_list->data;
+          volume_label = l->data;
           break;
         }
-      children_list = children_list->next;
+      l = l->next;
     }
   g_list_free (children_list);
 
@@ -357,12 +472,22 @@ button_volume_changed (GtkButton * button, gpointer user_data)
         return;
 
       new_value = gtk_scale_button_get_value (GTK_SCALE_BUTTON (button));
+      if (BUTTON_TRACE)
+	{
+	  g_print ("Raw value for volume slider is %4.3f.\n", new_value);
+	}
+      g_object_get (volume_element, "volume", &old_value, NULL);
       /* Set the volume of the sound. */
       g_object_set (volume_element, "volume", new_value, NULL);
 
       /* Update the text in the volume label. */
-      value_string = g_strdup_printf ("Vol%4.0f%%", new_value * 100.0);
+      value_string = g_strdup_printf ("Vol %4.0f%%", new_value * 100.0);
       gtk_label_set_text (volume_label, value_string);
+      if (BUTTON_TRACE)
+	{
+	  g_print ("Volume of %s changed: %s.\n",
+		   sound_data->name, value_string);
+	}
       g_free (value_string);
 
     }
@@ -372,32 +497,40 @@ button_volume_changed (GtkButton * button, gpointer user_data)
 
 /* The pan slider has been moved.  Update the pan and display. */
 void
-button_pan_changed (GtkButton * button, gpointer user_data)
+button_pan_changed (GtkButton *button, gpointer user_data)
 {
-  GtkLabel *pan_label = NULL;
+  GtkLabel *pan_label;
   GtkWidget *parent_container;
-  GList *children_list = NULL;
-  const gchar *child_name = NULL;
+  GList *children_list;
+  GList *l;
+  const gchar *child_name;
   struct sound_info *sound_data;
   GstBin *bin_element;
   GstElement *pan_element;
-  gdouble new_value;
+  gdouble old_value, new_value;
   gchar *value_string;
+
+  if (BUTTON_TRACE)
+    {
+      g_print ("Pan slider changed.\n");
+    }
 
   /* Find the pan label associated with this pan widget.
    * It will be a child of this widget's parent. */
   parent_container = gtk_widget_get_parent (GTK_WIDGET (button));
+  pan_label = NULL;
   children_list =
     gtk_container_get_children (GTK_CONTAINER (parent_container));
-  while (children_list != NULL)
+  l = children_list;
+  while (l != NULL)
     {
-      child_name = gtk_widget_get_name (children_list->data);
+      child_name = gtk_widget_get_name (l->data);
       if (g_strcmp0 (child_name, "pan_label") == 0)
         {
-          pan_label = children_list->data;
+          pan_label = l->data;
           break;
         }
-      children_list = children_list->next;
+      l = l->next;
     }
   g_list_free (children_list);
 
@@ -414,13 +547,18 @@ button_pan_changed (GtkButton * button, gpointer user_data)
        */
       bin_element = sound_data->sound_control;
       pan_element = gstreamer_get_pan (bin_element);
-      /* The pan control may be omitted by the sound designer.  */
+      /* The pan control may have been omitted by the sound designer.  */
       if (pan_element == NULL)
         return;
 
       new_value = gtk_scale_button_get_value (GTK_SCALE_BUTTON (button));
-      /* Set the panorama position of the sound. */
+      if (BUTTON_TRACE)
+	{
+	  g_print ("Raw value from pan button is %4.3f.\n", new_value);
+	}
       new_value = (new_value - 50.0) / 50.0;
+      g_object_get (pan_element, "panorama", &old_value, NULL);
+      /* Set the panorama position of the sound. */
       g_object_set (pan_element, "panorama", new_value, NULL);
 
       /* Update the text of the pan label.  0.0 corresponds to Center, 
@@ -438,6 +576,11 @@ button_pan_changed (GtkButton * button, gpointer user_data)
           gtk_label_set_text (pan_label, value_string);
           g_free (value_string);
         }
+      if (BUTTON_TRACE)
+	{
+	  g_print ("Pan value of %s changed from %4.0f to %4.0f.\n",
+		   sound_data->name, old_value, new_value);
+	}
     }
 
   return;

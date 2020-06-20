@@ -430,6 +430,7 @@ execute_start_sound (struct sequence_item_info *the_item,
        * Remove it from the cluster in favor of this new sound.  */
       button_reset_cluster (old_sound_effect, app);
       remember_data->off_cluster = TRUE;
+      sound_unbind_from_cluster (old_sound_effect, app);
     }
 
   /* Set the name of the cluster to the specified text.  */
@@ -1526,22 +1527,24 @@ sequence_sound_completion (struct sound_info *sound_effect,
   gboolean item_found;
   GList *item_list, *found_item;
   gchar *trace_text;
+  guint cluster_number;
 
   sequence_data = sep_get_sequence_data (app);
-
+  cluster_number = sound_effect->cluster_number;
+  
   if (trace_sequencer_level (app) > 0)
     {
       if (terminated)
 	{
 	  trace_text =
 	    g_strdup_printf ("Termination of sound %s on cluster %d.",
-			     sound_effect->name, sound_effect->cluster_number);
+			     sound_effect->name, cluster_number);
 	}
       else
 	{
 	  trace_text =
 	    g_strdup_printf ("Completion of sound %s on cluster %d.",
-			     sound_effect->name, sound_effect->cluster_number);
+			     sound_effect->name, cluster_number);
 	}
       trace_sequencer_write (trace_text, app);
       g_free (trace_text);
@@ -1585,47 +1588,47 @@ sequence_sound_completion (struct sound_info *sound_effect,
     {
       button_reset_cluster (sound_effect, app);
       remember_data->off_cluster = TRUE;
-
-      /* See if there is an Offer Sound sequence item outstanding which names
-       * this cluster.  */
-      item_found = FALSE;
-      for (item_list = sequence_data->offering; item_list != NULL;
-           item_list = item_list->next)
-        {
-          offer_remember_data = item_list->data;
-          if ((offer_remember_data->active)
-              && (offer_remember_data->cluster_number ==
-                  sound_effect->cluster_number))
-            {
-              offer_sound_sequence_item = offer_remember_data->sequence_item;
-              item_found = TRUE;
-              break;
-            }
-        }
-
-      /* If there is, restore its text to the cluster.  If there isn't, clear
-       * the text field.  */
-      if (item_found)
-        {
-          if (trace_sequencer_level (app) > 0)
-            {
-              trace_text =
-                g_strdup_printf ("Offer Sound item %s reinstated "
-                                 "on cluster %d.",
-                                 offer_sound_sequence_item->name,
-                                 remember_data->cluster_number);
-              trace_sequencer_write (trace_text, app);
-              g_free (trace_text);
-              trace_text = NULL;
-            }
-          sound_cluster_set_name (offer_sound_sequence_item->text_to_display,
-                                  remember_data->cluster_number, app);
-        }
-      else
-        {
-          sound_cluster_set_name ((gchar *) "", sound_effect->cluster_number,
-                                  app);
-        }
+      sound_unbind_from_cluster (sound_effect, app);
+    }
+  
+  /* See if there is an Offer Sound sequence item outstanding which names
+   * this cluster.  */
+  item_found = FALSE;
+  for (item_list = sequence_data->offering; item_list != NULL;
+       item_list = item_list->next)
+    {
+      offer_remember_data = item_list->data;
+      if ((offer_remember_data->active)
+	  && (offer_remember_data->cluster_number == cluster_number))
+	{
+	  offer_sound_sequence_item = offer_remember_data->sequence_item;
+	  item_found = TRUE;
+	  break;
+	}
+    }
+  
+  /* If there is, restore its text to the cluster.  If there isn't, clear
+   * the text field.  */
+  if (item_found)
+    {
+      if (trace_sequencer_level (app) > 0)
+	{
+	  trace_text =
+	    g_strdup_printf ("Offer Sound item %s reinstated "
+			     "on cluster %d.",
+			     offer_sound_sequence_item->name,
+			     cluster_number);
+	  trace_sequencer_write (trace_text, app);
+	  g_free (trace_text);
+	  trace_text = NULL;
+	}
+      sound_cluster_set_name (offer_sound_sequence_item->text_to_display,
+			      cluster_number, app);
+    }
+  else
+    {
+      sound_cluster_set_name ((gchar *) "", cluster_number,
+			      app);
     }
 
   /* Remove the sequence item from the running list.  */
@@ -1665,14 +1668,16 @@ sequence_sound_release_started (struct sound_info *sound_effect,
   gboolean item_found;
   GList *item_list;
   gchar *trace_text;
-
+  guint cluster_number;
+  
   sequence_data = sep_get_sequence_data (app);
-
+  cluster_number = sound_effect->cluster_number;
+  
   if (trace_sequencer_level (app) > 0)
     {
       trace_text =
         g_strdup_printf ("release started for sound %s on cluster %d.",
-                         sound_effect->name, sound_effect->cluster_number);
+                         sound_effect->name, cluster_number);
       trace_sequencer_write (trace_text, app);
       g_free (trace_text);
       trace_text = NULL;

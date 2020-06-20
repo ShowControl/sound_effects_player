@@ -1,3 +1,6 @@
+Version 0.120, June 20, 2020
+  Add default volume level.
+  
 Version 0.119, June 18, 2020
   Fix a race between shutting down an old sound and starting up a new one.
   

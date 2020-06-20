@@ -237,6 +237,7 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar *sounds_file_name,
           sound_data->start_time = 0;
           sound_data->designer_volume_level = 1.0;
           sound_data->designer_pan = 0.0;
+	  sound_data->default_volume_level = 1.0;
           sound_data->MIDI_program_number = 0;
           sound_data->MIDI_program_number_specified = FALSE;
           sound_data->MIDI_note_number = 0;
@@ -553,6 +554,25 @@ parse_sounds_info (xmlDocPtr sounds_file, gchar *sounds_file_name,
                         g_ascii_strtod ((gchar *) name_data, NULL);
                       xmlFree (name_data);
                       sound_data->designer_pan = double_data;
+                      name_data = NULL;
+                    }
+                }
+
+              if (xmlStrEqual
+                  (name, (const xmlChar *) "default_volume_level"))
+                {
+                  /* For this sound effect, start with the operator volume at
+		   * this level, so he can increase it if he needs to.
+		   */
+                  name_data =
+                    xmlNodeListGetString (sounds_file,
+                                          sound_loc->xmlChildrenNode, 1);
+                  if (name_data != NULL)
+                    {
+                      double_data =
+                        g_ascii_strtod ((gchar *) name_data, NULL);
+                      xmlFree (name_data);
+                      sound_data->default_volume_level = double_data;
                       name_data = NULL;
                     }
                 }

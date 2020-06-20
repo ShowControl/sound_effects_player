@@ -686,6 +686,9 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
     }
   out_channels = sep_get_speaker_count (app);
   
+  g_object_set (volume_element, "volume", sound_data->default_volume_level,
+                NULL);
+
   /* Create a mix matrix from the incoming to the outgoing channels.  */
   g_value_init (&v, GST_TYPE_ARRAY);
   for (out_chan=0; out_chan < out_channels; out_chan++)

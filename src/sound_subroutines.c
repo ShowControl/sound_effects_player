@@ -1455,7 +1455,7 @@ void
 sound_unbind_from_cluster (struct sound_info *sound_effect,
                            GApplication *app)
 {
-  sound_effect->cluster_number = 0;
+  sound_effect->cluster_number = -1;
   sound_effect->cluster_widget = NULL;
 
   return;

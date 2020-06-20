@@ -10,8 +10,9 @@
       <name>pre-show music</name>
       <wav_file_name>pre_show_music.wav</wav_file_name>
       <attack_duration_time>5.0</attack_duration_time>
-      <designer_volume_level>0.5</designer_volume_level>
+      <designer_volume_level>1.0</designer_volume_level>
       <designer_pan>0.00</designer_pan>
+      <default_volume_level>0.5</default_volume_level>
       <loop_from_time>386</loop_from_time>
       <loop_to_time>0</loop_to_time>
       <loop_limit>0</loop_limit>

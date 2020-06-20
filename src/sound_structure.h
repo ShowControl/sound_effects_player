@@ -52,6 +52,7 @@ struct sound_info
   guint64 start_time;           /* start time, in nanoseconds */
   gfloat designer_volume_level; /* 1.0 means 100% of waveform's volume */
   gfloat designer_pan;          /* -1.0 is left, 0.0 is center, 1.0 is right */
+  gfloat default_volume_level;  /* Initial operator volume.  */
   gint MIDI_program_number;     /* MIDI program number, if specified */
   gboolean MIDI_program_number_specified;       /* TRUE if not empty */
   gint MIDI_note_number;        /* MIDI note number, if specified */

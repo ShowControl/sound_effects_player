@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.119
+Version:        0.120
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -93,6 +93,8 @@ document for sound_effects_player.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Sat Jun 20 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.120-1 Add default volume level.
 * Thu Jun 18 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.119-1 Fix a race condition in the sequencer.
 * Sat Jun 13 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
