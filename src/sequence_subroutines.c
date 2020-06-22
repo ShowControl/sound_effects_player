@@ -1676,7 +1676,7 @@ sequence_sound_release_started (struct sound_info *sound_effect,
   if (trace_sequencer_level (app) > 0)
     {
       trace_text =
-        g_strdup_printf ("release started for sound %s on cluster %d.",
+        g_strdup_printf ("Release started for sound %s on cluster %d.",
                          sound_effect->name, cluster_number);
       trace_sequencer_write (trace_text, app);
       g_free (trace_text);

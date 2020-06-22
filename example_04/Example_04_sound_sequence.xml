@@ -111,268 +111,22 @@
     <sequence_item>
       <name>Act 01 Scene 02 Page 007_2</name>
       <type>offer_sound</type>
-      <next_to_start>Animal_Rabbit_1</next_to_start>
+      <next_to_start>Animal Medley</next_to_start>
+      <cluster_number>0</cluster_number>
       <tag>animals</tag>
-      <text_to_display>Rabbit</text_to_display>
+      <text_to_display>Animals</text_to_display>
       <next>Act 01 Scene 02 Page 007_3</next>
     </sequence_item>
 
-    <!--
-	The animal sounds play in sequence.  The sound effects operator
-	pushes Play when the next animal appears.  I will relocate this
-	to page 101.
-    -->
     <sequence_item>
-      <name>Animal_Rabbit_1</name>
+      <name>Animal Medley</name>
       <type>start_sound</type>
-      <sound_name>rabbit</sound_name>
-      <text_to_display>Rabbit</text_to_display>
-      <importance>2</importance>
+      <sound_name>Animal Medley</sound_name>
       <cluster_number>0</cluster_number>
-      <next_completion>Animal_Rabbit_2</next_completion>
+      <text_to_display>Animals</text_to_display>
       <tag>animals</tag>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Rabbit_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Rabbit_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Rabbit_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Turtle_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Turtle</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Turtle_1</name>
-      <type>start_sound</type>
-      <sound_name>turtle</sound_name>
-      <text_to_display>Turtle</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Turtle_2</next_completion>
     </sequence_item>
     
-    <sequence_item>
-      <name>Animal_Turtle_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Turtle_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Turtle_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Chimp_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Chimp</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Chimp_1</name>
-      <type>start_sound</type>
-      <sound_name>chimp</sound_name>
-      <text_to_display>Chimp</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Chimp_2</next_completion>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Animal_Chimp_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Chimp_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Chimp_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Panther_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Panther</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Panther_1</name>
-      <type>start_sound</type>
-      <sound_name>panther</sound_name>
-      <text_to_display>Panther</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Panther_2</next_completion>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Animal_Panther_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Panther_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Panther_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Bird_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Bird</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Bird_1</name>
-      <type>start_sound</type>
-      <sound_name>bird</sound_name>
-      <text_to_display>Bird</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Bird_2</next_completion>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Animal_Bird_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Bird_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Bird_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Frog_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Frog</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Frog_1</name>
-      <type>start_sound</type>
-      <sound_name>frog</sound_name>
-      <text_to_display>Frog</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Frog_2</next_completion>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Animal_Frog_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Frog_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Frog_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Zebra_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Zebra</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Zebra_1</name>
-      <type>start_sound</type>
-      <sound_name>zebra</sound_name>
-      <text_to_display>Zebra</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Zebra_2</next_completion>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Animal_Zebra_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Zebra_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Zebra_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Ostrich_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Ostrich</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Ostrich_1</name>
-      <type>start_sound</type>
-      <sound_name>ostrich</sound_name>
-      <text_to_display>Ostrich</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Ostrich_2</next_completion>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Animal_Ostrich_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Ostrich_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Ostrich_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Giraffe_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Giraffe</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Giraffe_1</name>
-      <type>start_sound</type>
-      <sound_name>giraffe</sound_name>
-      <text_to_display>Giraffe</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Giraffe_2</next_completion>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Animal_Giraffe_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-      <next>Animal_Giraffe_3</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Giraffe_3</name>
-      <type>offer_sound</type>
-      <next_to_start>Animal_Elephant_1</next_to_start>
-      <tag>animals</tag>
-      <text_to_display>Elephant</text_to_display>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Animal_Elephant_1</name>
-      <type>start_sound</type>
-      <sound_name>elephant</sound_name>
-      <text_to_display>Elephant</text_to_display>
-      <importance>2</importance>
-      <cluster_number>0</cluster_number>
-      <tag>animals</tag>
-      <next_completion>Animal_Elephant_2</next_completion>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Animal_Elephant_2</name>
-      <type>cease_offering_sound</type>
-      <tag>animals</tag>
-    </sequence_item>
-
     <sequence_item>
       <name>Act 01 Scene 02 Page 007_3</name>
       <type>offer_sound</type>
@@ -397,7 +151,7 @@
       <next_to_start>Water_1</next_to_start>
       <tag>water</tag>
       <text_to_display>Water</text_to_display>
-      <cluster_number>5</cluster_number>
+      <cluster_number>9</cluster_number>
       <next>Act 01 Scene 02 Page 007_5</next>
     </sequence_item>
 
@@ -407,7 +161,7 @@
       <sound_name>Water_01</sound_name>
       <text_to_display>Water</text_to_display>
       <importance>1</importance>
-      <cluster_number>5</cluster_number>
+      <cluster_number>9</cluster_number>
       <tag>water</tag>
       <next_starts>Water_2</next_starts>
       <next_termination>water_stop</next_termination>
@@ -623,11 +377,92 @@
       <importance>2</importance>
     </sequence_item>
 
-    
     <sequence_item>
       <name>Act 01 Scene 03 Page 043_7</name>
+      <type>offer_sound</type>
+      <next_to_start>wind</next_to_start>
+      <cluster_number>5</cluster_number>
+      <text_to_display>Wind</text_to_display>
+      <tag>weather</tag>
+      <next>Act 01 Scene 03 Page 043_8</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>wind</name>
+      <type>start_sound</type>
+      <sound_name>wind</sound_name>
+      <text_to_display>Wind</text_to_display>
+      <cluster_number>5</cluster_number>
+      <importance>2</importance>
+      <tag>weather</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 01 Scene 03 Page 043_8</name>
+      <type>offer_sound</type>
+      <next_to_start>rain</next_to_start>
+      <cluster_number>6</cluster_number>
+      <text_to_display>Rain</text_to_display>
+      <tag>weather</tag>
+      <next>Act 01 Scene 03 Page 043_9</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>rain</name>
+      <type>start_sound</type>
+      <sound_name>rain</sound_name>
+      <text_to_display>Rain</text_to_display>
+      <cluster_number>6</cluster_number>
+      <importance>2</importance>
+      <tag>weather</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 01 Scene 03 Page 043_9</name>
+      <type>offer_sound</type>
+      <next_to_start>thunder_072</next_to_start>
+      <cluster_number>7</cluster_number>
+      <text_to_display>Thunder</text_to_display>
+      <tag>weather</tag>
+      <next>Act 01 Scene 03 Page 043_10</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>thunder_072</name>
+      <type>start_sound</type>
+      <sound_name>thunder_072</sound_name>
+      <text_to_display>Thunder</text_to_display>
+      <cluster_number>7</cluster_number>
+      <importance>3</importance>
+      <tag>weather</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 01 Scene 03 Page 043_10</name>
+      <type>offer_sound</type>
+      <next_to_start>mark_of_cain</next_to_start>
+      <cluster_number>8</cluster_number>
+      <text_to_display>"must ever bear this mark"</text_to_display>
+      <tag>weather</tag>
+      <next>Act 01 Scene 03 Page 043_11</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>mark_of_cain</name>
+      <type>start_sound</type>
+      <sound_name>lightning_crash</sound_name>
+      <text_to_display>Cain being marked</text_to_display>
+      <cluster_number>8</cluster_number>
+      <importance>4</importance>
+      <tag>weather</tag>
+    </sequence_item>
+
+
+    
+    <sequence_item>
+      <name>Act 01 Scene 03 Page 043_11</name>
       <type>operator_wait</type>
-      <text_to_display>Press Play when we are done.</text_to_display>
+      <text_to_display>Press Play when Act 1 is complete</text_to_display>
       <next_play>end_act_1_1</next_play>
     </sequence_item>
 
@@ -689,10 +524,345 @@
 
     <sequence_item>
       <name>end_act_1_9</name>
-      <type>operator_wait</type>
-      <text_to_display>Press Play when intermission is over.</text_to_display>
+      <type>stop_sound</type>
+      <tag>weather</tag>
+      <next>end_act_1_10</next>
     </sequence_item>
 
+    <sequence_item>
+      <name>end_act_1_10</name>
+      <type>cease_offering_sound</type>
+      <tag>weather</tag>
+      <next>end_act_1_11</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>end_act_1_11</name>
+      <type>offer_sound</type>
+      <tag>announcements</tag>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Intermission Return announcement</text_to_display>
+      <next_to_start>Intermission Return</next_to_start>
+      <next>end_act_1_12</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Intermission Return</name>
+      <type>start_sound</type>
+      <sound_name>Announcement Intermission Return</sound_name>
+      <text_to_display>Intermission Return announcement</text_to_display>
+    </sequence_item>
+
+    
+    <sequence_item>
+      <name>end_act_1_12</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when intermission is over.</text_to_display>
+      <next_play>Act 02 Scene 01 Page 081_01</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_01</name>
+      <type>cease_offering_sound</type>
+      <tag>announcements</tag>
+      <next>Act 02 Scene 01 Page 081_02</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_02</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Rabbit_1</next_to_start>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <text_to_display>Rabbit</text_to_display>
+      <next>Act 02 Scene 01 Page 081_03</next>
+    </sequence_item>
+
+    <!--
+	Page 101: The animal sounds play in sequence.  
+	The sound effects operator pushes Play when the next animal appears.
+    -->
+    <sequence_item>
+      <name>Animal_Rabbit_1</name>
+      <type>start_sound</type>
+      <sound_name>rabbit</sound_name>
+      <text_to_display>Rabbit</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <next_completion>Animal_Rabbit_2</next_completion>
+      <next_termination>Animal_Rabbit_2</next_termination>
+      <tag>animals</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Rabbit_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Rabbit_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Rabbit_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Turtle_1</next_to_start>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <text_to_display>Turtle</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Turtle_1</name>
+      <type>start_sound</type>
+      <sound_name>turtle</sound_name>
+      <text_to_display>Turtle</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Turtle_2</next_completion>
+      <next_termination>Animal_Turtle_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Turtle_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Turtle_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Turtle_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Chimp_1</next_to_start>
+      <tag>animals</tag>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Chimp</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Chimp_1</name>
+      <type>start_sound</type>
+      <sound_name>chimp</sound_name>
+      <text_to_display>Chimp</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Chimp_2</next_completion>
+      <next_termination>Animal_Chimp_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Chimp_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Chimp_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Chimp_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Panther_1</next_to_start>
+      <tag>animals</tag>
+      <text_to_display>Panther</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Panther_1</name>
+      <type>start_sound</type>
+      <sound_name>panther</sound_name>
+      <text_to_display>Panther</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Panther_2</next_completion>
+      <next_termination>Animal_Panther_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Panther_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Panther_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Panther_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Bird_1</next_to_start>
+      <tag>animals</tag>
+      <text_to_display>Bird</text_to_display>
+      <cluster_number>0</cluster_number>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Bird_1</name>
+      <type>start_sound</type>
+      <sound_name>bird</sound_name>
+      <text_to_display>Bird</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Bird_2</next_completion>
+      <next_termination>Animal_Bird_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Bird_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Bird_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Bird_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Frog_1</next_to_start>
+      <tag>animals</tag>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Frog</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Frog_1</name>
+      <type>start_sound</type>
+      <sound_name>frog</sound_name>
+      <text_to_display>Frog</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Frog_2</next_completion>
+      <next_termination>Animal_Frog_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Frog_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Frog_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Frog_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Zebra_1</next_to_start>
+      <tag>animals</tag>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Zebra</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Zebra_1</name>
+      <type>start_sound</type>
+      <sound_name>zebra</sound_name>
+      <text_to_display>Zebra</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Zebra_2</next_completion>
+      <next_termination>Animal_Zebra_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Zebra_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Zebra_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Zebra_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Ostrich_1</next_to_start>
+      <tag>animals</tag>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Ostrich</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Ostrich_1</name>
+      <type>start_sound</type>
+      <sound_name>ostrich</sound_name>
+      <text_to_display>Ostrich</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Ostrich_2</next_completion>
+      <next_termination>Animal_Ostrich_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Ostrich_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Ostrich_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Ostrich_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Giraffe_1</next_to_start>
+      <tag>animals</tag>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Giraffe</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Giraffe_1</name>
+      <type>start_sound</type>
+      <sound_name>giraffe</sound_name>
+      <text_to_display>Giraffe</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Giraffe_2</next_completion>
+      <next_termination>Animal_Giraffe_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Giraffe_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+      <next>Animal_Giraffe_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Giraffe_3</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal_Elephant_1</next_to_start>
+      <tag>animals</tag>
+      <cluster_number>0</cluster_number>
+      <text_to_display>Elephant</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal_Elephant_1</name>
+      <type>start_sound</type>
+      <sound_name>elephant</sound_name>
+      <text_to_display>Elephant</text_to_display>
+      <importance>2</importance>
+      <cluster_number>0</cluster_number>
+      <tag>animals</tag>
+      <next_completion>Animal_Elephant_2</next_completion>
+      <next_termination>Animal_Elephant_2</next_termination>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Animal_Elephant_2</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_03</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when the scene is done.</text_to_display>
+      <next_play>Act 02 Scene 01 done_01</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 done_01</name>
+      <type>cease_offering_sound</type>
+      <tag>animals</tag>
+    </sequence_item>
     
   </sound_sequence>    
 </show_control>

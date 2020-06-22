@@ -775,7 +775,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -979,7 +978,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -1182,7 +1180,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -1389,7 +1386,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -1596,7 +1592,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -1800,7 +1795,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -2003,7 +1997,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -2210,12 +2203,11 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
 audio-volume-medium-symbolic</property>
-                                            <signal name="value-changed" handler="button_volume_changed" object="cluster_08" swapped="no"/>
+                                            <signal name="value-changed" handler="button_volume_changed" object="cluster_07" swapped="no"/>
                                             <child internal-child="plus_button">
                                               <object class="GtkButton">
                                                 <property name="can_focus">True</property>
@@ -2417,12 +2409,11 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
 audio-volume-medium-symbolic</property>
-                                            <signal name="value-changed" handler="button_volume_changed" object="cluster_07" swapped="no"/>
+                                            <signal name="value-changed" handler="button_volume_changed" object="cluster_08" swapped="no"/>
                                             <child internal-child="plus_button">
                                               <object class="GtkButton">
                                                 <property name="can_focus">True</property>
@@ -2621,7 +2612,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -2824,7 +2814,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -3031,7 +3020,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -3238,7 +3226,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -3442,7 +3429,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
@@ -3645,7 +3631,6 @@ audio-volume-medium-symbolic</property>
                                             <property name="can_focus">True</property>
                                             <property name="focus_on_click">False</property>
                                             <property name="receives_default">True</property>
-                                            <property name="value">1</property>
                                             <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic

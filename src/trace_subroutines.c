@@ -1,7 +1,7 @@
 /*
  * trace_subroutines.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,6 +77,9 @@ trace_finalize (GApplication * app)
   struct trace_info *trace_data;
 
   trace_data = sep_get_trace_data (app);
+  if (trace_data->file_open == 1)
+    g_close (trace_data->fid, NULL);
+  trace_data->file_open = 0;
   g_free (trace_data);
   return;
 }
@@ -99,18 +102,19 @@ static gchar *
 trace_current_time (GApplication * app)
 {
   struct tm current_time_tm, local_time_tm;
+  gint nanoseconds;
   gchar string_buffer[64];
   gchar *result;
 
   /* Get the current time into a tm structure.  */
-  time_current_tm (&current_time_tm);
+  time_current_tm_nano (&current_time_tm, &nanoseconds);
 
   /* Convert to local time.  */
   time_UTC_to_local (&current_time_tm, &local_time_tm, INT_MIN);
 
   /* Express the local time as a string.  */
-  time_tm_to_string (&local_time_tm, &string_buffer[0],
-                     sizeof (string_buffer));
+  time_tm_nano_to_string (&local_time_tm, nanoseconds,
+			  &string_buffer[0], sizeof (string_buffer));
   result = g_strdup (&string_buffer[0]);
   return (result);
 }
@@ -140,7 +144,6 @@ trace_sequencer_write (gchar * line, GApplication * app)
                 trace_data->file_name, g_strerror (errno));
       trace_data->sequencer_level = 0;
     }
-  fsync (trace_data->fid);
   g_free (output_string);
   output_string = NULL;
 

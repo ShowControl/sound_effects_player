@@ -374,42 +374,111 @@ button_set_cluster_releasing (struct sound_info *sound_data,
 void
 button_reset_cluster (struct sound_info *sound_data, GApplication *app)
 {
+
   GtkButton *start_button;
+  GtkLabel *volume_label, *pan_label;
+  GstElement *volume_element, *pan_element;
+  GstBin *bin_element;
+  GtkScaleButton *volume_button, *pan_button;
   GtkWidget *parent_container;
-  GList *children_list;
-  GList *l;
-  const gchar *child_name;
+  GList *children_list, *grandchildren_list;
+  GList *l, *ll;
+  const gchar *child_name, *grandchild_name;
 
   if (BUTTON_TRACE)
     {
       g_print ("Set sound %s to initial appearance.\n", sound_data->name);
     }
 
-  /* Find the start button and set its text back to "Start". 
-   * The start button will be a child of the cluster, and will be named
-   * "start_button".  */
+  /* Set the start, volume and pan displays to their initial values.  */
   parent_container = sound_data->cluster_widget;
+  if (parent_container == NULL)
+    return;
 
-  /* It is possible that the sound will no longer be in a cluster.  */
-  if (parent_container != NULL)
+  start_button = NULL;
+  pan_label = NULL;
+  volume_label = NULL;
+  pan_button = NULL;
+  volume_button = NULL;
+
+  /* Find the needed items.  */
+  children_list = gtk_container_get_children (GTK_CONTAINER (parent_container));
+  l = children_list;
+  while (l != NULL)
     {
-      start_button = NULL;
-      children_list =
-        gtk_container_get_children (GTK_CONTAINER (parent_container));
-      l = children_list;
-      while (l != NULL)
-        {
-          child_name = gtk_widget_get_name (l->data);
-          if (g_strcmp0 (child_name, "start_button") == 0)
-            {
-              start_button = l->data;
-              break;
-            }
-          l = l->next;
-        }
-      g_list_free (children_list);
+      child_name = gtk_widget_get_name (l->data);
+      if (BUTTON_TRACE)
+	g_print (" child name is %s\n", child_name);
+      if (GTK_IS_CONTAINER (l->data))
+	{
+	  if (BUTTON_TRACE)
+	    g_print (" container\n");
+	  grandchildren_list = gtk_container_get_children (l->data);
+	  ll = grandchildren_list;
+	  while (ll != NULL)
+	    {
+	      grandchild_name = gtk_widget_get_name (ll->data);
+	      if (BUTTON_TRACE)
+		g_print (" grandchild name is %s\n", grandchild_name);
+	      if (g_strcmp0 (grandchild_name, "pan_label") == 0)
+		pan_label = ll->data;
+	      if (g_strcmp0 (grandchild_name, "pan_button") == 0)
+		pan_button = ll->data;
+	      if (g_strcmp0 (grandchild_name, "volume_label") == 0)
+		volume_label = ll->data;
+	      if (g_strcmp0 (grandchild_name, "volume") == 0)
+		volume_button = ll->data;
+	      ll = ll->next;
+	    }
+	  g_list_free (grandchildren_list);
+	  grandchildren_list = NULL;
+	}
+      if (g_strcmp0 (child_name, "start_button") == 0)
+	  start_button = l->data;
+      l = l->next;
+    }
+  g_list_free (children_list);
+  children_list = NULL;
+    
+  if (BUTTON_TRACE)
+    {
       if (start_button != NULL)
-	gtk_button_set_label (start_button, "Start");
+	g_print (" found start button\n");
+      if (pan_label != NULL)
+	g_print (" found pan label\n");
+      if (pan_button != NULL)
+	g_print (" found pan button\n");
+      if (volume_label != NULL)
+	g_print (" found volume label\n");
+      if (volume_button != NULL)
+	g_print (" found volume button\n");
+    }
+  
+  if (start_button != NULL)
+    gtk_button_set_label (start_button, "Start");
+  
+  /* The sound_effect structure records where the Gstreamer bin is
+   * for this sound effect.  That bin contains the volume and pan
+   * controls. */
+  bin_element = sound_data->sound_control;
+  volume_element = gstreamer_get_volume (bin_element);
+  if ((volume_element != NULL) && (volume_button != NULL))
+    {
+      if (BUTTON_TRACE)
+	{
+	  g_print (" set volume to 0.\n");
+	}
+      gtk_scale_button_set_value (volume_button, 0.0);
+    }
+  
+  pan_element = gstreamer_get_pan (bin_element);
+  if ((pan_element != NULL) && (pan_button != NULL))
+    {  
+      if (BUTTON_TRACE)
+	{
+	  g_print (" set pan to center.\n");
+	}
+      gtk_scale_button_set_value (pan_button, 50.0);
     }
 
   return;

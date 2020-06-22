@@ -1,3 +1,7 @@
+Version 0.121, June 22, 2020
+  Fix clusters 7 and 8.  Set the operator volume display to 0 when there
+  is no sound on a cluster.
+  
 Version 0.120, June 20, 2020
   Add default volume level.
   

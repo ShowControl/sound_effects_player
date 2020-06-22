@@ -233,15 +233,32 @@
 	</channel>
       </channels>
     </sound>
+
+    <!--
+	Page 019: The animals dance about Adam and Eve.
+    -->
+    <sound>
+      <name>Animal Medley</name>
+      <wav_file_name>Steve_Devino/08-Animal medley.wav</wav_file_name>
+    </sound>
     
     <!--
-	The lightning strike and consequent thunder when Father
+	Pages 033 and 040: Adam and Eve bite the apple.
+    -->
+    <sound>
+      <name>Apple</name>
+      <wav_file_name>apple.wav</wav_file_name>
+    </sound>
+
+    <!--
+	Page 042: The lightning strike and consequent thunder when Father
 	destroys the tree.
     -->
     <sound>
       <name>lightning_crash</name>
       <wav_file_name>Weather/lightning_crash.wav</wav_file_name>
       <start_time>4.0</start_time>
+      <release_duration_time>1</release_duration_time>
       <channels>
 	<channel>
 	  <number>0</number>
@@ -291,14 +308,6 @@
       </channels>
     </sound>
 
-    <!--
-	Adam and Eve bite the apple.
-    -->
-    <sound>
-      <name>Apple</name>
-      <wav_file_name>apple.wav</wav_file_name>
-    </sound>
-
     <!-- background sound when in the wasteland.  -->
     
     <sound>
@@ -340,7 +349,7 @@
       </channels>
     </sound>
 
-    <!-- Two baby cry sounds, for Cain and Abel.  -->
+    <!-- Page 044: Two baby cry sounds, for Cain and Abel.  -->
     
     <sound>
       <name>baby_cry_1</name>
@@ -422,6 +431,139 @@
       <wav_file_name>bonk.wav</wav_file_name>
     </sound>
 
+    <!--
+	Page 072: wind, rain and thunder.
+    -->
+    <sound>
+      <name>wind</name>
+      <wav_file_name>Weather/wind.wav</wav_file_name>
+      <default_volume_level>0.15</default_volume_level>
+      <attack_duration_time>5</attack_duration_time>
+      <release_duration_time>1</release_duration_time>
+      <loop_from_time>28</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    
+    <sound>
+      <name>rain</name>
+      <wav_file_name>Weather/rain.wav</wav_file_name>
+      <default_volume_level>0.15</default_volume_level>
+      <attack_duration_time>5</attack_duration_time>
+      <release_duration_time>1</release_duration_time>
+      <loop_from_time>60</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    
+    <sound>
+      <name>thunder_072</name>
+      <wav_file_name>Weather/thunder_072.wav</wav_file_name>
+      <default_volume_level>1.0</default_volume_level>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>2</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>3</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>4</number>
+	  <speakers>
+	    <speaker>
+	      <name>LFE1</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
     
     <!--
 	Page 101: these sounds introduce the various animals.  Put them all in
