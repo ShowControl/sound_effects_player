@@ -3,7 +3,7 @@
  *
  * Much of this code is based on Gstreamer examples and tutorials.
  *
- * Copyright © 2016 John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -150,31 +150,31 @@ G_DEFINE_TYPE_WITH_CODE (GstEnvelope, gst_envelope, GST_TYPE_AUDIO_FILTER,
                          DEBUG_INIT);
 
 /* Forward declarations.  These subroutines will be defined below.  */
-static void gst_envelope_set_property (GObject * object, guint prop_id,
-                                       const GValue * value,
-                                       GParamSpec * pspec);
-static void gst_envelope_get_property (GObject * object, guint prop_id,
-                                       GValue * value, GParamSpec * pspec);
+static void gst_envelope_set_property (GObject *object, guint prop_id,
+                                       const GValue *value,
+                                       GParamSpec *pspec);
+static void gst_envelope_get_property (GObject *object, guint prop_id,
+                                       GValue *value, GParamSpec *pspec);
 
-static void envelope_before_transform (GstBaseTransform * base,
-                                       GstBuffer * buffer);
+static void envelope_before_transform (GstBaseTransform *base,
+                                       GstBuffer *buffer);
 
-static GstFlowReturn envelope_transform_ip (GstBaseTransform * base,
-                                            GstBuffer * outbuf);
-static GstFlowReturn envelope_transform (GstBaseTransform * base,
-                                         GstBuffer * inbuf,
-                                         GstBuffer * outbuf);
+static GstFlowReturn envelope_transform_ip (GstBaseTransform *base,
+                                            GstBuffer *outbuf);
+static GstFlowReturn envelope_transform (GstBaseTransform *base,
+                                         GstBuffer *inbuf,
+                                         GstBuffer *outbuf);
 
-static gboolean envelope_sink_event_handler (GstBaseTransform * trans,
-                                             GstEvent * event);
-static gboolean envelope_src_event_handler (GstBaseTransform * trans,
-                                            GstEvent * event);
+static gboolean envelope_sink_event_handler (GstBaseTransform *trans,
+                                             GstEvent *event);
+static gboolean envelope_src_event_handler (GstBaseTransform *trans,
+                                            GstEvent *event);
 
-static gdouble compute_volume (GstEnvelope * self, GstClockTime timestamp);
+static gdouble compute_volume (GstEnvelope *self, GstClockTime timestamp);
 
 /* Before each transform of input to output, do this.  */
 static void
-envelope_before_transform (GstBaseTransform * base, GstBuffer * buffer)
+envelope_before_transform (GstBaseTransform *base, GstBuffer *buffer)
 {
   GstClockTime timestamp, duration;
   GstEnvelope *self = GST_ENVELOPE (base);
@@ -291,7 +291,7 @@ envelope_before_transform (GstBaseTransform * base, GstBuffer * buffer)
 /* Convert input data to output data, using the same buffer for
  * input and output.  That is, the data is modified in place.  */
 static GstFlowReturn
-envelope_transform_ip (GstBaseTransform * base, GstBuffer * outbuf)
+envelope_transform_ip (GstBaseTransform *base, GstBuffer *outbuf)
 {
   GstAudioFilter *filter = GST_AUDIO_FILTER_CAST (base);
   GstEnvelope *self = GST_ENVELOPE (base);
@@ -318,7 +318,7 @@ envelope_transform_ip (GstBaseTransform * base, GstBuffer * outbuf)
 
   /* Compute the number of frames.  Each frame takes one time step and has
    * a sample for each channel.  Note that the width is in bits.  */
-  frame_count = gst_buffer_get_size (outbuf) / (width * channel_count / 8);
+  frame_count = gst_buffer_get_size (outbuf) / (width *channel_count / 8);
 
   ts = GST_BUFFER_TIMESTAMP (outbuf);
   ts = gst_segment_to_stream_time (&base->segment, GST_FORMAT_TIME, ts);
@@ -415,8 +415,8 @@ envelope_transform_ip (GstBaseTransform * base, GstBuffer * outbuf)
 /* Convert input data to output data, using different buffers for
  * input and output.  */
 static GstFlowReturn
-envelope_transform (GstBaseTransform * base, GstBuffer * inbuf,
-                    GstBuffer * outbuf)
+envelope_transform (GstBaseTransform *base, GstBuffer *inbuf,
+                    GstBuffer *outbuf)
 {
   GstAudioFilter *filter = GST_AUDIO_FILTER_CAST (base);
   GstEnvelope *self = GST_ENVELOPE (base);
@@ -586,7 +586,7 @@ enum envelope_stage
 /* Determine the stage of envelope processing, given the time since
  * the envelope started, minus the time spent paused.  */
 static enum envelope_stage
-compute_envelope_stage (GstEnvelope * self, GstClockTime ts)
+compute_envelope_stage (GstEnvelope *self, GstClockTime ts)
 {
   gchar *release_type;
 
@@ -711,7 +711,7 @@ compute_envelope_stage (GstEnvelope * self, GstClockTime ts)
 
 /* Compute the volume adjustment for a frame.  */
 static gdouble
-compute_volume (GstEnvelope * self, GstClockTime ts)
+compute_volume (GstEnvelope *self, GstClockTime ts)
 {
   gdouble volume_val;
   enum envelope_stage envelope_position;
@@ -752,9 +752,8 @@ compute_volume (GstEnvelope * self, GstClockTime ts)
        * attack level and the sustain level.  If the decay duration time is 0, 
        * we will never be in the decay section of the envelope.  */
       decay_end_time = self->attack_duration_time + self->decay_duration_time;
-      decay_fraction =
-        (gdouble) 1.0 - (gdouble) (decay_end_time -
-                                   ts) / (gdouble) self->decay_duration_time;
+      decay_fraction = (gdouble) 1.0 -
+	((gdouble) (decay_end_time - ts) / (gdouble) self->decay_duration_time);
       GST_LOG_OBJECT (self, "envelope position: decay, fraction %g.",
                       decay_fraction);
       volume_val =
@@ -826,7 +825,7 @@ compute_volume (GstEnvelope * self, GstClockTime ts)
 }
 
 static gboolean
-envelope_stop (GstBaseTransform * base)
+envelope_stop (GstBaseTransform *base)
 {
   /* GstEnvelope *self = GST_ENVELOPE (base); */
   return GST_CALL_PARENT_WITH_DEFAULT (GST_BASE_TRANSFORM_CLASS, stop, (base),
@@ -835,7 +834,7 @@ envelope_stop (GstBaseTransform * base)
 
 /* call whenever the format changes.  */
 static gboolean
-envelope_setup (GstAudioFilter * filter, const GstAudioInfo * info)
+envelope_setup (GstAudioFilter *filter, const GstAudioInfo *info)
 {
   GstEnvelope *self = GST_ENVELOPE (filter);
   GST_OBJECT_LOCK (self);
@@ -844,7 +843,7 @@ envelope_setup (GstAudioFilter * filter, const GstAudioInfo * info)
 };
 
 static void
-gst_envelope_dispose (GObject * object)
+gst_envelope_dispose (GObject *object)
 {
   GstEnvelope *self = GST_ENVELOPE (object);
   g_free (self->release_duration_string);
@@ -860,7 +859,7 @@ gst_envelope_dispose (GObject * object)
 
 /* initialize the envelope's class */
 static void
-gst_envelope_class_init (GstEnvelopeClass * klass)
+gst_envelope_class_init (GstEnvelopeClass *klass)
 {
   GObjectClass *gobject_class;
   GstElementClass *element_class;
@@ -977,7 +976,7 @@ gst_envelope_class_init (GstEnvelopeClass * klass)
  * initialize instance structure
  */
 static void
-gst_envelope_init (GstEnvelope * self)
+gst_envelope_init (GstEnvelope *self)
 {
   /* Set all of the parameters to their default values and initialize
    * the locals.  */
@@ -1016,8 +1015,8 @@ gst_envelope_init (GstEnvelope * self)
 
 /* Set a property.  */
 static void
-gst_envelope_set_property (GObject * object, guint prop_id,
-                           const GValue * value, GParamSpec * pspec)
+gst_envelope_set_property (GObject *object, guint prop_id,
+                           const GValue *value, GParamSpec *pspec)
 {
   GstEnvelope *self = GST_ENVELOPE (object);
 
@@ -1122,8 +1121,8 @@ gst_envelope_set_property (GObject * object, guint prop_id,
 }
 
 static void
-gst_envelope_get_property (GObject * object, guint prop_id, GValue * value,
-                           GParamSpec * pspec)
+gst_envelope_get_property (GObject *object, guint prop_id, GValue *value,
+                           GParamSpec *pspec)
 {
   GstEnvelope *self = GST_ENVELOPE (object);
 
@@ -1199,7 +1198,7 @@ gst_envelope_get_property (GObject * object, guint prop_id, GValue * value,
  * We care only about custom events: start, pause, continue and release.
  */
 static gboolean
-envelope_src_event_handler (GstBaseTransform * trans, GstEvent * event)
+envelope_src_event_handler (GstBaseTransform *trans, GstEvent *event)
 {
   GstEnvelope *self = GST_ENVELOPE (trans);
   const GstStructure *event_structure;
@@ -1311,7 +1310,7 @@ envelope_src_event_handler (GstBaseTransform * trans, GstEvent * event)
  * by the looper when it reaches the end of its buffer.
  */
 static gboolean
-envelope_sink_event_handler (GstBaseTransform * trans, GstEvent * event)
+envelope_sink_event_handler (GstBaseTransform *trans, GstEvent *event)
 {
   GstEnvelope *self = GST_ENVELOPE (trans);
   const GstStructure *event_structure;
@@ -1381,7 +1380,7 @@ envelope_sink_event_handler (GstBaseTransform * trans, GstEvent * event)
  * register the element factories and other features
  */
 static gboolean
-envelope_init (GstPlugin * envelope)
+envelope_init (GstPlugin *envelope)
 {
   return gst_element_register (envelope, "envelope", GST_RANK_NONE,
                                GST_TYPE_ENVELOPE);

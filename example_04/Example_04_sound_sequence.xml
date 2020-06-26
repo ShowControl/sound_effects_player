@@ -344,7 +344,7 @@
       <type>offer_sound</type>
       <next_to_start>slap_Cain</next_to_start>
       <cluster_number>3</cluster_number>
-      <text_to_display>Adam slaps Cain</text_to_display>
+      <text_to_display>slap Cain</text_to_display>
       <tag>slap</tag>
       <next>Act 01 Scene 03 Page 043_6</next>
     </sequence_item>
@@ -353,7 +353,7 @@
       <name>slap_Cain</name>
       <type>start_sound</type>
       <sound_name>slap</sound_name>
-      <text_to_display>Adam slaps Cain</text_to_display>
+      <text_to_display>slap Cain</text_to_display>
       <cluster_number>3</cluster_number>
       <importance>2</importance>
     </sequence_item>
@@ -1059,7 +1059,7 @@
       <name>Act 02 Scene 01 Page 081_4</name>
       <type>offer_sound</type>
       <next_to_start>rain_02</next_to_start>
-      <cluster_number>2</cluster_number>
+      <cluster_number>6</cluster_number>
       <text_to_display>Rain</text_to_display>
       <tag>weather</tag>
       <next>Act 02 Scene 01 Page 081_5</next>
@@ -1070,7 +1070,7 @@
       <type>start_sound</type>
       <sound_name>rain_02</sound_name>
       <text_to_display>Rain</text_to_display>
-      <cluster_number>2</cluster_number>
+      <cluster_number>6</cluster_number>
       <importance>2</importance>
       <tag>weather</tag>
     </sequence_item>
@@ -1141,7 +1141,7 @@
       <name>Act 02 Scene 01 Page 081_8</name>
       <type>offer_sound</type>
       <next_to_start>slap_Japheth</next_to_start>
-      <cluster_number>6</cluster_number>
+      <cluster_number>2</cluster_number>
       <text_to_display>Noah slaps Japheth</text_to_display>
       <tag>slap</tag>
       <next>Act 02 Scene 01 Page 081_9</next>
@@ -1152,7 +1152,7 @@
       <type>start_sound</type>
       <sound_name>slap</sound_name>
       <text_to_display>Noah slaps Japheth</text_to_display>
-      <cluster_number>6</cluster_number>
+      <cluster_number>2</cluster_number>
       <importance>2</importance>
     </sequence_item>
 
@@ -1231,8 +1231,32 @@
 
     <sequence_item>
       <name>Act 02 Scene 04 Page 130 done_02</name>
+      <type>start_sound</type>
+      <sound_name>pre-show music</sound_name>
+      <cluster_number>15</cluster_number>
+      <text_to_display>post-show music</text_to_display>
+      <tag>post-show music</tag>
+      <next_starts>Act 02 Scene 04 Page 130 done_03</next_starts>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 04 Page 130 done_03</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when the audience has left the theater.</text_to_display>
+      <next_play>Act 02 Scene 04 Page 130 done_04</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 04 Page 130 done_04</name>
+      <type>stop_sound</type>
+      <tag>post-show music</tag>
+      <next>Act 02 Scene 04 Page 130 done_05</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 04 Page 130 done_05</name>
       <type>wait</type>
-      <time_to_wait>10.0</time_to_wait>
+      <time_to_wait>5.0</time_to_wait>
       <text_to_display>show is complete</text_to_display>
     </sequence_item>
     

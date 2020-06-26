@@ -120,6 +120,7 @@
       <wav_file_name>water/water1.wav</wav_file_name>
       <attack_duration_time>1.0</attack_duration_time>
       <designer_volume_level>0.05</designer_volume_level>
+      <default_volume_level>0.3</default_volume_level>
       <release_duration_time>1.0</release_duration_time>
       <loop_from_time>59</loop_from_time>
       <loop_to_time>0</loop_to_time>
@@ -150,6 +151,7 @@
       <wav_file_name>water/water2.wav</wav_file_name>
       <attack_duration_time>1.0</attack_duration_time>
       <designer_volume_level>0.05</designer_volume_level>
+      <default_volume_level>0.3</default_volume_level>
       <release_duration_time>1.0</release_duration_time>
       <loop_from_time>24</loop_from_time>
       <loop_to_time>0</loop_to_time>
@@ -180,6 +182,7 @@
       <wav_file_name>water/water3.wav</wav_file_name>
       <attack_duration_time>1.0</attack_duration_time>
       <designer_volume_level>0.05</designer_volume_level>
+      <default_volume_level>0.3</default_volume_level>
       <release_duration_time>1.0</release_duration_time>
       <loop_from_time>24.5</loop_from_time>
       <loop_to_time>0</loop_to_time>
@@ -210,6 +213,7 @@
       <wav_file_name>water/water4.wav</wav_file_name>
       <attack_duration_time>1.0</attack_duration_time>
       <designer_volume_level>0.05</designer_volume_level>
+      <default_volume_level>0.3</default_volume_level>
       <release_duration_time>1.0</release_duration_time>
       <loop_from_time>28</loop_from_time>
       <loop_to_time>0</loop_to_time>
@@ -241,7 +245,7 @@
     -->
     <sound>
       <name>Animal Medley</name>
-      <wav_file_name>Steve_Devino/08-Animal medley.wav</wav_file_name>
+      <wav_file_name>Steve_Devino/08-Animal_medley.wav</wav_file_name>
     </sound>
     
     <!--
@@ -1069,7 +1073,7 @@
 
     <sound>
       <name>Dove</name>
-      <wav_file_name>Steve_Devino/07-Dove cooing.wav</wav_file_name>
+      <wav_file_name>Steve_Devino/07-Dove_cooing.wav</wav_file_name>
     </sound>
     
   </sounds>

@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.122
+Version:        0.123
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -44,8 +44,9 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 The %{name}-doc package contains
 the documentation for %{name}.
 This is currently some design documents for the
-higher-level project, show_control, and a how-to
-document for sound_effects_player.
+higher-level project, show_control, a how-to
+document for sound_effects_player and a fully-worked
+example of a musical.
 
 %files
 %defattr(-,root,root)
@@ -89,10 +90,13 @@ document for sound_effects_player.
 %defattr(-,root,root)
 %doc %{_docdir}/%{name}/How_to_use_the_Sound_Effects_Player.pdf
 %doc %{_docdir}/%{name}/project_file.pdf
+%doc %{_docdir}/%{name}/sound_effects_player_example_04.pdf
 %doc %{_docdir}/%{name}/sound_effects_player_overview.pdf
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Fri Jun 26 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.123-1 Add example 4.
 * Thu Jun 25 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.122-1 Fix a problem when a background sound is used twice.
 * Mon Jun 22 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
