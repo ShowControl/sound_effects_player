@@ -1914,6 +1914,7 @@ gst_looper_handle_src_event (GstPad * pad, GstObject * parent,
           GST_INFO_OBJECT (self, "received custom start event");
           self->started = TRUE;
           self->completion_sent = FALSE;
+	  self->released = FALSE;
           start_position = round_down_to_position (self, self->start_time);
           self->local_buffer_drain_level = start_position;
           self->elapsed_time = 0;

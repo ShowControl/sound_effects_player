@@ -2,6 +2,11 @@
 <show_control>
   <sounds>
     <version>1.0</version>
+
+    <!--
+	The sound effects operator can play this sound to make sure
+	the speakers are connected correctly.
+    -->
     
     <sound>
       <name>6-channel_ID</name>
@@ -67,6 +72,11 @@
       </channels>
     </sound>
 
+    <!--
+	These announcements can be played before the first curtain
+	or, in one case, before the second act.
+    -->
+    
     <sound>
       <name>Announcement Evening Long</name>
       <wav_file_name>announcements/01-Evening_Long.wav</wav_file_name>

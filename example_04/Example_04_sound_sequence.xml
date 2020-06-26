@@ -111,7 +111,7 @@
     <sequence_item>
       <name>Act 01 Scene 02 Page 007_2</name>
       <type>offer_sound</type>
-      <next_to_start>Animal Medley</next_to_start>
+      <next_to_start>Animal Medley_01</next_to_start>
       <cluster_number>0</cluster_number>
       <tag>animals</tag>
       <text_to_display>Animals</text_to_display>
@@ -119,7 +119,7 @@
     </sequence_item>
 
     <sequence_item>
-      <name>Animal Medley</name>
+      <name>Animal Medley_01</name>
       <type>start_sound</type>
       <sound_name>Animal Medley</sound_name>
       <cluster_number>0</cluster_number>
@@ -380,7 +380,7 @@
     <sequence_item>
       <name>Act 01 Scene 03 Page 043_7</name>
       <type>offer_sound</type>
-      <next_to_start>wind</next_to_start>
+      <next_to_start>wind_01</next_to_start>
       <cluster_number>5</cluster_number>
       <text_to_display>Wind</text_to_display>
       <tag>weather</tag>
@@ -388,7 +388,7 @@
     </sequence_item>
     
     <sequence_item>
-      <name>wind</name>
+      <name>wind_01</name>
       <type>start_sound</type>
       <sound_name>wind</sound_name>
       <text_to_display>Wind</text_to_display>
@@ -400,7 +400,7 @@
     <sequence_item>
       <name>Act 01 Scene 03 Page 043_8</name>
       <type>offer_sound</type>
-      <next_to_start>rain</next_to_start>
+      <next_to_start>rain_01</next_to_start>
       <cluster_number>6</cluster_number>
       <text_to_display>Rain</text_to_display>
       <tag>weather</tag>
@@ -408,9 +408,9 @@
     </sequence_item>
     
     <sequence_item>
-      <name>rain</name>
+      <name>rain_01</name>
       <type>start_sound</type>
-      <sound_name>rain</sound_name>
+      <sound_name>rain_01</sound_name>
       <text_to_display>Rain</text_to_display>
       <cluster_number>6</cluster_number>
       <importance>2</importance>
@@ -580,7 +580,7 @@
 
     <!--
 	Page 101: The animal sounds play in sequence.  
-	The sound effects operator pushes Play when the next animal appears.
+	The sound effects operator pushes Start when the next animal appears.
     -->
     <sequence_item>
       <name>Animal_Rabbit_1</name>
@@ -851,10 +851,315 @@
       <tag>animals</tag>
     </sequence_item>
 
+    <!--
+	Pages 103, 107 and 109: Similarly for the four thunder sounds 
+	on page 103, the two on page 107 and the one on page 109.
+    -->
+
     <sequence_item>
       <name>Act 02 Scene 01 Page 081_03</name>
+      <type>offer_sound</type>
+      <next_to_start>thunder_103a_1</next_to_start>
+      <cluster_number>1</cluster_number>
+      <tag>thunder</tag>
+      <text_to_display>Thunder 103 A</text_to_display>
+      <next>Act 02 Scene 01 Page 081_4</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103a_1</name>
+      <type>start_sound</type>
+      <sound_name>thunder_103a</sound_name>
+      <text_to_display>Thunder 103 A</text_to_display>
+      <importance>2</importance>
+      <cluster_number>1</cluster_number>
+      <next_completion>thunder_103a_2</next_completion>
+      <next_termination>thunder_103a_2</next_termination>
+      <tag>thunder</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103a_2</name>
+      <type>cease_offering_sound</type>
+      <tag>thunder</tag>
+      <next>thunder_103a_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103a_3</name>
+      <type>offer_sound</type>
+      <next_to_start>thunder_103b_1</next_to_start>
+      <cluster_number>1</cluster_number>
+      <tag>thunder</tag>
+      <text_to_display>Thunder 103 B</text_to_display>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103b_1</name>
+      <type>start_sound</type>
+      <sound_name>thunder_103b</sound_name>
+      <text_to_display>Thunder 103 B</text_to_display>
+      <importance>2</importance>
+      <cluster_number>1</cluster_number>
+      <next_completion>thunder_103b_2</next_completion>
+      <next_termination>thunder_103b_2</next_termination>
+      <tag>thunder</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103b_2</name>
+      <type>cease_offering_sound</type>
+      <tag>thunder</tag>
+      <next>thunder_103b_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103b_3</name>
+      <type>offer_sound</type>
+      <next_to_start>thunder_103c_1</next_to_start>
+      <cluster_number>1</cluster_number>
+      <tag>thunder</tag>
+      <text_to_display>Thunder 103 C</text_to_display>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>thunder_103c_1</name>
+      <type>start_sound</type>
+      <sound_name>thunder_103c</sound_name>
+      <text_to_display>Thunder 103 C</text_to_display>
+      <importance>2</importance>
+      <cluster_number>1</cluster_number>
+      <next_completion>thunder_103c_2</next_completion>
+      <next_termination>thunder_103c_2</next_termination>
+      <tag>thunder</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103c_2</name>
+      <type>cease_offering_sound</type>
+      <tag>thunder</tag>
+      <next>thunder_103c_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103c_3</name>
+      <type>offer_sound</type>
+      <next_to_start>thunder_103d_1</next_to_start>
+      <cluster_number>1</cluster_number>
+      <tag>thunder</tag>
+      <text_to_display>Thunder 103 D</text_to_display>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>thunder_103d_1</name>
+      <type>start_sound</type>
+      <sound_name>thunder_103d</sound_name>
+      <text_to_display>Thunder 103 D</text_to_display>
+      <importance>2</importance>
+      <cluster_number>1</cluster_number>
+      <next_completion>thunder_103d_2</next_completion>
+      <next_termination>thunder_103d_2</next_termination>
+      <tag>thunder</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_103d_2</name>
+      <type>cease_offering_sound</type>
+      <tag>thunder</tag>
+      <next>thunder_103d_3</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>thunder_103d_3</name>
+      <type>offer_sound</type>
+      <next_to_start>thunder_107a_1</next_to_start>
+      <cluster_number>1</cluster_number>
+      <tag>thunder</tag>
+      <text_to_display>Thunder 107 A</text_to_display>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>thunder_107a_1</name>
+      <type>start_sound</type>
+      <sound_name>thunder_107a</sound_name>
+      <text_to_display>Thunder 107 A</text_to_display>
+      <importance>2</importance>
+      <cluster_number>1</cluster_number>
+      <next_completion>thunder_107a_2</next_completion>
+      <next_termination>thunder_107a_2</next_termination>
+      <tag>thunder</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_107a_2</name>
+      <type>cease_offering_sound</type>
+      <tag>thunder</tag>
+      <next>thunder_107a_3</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>thunder_107a_3</name>
+      <type>offer_sound</type>
+      <next_to_start>thunder_107b_1</next_to_start>
+      <cluster_number>1</cluster_number>
+      <tag>thunder</tag>
+      <text_to_display>Thunder 107 B</text_to_display>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>thunder_107b_1</name>
+      <type>start_sound</type>
+      <sound_name>thunder_107b</sound_name>
+      <text_to_display>Thunder 107 B</text_to_display>
+      <importance>2</importance>
+      <cluster_number>1</cluster_number>
+      <next_completion>thunder_107b_2</next_completion>
+      <next_termination>thunder_107b_2</next_termination>
+      <tag>thunder</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_107b_2</name>
+      <type>cease_offering_sound</type>
+      <tag>thunder</tag>
+      <next>thunder_107b_3</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_107b_3</name>
+      <type>offer_sound</type>
+      <next_to_start>thunder_109b_1</next_to_start>
+      <cluster_number>1</cluster_number>
+      <tag>thunder</tag>
+      <text_to_display>Thunder 109 B</text_to_display>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>thunder_109b_1</name>
+      <type>start_sound</type>
+      <sound_name>thunder_109b</sound_name>
+      <text_to_display>Thunder 109 B</text_to_display>
+      <importance>2</importance>
+      <cluster_number>1</cluster_number>
+      <next_completion>thunder_109b_2</next_completion>
+      <next_termination>thunder_109b_2</next_termination>
+      <tag>thunder</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>thunder_109b_2</name>
+      <type>cease_offering_sound</type>
+      <tag>thunder</tag>
+    </sequence_item>
+
+    <!--
+	Page 108: rain.
+    -->
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_4</name>
+      <type>offer_sound</type>
+      <next_to_start>rain_02</next_to_start>
+      <cluster_number>2</cluster_number>
+      <text_to_display>Rain</text_to_display>
+      <tag>weather</tag>
+      <next>Act 02 Scene 01 Page 081_5</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>rain_02</name>
+      <type>start_sound</type>
+      <sound_name>rain_02</sound_name>
+      <text_to_display>Rain</text_to_display>
+      <cluster_number>2</cluster_number>
+      <importance>2</importance>
+      <tag>weather</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_5</name>
+      <type>offer_sound</type>
+      <next_to_start>wind_02</next_to_start>
+      <cluster_number>5</cluster_number>
+      <text_to_display>Wind</text_to_display>
+      <tag>weather</tag>
+      <next>Act 02 Scene 01 Page 081_6</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>wind_02</name>
+      <type>start_sound</type>
+      <sound_name>wind</sound_name>
+      <text_to_display>Wind</text_to_display>
+      <cluster_number>5</cluster_number>
+      <importance>2</importance>
+      <tag>weather</tag>
+    </sequence_item>
+
+    <!--
+	Page 110: Dove.
+    -->
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_6</name>
+      <type>offer_sound</type>
+      <next_to_start>Dove</next_to_start>
+      <cluster_number>3</cluster_number>
+      <text_to_display>Dove</text_to_display>
+      <tag>animals</tag>
+      <next>Act 02 Scene 01 Page 081_7</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Dove</name>
+      <type>start_sound</type>
+      <sound_name>Dove</sound_name>
+      <text_to_display>Dove cooing</text_to_display>
+      <cluster_number>3</cluster_number>
+      <importance>2</importance>
+      <tag>animals</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_7</name>
+      <type>offer_sound</type>
+      <next_to_start>Animal Medley_02</next_to_start>
+      <cluster_number>4</cluster_number>
+      <tag>animals</tag>
+      <text_to_display>Commotion</text_to_display>
+      <next>Act 02 Scene 01 Page 081_8</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Animal Medley_02</name>
+      <type>start_sound</type>
+      <sound_name>Animal Medley</sound_name>
+      <cluster_number>4</cluster_number>
+      <text_to_display>Commotion</text_to_display>
+      <tag>animals</tag>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_8</name>
+      <type>offer_sound</type>
+      <next_to_start>slap_Japheth</next_to_start>
+      <cluster_number>6</cluster_number>
+      <text_to_display>Noah slaps Japheth</text_to_display>
+      <tag>slap</tag>
+      <next>Act 02 Scene 01 Page 081_9</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>slap_Japheth</name>
+      <type>start_sound</type>
+      <sound_name>slap</sound_name>
+      <text_to_display>Noah slaps Japheth</text_to_display>
+      <cluster_number>6</cluster_number>
+      <importance>2</importance>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_9</name>
       <type>operator_wait</type>
-      <text_to_display>Press Play when the scene is done.</text_to_display>
+      <text_to_display>Press Play when the scene shifts to Mount Ararat.</text_to_display>
       <next_play>Act 02 Scene 01 done_01</next_play>
     </sequence_item>
 
@@ -862,6 +1167,73 @@
       <name>Act 02 Scene 01 done_01</name>
       <type>cease_offering_sound</type>
       <tag>animals</tag>
+      <next>Act 02 Scene 01 done_02</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 done_02</name>
+      <type>cease_offering_sound</type>
+      <tag>thunder</tag>
+      <next>Act 02 Scene 01 done_03</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 done_03</name>
+      <type>cease_offering_sound</type>
+      <tag>weather</tag>
+      <next>Act 02 Scene 01 done_04</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 done_04</name>
+      <type>stop_sound</type>
+      <tag>weather</tag>
+      <next>Act 02 Scene 01 done_05</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Act 02 Scene 01 done_05</name>
+      <type>stop_sound</type>
+      <tag>animals</tag>
+      <next>Act 02 Scene 01 done_06</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 01 done_06</name>
+      <type>cease_offering_sound</type>
+      <tag>slap</tag>
+      <next>Act 02 Scene 04 Page 130_01</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>Act 02 Scene 04 Page 130_01</name>
+      <type>start_sound</type>
+      <sound_name>Garden ambience</sound_name>
+      <text_to_display>ambience</text_to_display>
+      <cluster_number>15</cluster_number>
+      <tag>ambience</tag>
+      <next_starts>Act 02 Scene 04 Page 130_02</next_starts>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 04 Page 130_02</name>
+      <type>operator_wait</type>
+      <text_to_display>Press Play when the curtain falls.</text_to_display>
+      <next_play>Act 02 Scene 04 Page 130 done_01</next_play>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 04 Page 130 done_01</name>
+      <type>stop_sound</type>
+      <tag>ambience</tag>
+      <next>Act 02 Scene 04 Page 130 done_02</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 02 Scene 04 Page 130 done_02</name>
+      <type>wait</type>
+      <time_to_wait>10.0</time_to_wait>
+      <text_to_display>show is complete</text_to_display>
     </sequence_item>
     
   </sound_sequence>    

@@ -492,6 +492,7 @@ execute_stop_sound (struct sequence_item_info *the_item,
                     struct sequence_info *sequence_data, GApplication *app)
 {
 
+  struct sound_info *sound_effect;
   struct remember_info *remember_data;
   struct sequence_item_info *sequence_item;
   gboolean item_found, still_searching;
@@ -531,8 +532,17 @@ execute_stop_sound (struct sequence_item_info *the_item,
       if (item_found)
         {
           /* Stop the sound.  When the sound terminates we will clean up.  */
+	  sound_effect = remember_data->sound_effect;
+	  if (trace_sequencer_level (app) > 0)
+	    {
+	      trace_text = g_strdup_printf ("Stopping sound %s.",
+					    sound_effect->name);
+	      trace_sequencer_write (trace_text, app);
+	      g_free (trace_text);
+	      trace_text = NULL;
+	    }
           remember_data->release_sent = TRUE;
-          sound_stop_playing (remember_data->sound_effect, app);
+          sound_stop_playing (sound_effect, app);
         }
       else
         {

@@ -1646,7 +1646,8 @@ sound_completed (const gchar * sound_name, GApplication *app)
   GList *sound_effect_list;
   struct sound_info *sound_effect = NULL;
   gboolean sound_effect_found;
-
+  gboolean terminated;
+  
   /* Search through the sound effects for the one with this name.  */
   sounds_data = sep_get_sounds_data (app);
   sound_effect_list = sounds_data->sounds_list;
@@ -1671,7 +1672,9 @@ sound_completed (const gchar * sound_name, GApplication *app)
 
   /* Let the internal sequencer distinguish a sound that has completed
    * normally from one that has been stopped.  */
-  sequence_sound_completion (sound_effect, sound_effect->release_sent, app);
+  terminated = sound_effect->release_sent;
+  sound_effect->release_sent = FALSE;
+  sequence_sound_completion (sound_effect, terminated, app);
   return;
 }
 

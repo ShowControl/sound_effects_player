@@ -3,6 +3,7 @@
 
   <sounds>
     <version>1.0</version>
+
     <!-- 
 	 Play this music from house open to ready for announcements.
     -->
@@ -52,20 +53,21 @@
     </sound>
 
     <!--
-	Play this garden sound while Adam and Eve
+	Play this forest sound while Adam and Eve
 	are in the Garden of Eden.
     -->
     <sound>
       <name>Garden ambience</name>
-      <wav_file_name>garden_ambience.wav</wav_file_name>
+      <wav_file_name>forest.wav</wav_file_name>
       <attack_duration_time>1.0</attack_duration_time>
-      <designer_volume_level>0.25</designer_volume_level>
+      <designer_volume_level>0.125</designer_volume_level>
+      <default_volume_level>0.5</default_volume_level>
       <release_duration_time>1.0</release_duration_time>
-      <loop_from_time>53.5</loop_from_time>
-      <loop_to_time>0.75</loop_to_time>
+      <loop_from_time>333.0</loop_from_time>
+      <loop_to_time>0.0</loop_to_time>
       <loop_limit>0</loop_limit>
       <channels>	
-	<!-- This is a quadrophonic sound, so we send
+	<!-- This is a quadrophonic sound.  We send
 	     channel 0 to front left, 1 to front right,
 	     2 to rear left and 3 to rear right.
 	-->
@@ -362,15 +364,14 @@
 
     <!--
 	Page 063: Added ambience when the family is in the standing
-	stones.  This is a quiet version of the Garden of Eden
-	ambience, with channels swapped.
+	stones.
     -->
     
     <sound>
       <name>Standing Stones ambience</name>
       <wav_file_name>garden_ambience.wav</wav_file_name>
       <attack_duration_time>1.0</attack_duration_time>
-      <designer_volume_level>0.125</designer_volume_level>
+      <designer_volume_level>0.25</designer_volume_level>
       <release_duration_time>1.0</release_duration_time>
       <loop_from_time>53.5</loop_from_time>
       <loop_to_time>0.75</loop_to_time>
@@ -380,7 +381,7 @@
 	  <number>0</number>
 	  <speakers>
 	    <speaker>
-	      <name>rear_left</name>
+	      <name>front_left</name>
 	      <volume_level>1.0</volume_level>
 	    </speaker>
 	  </speakers>
@@ -389,7 +390,7 @@
 	  <number>1</number>
 	  <speakers>
 	    <speaker>
-	      <name>rear_right</name>
+	      <name>front_right</name>
 	      <volume_level>1.0</volume_level>
 	    </speaker>
 	  </speakers>
@@ -398,7 +399,7 @@
 	  <number>2</number>
 	  <speakers>
 	    <speaker>
-	      <name>front_left</name>
+	      <name>rear_left</name>
 	      <volume_level>1.0</volume_level>
 	    </speaker>
 	  </speakers>
@@ -407,7 +408,7 @@
 	  <number>3</number>
 	  <speakers>
 	    <speaker>
-	      <name>front_right</name>
+	      <name>rear_right</name>
 	      <volume_level>1.0</volume_level>
 	    </speaker>
 	  </speakers>
@@ -437,9 +438,12 @@
     <sound>
       <name>wind</name>
       <wav_file_name>Weather/wind.wav</wav_file_name>
-      <default_volume_level>0.15</default_volume_level>
-      <attack_duration_time>5</attack_duration_time>
-      <release_duration_time>1</release_duration_time>
+      <designer_volume_level>0.3</designer_volume_level>
+      <default_volume_level>0.5</default_volume_level>
+      <attack_duration_time>4.5</attack_duration_time>
+      <decay_duration_time>1.0</decay_duration_time>
+      <sustain_level>0.33</sustain_level>
+      <release_duration_time>1.0</release_duration_time>
       <loop_from_time>28</loop_from_time>
       <loop_to_time>0</loop_to_time>
       <loop_limit>0</loop_limit>
@@ -474,11 +478,52 @@
     </sound>
     
     <sound>
-      <name>rain</name>
+      <name>rain_01</name>
       <wav_file_name>Weather/rain.wav</wav_file_name>
-      <default_volume_level>0.15</default_volume_level>
+      <designer_volume_level>0.3</designer_volume_level>
+      <default_volume_level>0.5</default_volume_level>
       <attack_duration_time>5</attack_duration_time>
       <release_duration_time>1</release_duration_time>
+      <loop_from_time>60</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    
+    <sound>
+      <name>rain_02</name>
+      <wav_file_name>Weather/rain.wav</wav_file_name>
+      <designer_volume_level>0.3</designer_volume_level>
+      <default_volume_level>0.5</default_volume_level>
+      <attack_duration_time>5</attack_duration_time>
+      <release_duration_time>15</release_duration_time>
       <loop_from_time>60</loop_from_time>
       <loop_to_time>0</loop_to_time>
       <loop_limit>0</loop_limit>
@@ -789,5 +834,243 @@
       </channels>
     </sound>
 
+    <!--
+	Page 103: four thunder sounds, coming closer.
+    -->
+    <sound>
+      <name>thunder_103a</name>
+      <wav_file_name>Weather/thunder_103a.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>thunder_103b</name>
+      <wav_file_name>Weather/thunder_103b.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>0.25</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>0.25</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>thunder_103c</name>
+      <wav_file_name>Weather/thunder_103c.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.5</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>0.5</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.5</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>0.5</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>thunder_103d</name>
+      <wav_file_name>Weather/thunder_103d.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <!--
+	Page 107: two more thunder sounds.
+    -->
+    <sound>
+      <name>thunder_107a</name>
+      <wav_file_name>Weather/thunder_107a.wav</wav_file_name>
+      <release_duration_time>0.5</release_duration_time>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>0.33</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.67</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>0.33</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.67</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    <sound>
+      <name>thunder_107b</name>
+      <wav_file_name>Weather/thunder_107b.wav</wav_file_name>
+      <release_duration_time>0.5</release_duration_time>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <!--
+	Page 109: Lightning and thunder.
+    -->
+    <sound>
+      <name>thunder_109b</name>
+      <wav_file_name>Weather/thunder_109b.wav</wav_file_name>
+      <release_duration_time>1.0</release_duration_time>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>2</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>3</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <sound>
+      <name>Dove</name>
+      <wav_file_name>Steve_Devino/07-Dove cooing.wav</wav_file_name>
+    </sound>
+    
   </sounds>
 </show_control>

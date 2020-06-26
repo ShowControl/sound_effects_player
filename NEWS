@@ -1,3 +1,6 @@
+Version 0.122, June 25, 2020
+  Fix a problem with a background sound that is used twice.
+  
 Version 0.121, June 22, 2020
   Fix clusters 7 and 8.  Set the operator volume display to 0 when there
   is no sound on a cluster.

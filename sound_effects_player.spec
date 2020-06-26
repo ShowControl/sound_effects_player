@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.121
+Version:        0.122
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -93,6 +93,8 @@ document for sound_effects_player.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Thu Jun 25 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.122-1 Fix a problem when a background sound is used twice.
 * Mon Jun 22 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.121-1 Fix some operator display problems.
 * Sat Jun 20 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
