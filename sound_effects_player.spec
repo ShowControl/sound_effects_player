@@ -1,6 +1,6 @@
 Name:           sound_effects_player
 Version:        0.123
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Play sounds for live theatre
 
 License:        GPLv3+
@@ -21,7 +21,7 @@ BuildRequires:  gtk-doc
 %global _hardened_build 1
 
 %description
-Play sound effects for a live theatre production..
+Play sound effects for a live theatre production.
 
 %prep
 %autosetup -S git
@@ -36,9 +36,20 @@ Play sound effects for a live theatre production..
 %check
 make check VERBOSE=1
 
+%package devel
+Summary: Create and play sound effects for a live theatre production
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
 %package doc
 Summary: Comprehensive documentation for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description devel
+Create and play sound effects for a live theatre production.
+This package includes the sample project and some example
+projects which, along with the documentation, are intended
+to help the sound designer create sound effects for his
+production.
 
 %description doc
 The %{name}-doc package contains
@@ -86,6 +97,118 @@ example of a musical.
 %{_mandir}/man1/sound_effects_player.1.gz
 %doc AUTHORS ChangeLog NEWS README
 
+%files devel
+%{_datadir}/%{name}/sample/440Hz.wav
+%{_datadir}/%{name}/sample/Sample_config.xml 
+%{_datadir}/%{name}/sample/Sample_cues.xml 
+%{_datadir}/%{name}/sample/Sample_equipment.xml 
+%{_datadir}/%{name}/sample/Sample_project.xml 
+%{_datadir}/%{name}/sample/Sample_script.xml 
+%{_datadir}/%{name}/sample/Sample_sound_sequence.xml 
+%{_datadir}/%{name}/sample/Sample_sounds.xml 
+%{_datadir}/%{name}/sample/run_sample.sh
+%{_datadir}/%{name}/examples/01/01.wav
+%{_datadir}/%{name}/examples/01/02.wav 
+%{_datadir}/%{name}/examples/01/03.wav 
+%{_datadir}/%{name}/examples/01/04.wav 
+%{_datadir}/%{name}/examples/01/05.wav 
+%{_datadir}/%{name}/examples/01/06.wav 
+%{_datadir}/%{name}/examples/01/07.wav 
+%{_datadir}/%{name}/examples/01/08.wav 
+%{_datadir}/%{name}/examples/01/09.wav 
+%{_datadir}/%{name}/examples/01/10.wav 
+%{_datadir}/%{name}/examples/01/11.wav 
+%{_datadir}/%{name}/examples/01/12.wav 
+%{_datadir}/%{name}/examples/01/13.wav 
+%{_datadir}/%{name}/examples/01/14.wav 
+%{_datadir}/%{name}/examples/01/15.wav 
+%{_datadir}/%{name}/examples/01/16.wav 
+%{_datadir}/%{name}/examples/01/440Hz.wav 
+%{_datadir}/%{name}/examples/01/Example_01_cues.xml 
+%{_datadir}/%{name}/examples/01/Example_01_equipment.xml 
+%{_datadir}/%{name}/examples/01/Example_01_project.xml 
+%{_datadir}/%{name}/examples/01/Example_01_script.xml 
+%{_datadir}/%{name}/examples/01/Example_01_sound_sequence.xml 
+%{_datadir}/%{name}/examples/01/Example_01_sounds.xml 
+%{_datadir}/%{name}/examples/01/run_example_01.sh
+%{_datadir}/%{name}/examples/02/Example_02_cues.xml
+%{_datadir}/%{name}/examples/02/Example_02_equipment.xml
+%{_datadir}/%{name}/examples/02/Example_02_project.xml
+%{_datadir}/%{name}/examples/02/Example_02_script.xml
+%{_datadir}/%{name}/examples/02/Example_02_sound_sequence.xml
+%{_datadir}/%{name}/examples/02/Example_02_sounds.xml
+%{_datadir}/%{name}/examples/02/car.wav
+%{_datadir}/%{name}/examples/02/circular_saw.wav
+%{_datadir}/%{name}/examples/02/run_example_02.sh
+%{_datadir}/%{name}/examples/03/Automobile.wav
+%{_datadir}/%{name}/examples/03/Example_03_cues.xml
+%{_datadir}/%{name}/examples/03/Example_03_equipment.xml
+%{_datadir}/%{name}/examples/03/Example_03_project.xml
+%{_datadir}/%{name}/examples/03/Example_03_script.xml
+%{_datadir}/%{name}/examples/03/Example_03_sound_sequence.xml
+%{_datadir}/%{name}/examples/03/Example_03_sounds.xml
+%{_datadir}/%{name}/examples/03/Theater_cues.xml
+%{_datadir}/%{name}/examples/03/Theater_equipment.xml
+%{_datadir}/%{name}/examples/03/Theater_sound_sequence.xml
+%{_datadir}/%{name}/examples/03/Theater_sounds.xml
+%{_datadir}/%{name}/examples/03/background_music.wav
+%{_datadir}/%{name}/examples/03/full_ring.wav
+%{_datadir}/%{name}/examples/03/run_example_03.sh
+%{_datadir}/%{name}/examples/04/6_Channel_ID.wav
+%{_datadir}/%{name}/examples/04/Example_04_equipment.xml
+%{_datadir}/%{name}/examples/04/Example_04_project.xml
+%{_datadir}/%{name}/examples/04/Example_04_sound_sequence.xml
+%{_datadir}/%{name}/examples/04/Example_04_sounds.xml
+%{_datadir}/%{name}/examples/04/Steve_Devino/07-Dove_cooing.wav
+%{_datadir}/%{name}/examples/04/Steve_Devino/08-Animal_medley.wav
+%{_datadir}/%{name}/examples/04/Theater_equipment.xml
+%{_datadir}/%{name}/examples/04/Theater_sound_sequence.xml
+%{_datadir}/%{name}/examples/04/Theater_sounds.xml
+%{_datadir}/%{name}/examples/04/Wasteland/Wasteland.wav
+%{_datadir}/%{name}/examples/04/Weather/lightning_crash.wav
+%{_datadir}/%{name}/examples/04/Weather/rain.wav
+%{_datadir}/%{name}/examples/04/Weather/thunder_072.wav
+%{_datadir}/%{name}/examples/04/Weather/thunder_103a.wav
+%{_datadir}/%{name}/examples/04/Weather/thunder_103b.wav
+%{_datadir}/%{name}/examples/04/Weather/thunder_103c.wav
+%{_datadir}/%{name}/examples/04/Weather/thunder_103d.wav
+%{_datadir}/%{name}/examples/04/Weather/thunder_107a.wav
+%{_datadir}/%{name}/examples/04/Weather/thunder_107b.wav
+%{_datadir}/%{name}/examples/04/Weather/thunder_109b.wav
+%{_datadir}/%{name}/examples/04/Weather/wind.wav
+%{_datadir}/%{name}/examples/04/animals/101a_rabbit_purring.wav
+%{_datadir}/%{name}/examples/04/animals/101b_Egyptian_turtle.wav
+%{_datadir}/%{name}/examples/04/animals/101c_chimp.wav
+%{_datadir}/%{name}/examples/04/animals/101d_panther.wav
+%{_datadir}/%{name}/examples/04/animals/101e_bird.wav
+%{_datadir}/%{name}/examples/04/animals/101f_frog.wav
+%{_datadir}/%{name}/examples/04/animals/101g_mice.wav
+%{_datadir}/%{name}/examples/04/animals/101h_zebra.wav
+%{_datadir}/%{name}/examples/04/animals/101i_ostrich.wav
+%{_datadir}/%{name}/examples/04/animals/101j_newborn_giraffe.wav
+%{_datadir}/%{name}/examples/04/animals/101k_elephant.wav
+%{_datadir}/%{name}/examples/04/announcements/01-Evening_Long.wav
+%{_datadir}/%{name}/examples/04/announcements/02-Evening_Short.wav
+%{_datadir}/%{name}/examples/04/announcements/03-Evening_Long_Humorous.wav
+%{_datadir}/%{name}/examples/04/announcements/04-Afternoon_Long.wav
+%{_datadir}/%{name}/examples/04/announcements/05-Afternoon_Short.wav
+%{_datadir}/%{name}/examples/04/announcements/06-Afternoon_Long_Humorous.wav
+%{_datadir}/%{name}/examples/04/announcements/07-Morning_Short.wav
+%{_datadir}/%{name}/examples/04/announcements/08-Intermission_Return.wav
+%{_datadir}/%{name}/examples/04/apple.wav
+%{_datadir}/%{name}/examples/04/baby_cry_1.wav
+%{_datadir}/%{name}/examples/04/baby_cry_2.wav
+%{_datadir}/%{name}/examples/04/bonk.wav
+%{_datadir}/%{name}/examples/04/forest.wav
+%{_datadir}/%{name}/examples/04/garden_ambience.wav
+%{_datadir}/%{name}/examples/04/pre_show_music.wav
+%{_datadir}/%{name}/examples/04/run_example_04.sh
+%{_datadir}/%{name}/examples/04/slap.wav
+%{_datadir}/%{name}/examples/04/water/water1.wav
+%{_datadir}/%{name}/examples/04/water/water2.wav
+%{_datadir}/%{name}/examples/04/water/water3.wav
+%{_datadir}/%{name}/examples/04/water/water4.wav
+
 %files doc
 %defattr(-,root,root)
 %doc %{_docdir}/%{name}/How_to_use_the_Sound_Effects_Player.pdf
@@ -95,6 +218,8 @@ example of a musical.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Sun Jun 28 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.123-2 Add -devel.
 * Fri Jun 26 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.123-1 Add example 4.
 * Thu Jun 25 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>

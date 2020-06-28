@@ -14,6 +14,32 @@
 
 @SET_MAKE@
 
+# File: Makefile.am, author: John Sauter, date: June 28, 2020.
+
+#   Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#   The author's contact information is as follows:
+#     John Sauter
+#     System Eyes Computer Store
+#     20A Northwest Blvd.  Ste 345
+#     Nashua, NH  03063-4066
+#     telephone: (603) 424-1188
+#     e-mail: John_Sauter@systemeyescomputerstore.com
+
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -98,40 +124,22 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/gtk-doc.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
-	$(am__configure_deps) $(dist_doc_DATA) $(am__DIST_COMMON)
+	$(am__configure_deps) $(dist_example01exec_SCRIPTS) \
+	$(dist_example02exec_SCRIPTS) $(dist_example03exec_SCRIPTS) \
+	$(dist_example04exec_SCRIPTS) $(dist_sampleexec_SCRIPTS) \
+	$(dist_doc_DATA) $(dist_example01_DATA) $(dist_example02_DATA) \
+	$(dist_example03_DATA) $(dist_example04_DATA) \
+	$(dist_example04Steve_DATA) $(dist_example04Wasteland_DATA) \
+	$(dist_example04Weather_DATA) $(dist_example04animals_DATA) \
+	$(dist_example04announcements_DATA) \
+	$(dist_example04water_DATA) $(dist_sample_DATA) \
+	$(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-AM_V_P = $(am__v_P_@AM_V@)
-am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
-am__v_P_0 = false
-am__v_P_1 = :
-AM_V_GEN = $(am__v_GEN_@AM_V@)
-am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
-am__v_GEN_0 = @echo "  GEN     " $@;
-am__v_GEN_1 = 
-AM_V_at = $(am__v_at_@AM_V@)
-am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
-am__v_at_0 = @
-am__v_at_1 = 
-SOURCES =
-DIST_SOURCES =
-RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
-	ctags-recursive dvi-recursive html-recursive info-recursive \
-	install-data-recursive install-dvi-recursive \
-	install-exec-recursive install-html-recursive \
-	install-info-recursive install-pdf-recursive \
-	install-ps-recursive install-recursive installcheck-recursive \
-	installdirs-recursive pdf-recursive ps-recursive \
-	tags-recursive uninstall-recursive
-am__can_run_installinfo = \
-  case $$AM_UPDATE_INFO_DIR in \
-    n|no|NO) false;; \
-    *) (install-info --version) >/dev/null 2>&1;; \
-  esac
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -159,8 +167,55 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(docdir)" "$(DESTDIR)$(iconsdir)"
-DATA = $(dist_doc_DATA) $(icons_DATA)
+am__installdirs = "$(DESTDIR)$(example01execdir)" \
+	"$(DESTDIR)$(example02execdir)" \
+	"$(DESTDIR)$(example03execdir)" \
+	"$(DESTDIR)$(example04execdir)" "$(DESTDIR)$(sampleexecdir)" \
+	"$(DESTDIR)$(docdir)" "$(DESTDIR)$(example01dir)" \
+	"$(DESTDIR)$(example02dir)" "$(DESTDIR)$(example03dir)" \
+	"$(DESTDIR)$(example04dir)" "$(DESTDIR)$(example04Stevedir)" \
+	"$(DESTDIR)$(example04Wastelanddir)" \
+	"$(DESTDIR)$(example04Weatherdir)" \
+	"$(DESTDIR)$(example04animalsdir)" \
+	"$(DESTDIR)$(example04announcementsdir)" \
+	"$(DESTDIR)$(example04waterdir)" "$(DESTDIR)$(sampledir)" \
+	"$(DESTDIR)$(iconsdir)"
+SCRIPTS = $(dist_example01exec_SCRIPTS) $(dist_example02exec_SCRIPTS) \
+	$(dist_example03exec_SCRIPTS) $(dist_example04exec_SCRIPTS) \
+	$(dist_sampleexec_SCRIPTS)
+AM_V_P = $(am__v_P_@AM_V@)
+am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
+am__v_P_0 = false
+am__v_P_1 = :
+AM_V_GEN = $(am__v_GEN_@AM_V@)
+am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
+am__v_GEN_0 = @echo "  GEN     " $@;
+am__v_GEN_1 = 
+AM_V_at = $(am__v_at_@AM_V@)
+am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+am__v_at_0 = @
+am__v_at_1 = 
+SOURCES =
+DIST_SOURCES =
+RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
+	ctags-recursive dvi-recursive html-recursive info-recursive \
+	install-data-recursive install-dvi-recursive \
+	install-exec-recursive install-html-recursive \
+	install-info-recursive install-pdf-recursive \
+	install-ps-recursive install-recursive installcheck-recursive \
+	installdirs-recursive pdf-recursive ps-recursive \
+	tags-recursive uninstall-recursive
+am__can_run_installinfo = \
+  case $$AM_UPDATE_INFO_DIR in \
+    n|no|NO) false;; \
+    *) (install-info --version) >/dev/null 2>&1;; \
+  esac
+DATA = $(dist_doc_DATA) $(dist_example01_DATA) $(dist_example02_DATA) \
+	$(dist_example03_DATA) $(dist_example04_DATA) \
+	$(dist_example04Steve_DATA) $(dist_example04Wasteland_DATA) \
+	$(dist_example04Weather_DATA) $(dist_example04animals_DATA) \
+	$(dist_example04announcements_DATA) \
+	$(dist_example04water_DATA) $(dist_sample_DATA) $(icons_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -437,16 +492,23 @@ EXTRA_DIST = \
 	sound_effects_player.spec \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
-	sample/440Hz.wav \
+	$(INTLTOOL_FILES)
+
+sampledir = ${datadir}/sound_effects_player/sample/
+sampleexecdir = ${datadir}/sound_effects_player/sample/
+dist_sample_DATA = sample/440Hz.wav \
 	sample/Sample_config.xml \
 	sample/Sample_cues.xml \
 	sample/Sample_equipment.xml \
 	sample/Sample_project.xml \
 	sample/Sample_script.xml \
 	sample/Sample_sound_sequence.xml \
-	sample/Sample_sounds.xml \
-	sample/run_sample.sh \
-	example_01/01.wav \
+	sample/Sample_sounds.xml
+
+dist_sampleexec_SCRIPTS = sample/run_sample.sh
+example01dir = ${datadir}/sound_effects_player/examples/01/
+example01execdir = ${datadir}/sound_effects_player/examples/01/
+dist_example01_DATA = example_01/01.wav \
 	example_01/02.wav \
 	example_01/03.wav \
 	example_01/04.wav \
@@ -468,18 +530,24 @@ EXTRA_DIST = \
 	example_01/Example_01_project.xml \
 	example_01/Example_01_script.xml \
 	example_01/Example_01_sound_sequence.xml \
-	example_01/Example_01_sounds.xml \
-	example_01/run_example_01.sh \
-	example_02/Example_02_cues.xml \
+	example_01/Example_01_sounds.xml
+
+dist_example01exec_SCRIPTS = example_01/run_example_01.sh 
+example02dir = ${datadir}/sound_effects_player/examples/02/
+example02execdir = ${datadir}/sound_effects_player/examples/02/
+dist_example02_DATA = example_02/Example_02_cues.xml \
 	example_02/Example_02_equipment.xml \
 	example_02/Example_02_project.xml \
 	example_02/Example_02_script.xml \
 	example_02/Example_02_sound_sequence.xml \
 	example_02/Example_02_sounds.xml \
 	example_02/car.wav \
-	example_02/circular_saw.wav \
-	example_02/run_example_02.xml \
-	example_03/Automobile.wav \
+	example_02/circular_saw.wav 
+
+dist_example02exec_SCRIPTS = example_02/run_example_02.sh 
+example03dir = ${datadir}/sound_effects_player/examples/03/
+example03execdir = ${datadir}/sound_effects_player/examples/03/
+dist_example03_DATA = example_03/Automobile.wav \
 	example_03/Example_03_cues.xml \
 	example_03/Example_03_equipment.xml \
 	example_03/Example_03_project.xml \
@@ -491,20 +559,35 @@ EXTRA_DIST = \
 	example_03/Theater_sound_sequence.xml \
 	example_03/Theater_sounds.xml \
 	example_03/background_music.wav \
-	example_03/full_ring.wav \
-	example_03/run_example_03.xml \
-	example_04/6_Channel_ID.wav \
+	example_03/full_ring.wav 
+
+dist_example03exec_SCRIPTS = example_03/run_example_03.sh 
+example04dir = ${datadir}/sound_effects_player/examples/04/
+dist_example04_DATA = example_04/6_Channel_ID.wav \
 	example_04/Example_04_equipment.xml \
 	example_04/Example_04_project.xml \
 	example_04/Example_04_sound_sequence.xml \
-	example_04/Example_04_sounds.xml \
-	example_04/Steve_Devino/07-Dove_cooing.wav \
-	example_04/Steve_Devino/08-Animal_medley.wav \
+	example_04/Example_04_sounds.xml\
 	example_04/Theater_equipment.xml \
 	example_04/Theater_sound_sequence.xml \
 	example_04/Theater_sounds.xml \
-	example_04/Wasteland/Wasteland.wav \
-	example_04/Weather/lightning_crash.wav \
+	example_04/apple.wav \
+	example_04/baby_cry_1.wav \
+	example_04/baby_cry_2.wav \
+	example_04/bonk.wav \
+	example_04/forest.wav \
+	example_04/garden_ambience.wav \
+	example_04/pre_show_music.wav \
+	example_04/slap.wav 
+
+example04Stevedir = ${datadir}/sound_effects_player/examples/04/Steve_Devino/
+dist_example04Steve_DATA = example_04/Steve_Devino/07-Dove_cooing.wav \
+	example_04/Steve_Devino/08-Animal_medley.wav
+
+example04Wastelanddir = ${datadir}/sound_effects_player/examples/04/Wasteland/
+dist_example04Wasteland_DATA = example_04/Wasteland/Wasteland.wav 
+example04Weatherdir = ${datadir}/sound_effects_player/examples/04/Weather/
+dist_example04Weather_DATA = example_04/Weather/lightning_crash.wav \
 	example_04/Weather/rain.wav \
 	example_04/Weather/thunder_072.wav \
 	example_04/Weather/thunder_103a.wav \
@@ -514,8 +597,10 @@ EXTRA_DIST = \
 	example_04/Weather/thunder_107a.wav \
 	example_04/Weather/thunder_107b.wav \
 	example_04/Weather/thunder_109b.wav \
-	example_04/Weather/wind.wav \
-	example_04/animals/101a_rabbit_purring.wav \
+	example_04/Weather/wind.wav 
+
+example04animalsdir = ${datadir}/sound_effects_player/examples/04/animals/
+dist_example04animals_DATA = example_04/animals/101a_rabbit_purring.wav \
 	example_04/animals/101b_Egyptian_turtle.wav \
 	example_04/animals/101c_chimp.wav \
 	example_04/animals/101d_panther.wav \
@@ -525,7 +610,10 @@ EXTRA_DIST = \
 	example_04/animals/101h_zebra.wav \
 	example_04/animals/101i_ostrich.wav \
 	example_04/animals/101j_newborn_giraffe.wav \
-	example_04/animals/101k_elephant.wav \
+	example_04/animals/101k_elephant.wav 
+
+example04announcementsdir = ${datadir}/sound_effects_player/examples/04/announcements/
+dist_example04announcements_DATA = \
 	example_04/announcements/01-Evening_Long.wav \
 	example_04/announcements/02-Evening_Short.wav \
 	example_04/announcements/03-Evening_Long_Humorous.wav \
@@ -533,22 +621,16 @@ EXTRA_DIST = \
 	example_04/announcements/05-Afternoon_Short.wav \
 	example_04/announcements/06-Afternoon_Long_Humorous.wav \
 	example_04/announcements/07-Morning_Short.wav \
-	example_04/announcements/08-Intermission_Return.wav \
-	example_04/apple.wav \
-	example_04/baby_cry_1.wav \
-	example_04/baby_cry_2.wav \
-	example_04/bonk.wav \
-	example_04/forest.wav \
-	example_04/garden_ambience.wav \
-	example_04/pre_show_music.wav \
-	example_04/run_example_04.xml \
-	example_04/slap.wav \
-	example_04/water/water1.wav \
+	example_04/announcements/08-Intermission_Return.wav 
+
+example04waterdir = ${datadir}/sound_effects_player/examples/04/water/
+dist_example04water_DATA = example_04/water/water1.wav \
 	example_04/water/water2.wav \
 	example_04/water/water3.wav \
-	example_04/water/water4.wav \
-	$(INTLTOOL_FILES)
+	example_04/water/water4.wav 
 
+example04execdir = ${datadir}/sound_effects_player/examples/04/
+dist_example04exec_SCRIPTS = example_04/run_example_04.sh 
 iconsdir = ${datadir}/icons/hicolor/48x48/apps
 icons_DATA = icons/sound_effects_player_icon.png
 applicationsdir = ${DESTDIR}${datadir}/applications
@@ -609,6 +691,181 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
+install-dist_example01execSCRIPTS: $(dist_example01exec_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example01exec_SCRIPTS)'; test -n "$(example01execdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example01execdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example01execdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(example01execdir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(example01execdir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-dist_example01execSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example01exec_SCRIPTS)'; test -n "$(example01execdir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	dir='$(DESTDIR)$(example01execdir)'; $(am__uninstall_files_from_dir)
+install-dist_example02execSCRIPTS: $(dist_example02exec_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example02exec_SCRIPTS)'; test -n "$(example02execdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example02execdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example02execdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(example02execdir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(example02execdir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-dist_example02execSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example02exec_SCRIPTS)'; test -n "$(example02execdir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	dir='$(DESTDIR)$(example02execdir)'; $(am__uninstall_files_from_dir)
+install-dist_example03execSCRIPTS: $(dist_example03exec_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example03exec_SCRIPTS)'; test -n "$(example03execdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example03execdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example03execdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(example03execdir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(example03execdir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-dist_example03execSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example03exec_SCRIPTS)'; test -n "$(example03execdir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	dir='$(DESTDIR)$(example03execdir)'; $(am__uninstall_files_from_dir)
+install-dist_example04execSCRIPTS: $(dist_example04exec_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example04exec_SCRIPTS)'; test -n "$(example04execdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example04execdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example04execdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(example04execdir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(example04execdir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-dist_example04execSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example04exec_SCRIPTS)'; test -n "$(example04execdir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	dir='$(DESTDIR)$(example04execdir)'; $(am__uninstall_files_from_dir)
+install-dist_sampleexecSCRIPTS: $(dist_sampleexec_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_sampleexec_SCRIPTS)'; test -n "$(sampleexecdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(sampleexecdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(sampleexecdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(sampleexecdir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(sampleexecdir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-dist_sampleexecSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_sampleexec_SCRIPTS)'; test -n "$(sampleexecdir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	dir='$(DESTDIR)$(sampleexecdir)'; $(am__uninstall_files_from_dir)
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -639,6 +896,237 @@ uninstall-dist_docDATA:
 	@list='$(dist_doc_DATA)'; test -n "$(docdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(docdir)'; $(am__uninstall_files_from_dir)
+install-dist_example01DATA: $(dist_example01_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example01_DATA)'; test -n "$(example01dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example01dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example01dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example01dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example01dir)" || exit $$?; \
+	done
+
+uninstall-dist_example01DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example01_DATA)'; test -n "$(example01dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example01dir)'; $(am__uninstall_files_from_dir)
+install-dist_example02DATA: $(dist_example02_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example02_DATA)'; test -n "$(example02dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example02dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example02dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example02dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example02dir)" || exit $$?; \
+	done
+
+uninstall-dist_example02DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example02_DATA)'; test -n "$(example02dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example02dir)'; $(am__uninstall_files_from_dir)
+install-dist_example03DATA: $(dist_example03_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example03_DATA)'; test -n "$(example03dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example03dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example03dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example03dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example03dir)" || exit $$?; \
+	done
+
+uninstall-dist_example03DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example03_DATA)'; test -n "$(example03dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example03dir)'; $(am__uninstall_files_from_dir)
+install-dist_example04DATA: $(dist_example04_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example04_DATA)'; test -n "$(example04dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example04dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example04dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example04dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example04dir)" || exit $$?; \
+	done
+
+uninstall-dist_example04DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example04_DATA)'; test -n "$(example04dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example04dir)'; $(am__uninstall_files_from_dir)
+install-dist_example04SteveDATA: $(dist_example04Steve_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example04Steve_DATA)'; test -n "$(example04Stevedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example04Stevedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example04Stevedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example04Stevedir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example04Stevedir)" || exit $$?; \
+	done
+
+uninstall-dist_example04SteveDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example04Steve_DATA)'; test -n "$(example04Stevedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example04Stevedir)'; $(am__uninstall_files_from_dir)
+install-dist_example04WastelandDATA: $(dist_example04Wasteland_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example04Wasteland_DATA)'; test -n "$(example04Wastelanddir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example04Wastelanddir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example04Wastelanddir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example04Wastelanddir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example04Wastelanddir)" || exit $$?; \
+	done
+
+uninstall-dist_example04WastelandDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example04Wasteland_DATA)'; test -n "$(example04Wastelanddir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example04Wastelanddir)'; $(am__uninstall_files_from_dir)
+install-dist_example04WeatherDATA: $(dist_example04Weather_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example04Weather_DATA)'; test -n "$(example04Weatherdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example04Weatherdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example04Weatherdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example04Weatherdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example04Weatherdir)" || exit $$?; \
+	done
+
+uninstall-dist_example04WeatherDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example04Weather_DATA)'; test -n "$(example04Weatherdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example04Weatherdir)'; $(am__uninstall_files_from_dir)
+install-dist_example04animalsDATA: $(dist_example04animals_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example04animals_DATA)'; test -n "$(example04animalsdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example04animalsdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example04animalsdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example04animalsdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example04animalsdir)" || exit $$?; \
+	done
+
+uninstall-dist_example04animalsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example04animals_DATA)'; test -n "$(example04animalsdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example04animalsdir)'; $(am__uninstall_files_from_dir)
+install-dist_example04announcementsDATA: $(dist_example04announcements_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example04announcements_DATA)'; test -n "$(example04announcementsdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example04announcementsdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example04announcementsdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example04announcementsdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example04announcementsdir)" || exit $$?; \
+	done
+
+uninstall-dist_example04announcementsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example04announcements_DATA)'; test -n "$(example04announcementsdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example04announcementsdir)'; $(am__uninstall_files_from_dir)
+install-dist_example04waterDATA: $(dist_example04water_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_example04water_DATA)'; test -n "$(example04waterdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(example04waterdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(example04waterdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(example04waterdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(example04waterdir)" || exit $$?; \
+	done
+
+uninstall-dist_example04waterDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_example04water_DATA)'; test -n "$(example04waterdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(example04waterdir)'; $(am__uninstall_files_from_dir)
+install-dist_sampleDATA: $(dist_sample_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_sample_DATA)'; test -n "$(sampledir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(sampledir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(sampledir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(sampledir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(sampledir)" || exit $$?; \
+	done
+
+uninstall-dist_sampleDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_sample_DATA)'; test -n "$(sampledir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(sampledir)'; $(am__uninstall_files_from_dir)
 install-iconsDATA: $(icons_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(icons_DATA)'; test -n "$(iconsdir)" || list=; \
@@ -960,10 +1448,10 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(DATA) config.h
+all-am: Makefile $(SCRIPTS) $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(docdir)" "$(DESTDIR)$(iconsdir)"; do \
+	for dir in "$(DESTDIR)$(example01execdir)" "$(DESTDIR)$(example02execdir)" "$(DESTDIR)$(example03execdir)" "$(DESTDIR)$(example04execdir)" "$(DESTDIR)$(sampleexecdir)" "$(DESTDIR)$(docdir)" "$(DESTDIR)$(example01dir)" "$(DESTDIR)$(example02dir)" "$(DESTDIR)$(example03dir)" "$(DESTDIR)$(example04dir)" "$(DESTDIR)$(example04Stevedir)" "$(DESTDIR)$(example04Wastelanddir)" "$(DESTDIR)$(example04Weatherdir)" "$(DESTDIR)$(example04animalsdir)" "$(DESTDIR)$(example04announcementsdir)" "$(DESTDIR)$(example04waterdir)" "$(DESTDIR)$(sampledir)" "$(DESTDIR)$(iconsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -1020,13 +1508,25 @@ info: info-recursive
 info-am:
 
 install-data-am: install-data-local install-dist_docDATA \
+	install-dist_example01DATA install-dist_example02DATA \
+	install-dist_example03DATA install-dist_example04DATA \
+	install-dist_example04SteveDATA \
+	install-dist_example04WastelandDATA \
+	install-dist_example04WeatherDATA \
+	install-dist_example04animalsDATA \
+	install-dist_example04announcementsDATA \
+	install-dist_example04waterDATA install-dist_sampleDATA \
 	install-iconsDATA
 
 install-dvi: install-dvi-recursive
 
 install-dvi-am:
 
-install-exec-am:
+install-exec-am: install-dist_example01execSCRIPTS \
+	install-dist_example02execSCRIPTS \
+	install-dist_example03execSCRIPTS \
+	install-dist_example04execSCRIPTS \
+	install-dist_sampleexecSCRIPTS
 
 install-html: install-html-recursive
 
@@ -1066,7 +1566,20 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-dist_docDATA uninstall-iconsDATA \
+uninstall-am: uninstall-dist_docDATA uninstall-dist_example01DATA \
+	uninstall-dist_example01execSCRIPTS \
+	uninstall-dist_example02DATA \
+	uninstall-dist_example02execSCRIPTS \
+	uninstall-dist_example03DATA \
+	uninstall-dist_example03execSCRIPTS \
+	uninstall-dist_example04DATA uninstall-dist_example04SteveDATA \
+	uninstall-dist_example04WastelandDATA \
+	uninstall-dist_example04WeatherDATA \
+	uninstall-dist_example04animalsDATA \
+	uninstall-dist_example04announcementsDATA \
+	uninstall-dist_example04execSCRIPTS \
+	uninstall-dist_example04waterDATA uninstall-dist_sampleDATA \
+	uninstall-dist_sampleexecSCRIPTS uninstall-iconsDATA \
 	uninstall-local
 
 .MAKE: $(am__recursive_targets) all install-am install-strip
@@ -1079,15 +1592,39 @@ uninstall-am: uninstall-dist_docDATA uninstall-iconsDATA \
 	distclean-hdr distclean-libtool distclean-tags distcleancheck \
 	distdir distuninstallcheck dvi dvi-am html html-am info \
 	info-am install install-am install-data install-data-am \
-	install-data-local install-dist_docDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-iconsDATA install-info install-info-am \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-am uninstall \
-	uninstall-am uninstall-dist_docDATA uninstall-iconsDATA \
+	install-data-local install-dist_docDATA \
+	install-dist_example01DATA install-dist_example01execSCRIPTS \
+	install-dist_example02DATA install-dist_example02execSCRIPTS \
+	install-dist_example03DATA install-dist_example03execSCRIPTS \
+	install-dist_example04DATA install-dist_example04SteveDATA \
+	install-dist_example04WastelandDATA \
+	install-dist_example04WeatherDATA \
+	install-dist_example04animalsDATA \
+	install-dist_example04announcementsDATA \
+	install-dist_example04execSCRIPTS \
+	install-dist_example04waterDATA install-dist_sampleDATA \
+	install-dist_sampleexecSCRIPTS install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-iconsDATA install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
+	ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-dist_docDATA uninstall-dist_example01DATA \
+	uninstall-dist_example01execSCRIPTS \
+	uninstall-dist_example02DATA \
+	uninstall-dist_example02execSCRIPTS \
+	uninstall-dist_example03DATA \
+	uninstall-dist_example03execSCRIPTS \
+	uninstall-dist_example04DATA uninstall-dist_example04SteveDATA \
+	uninstall-dist_example04WastelandDATA \
+	uninstall-dist_example04WeatherDATA \
+	uninstall-dist_example04animalsDATA \
+	uninstall-dist_example04announcementsDATA \
+	uninstall-dist_example04execSCRIPTS \
+	uninstall-dist_example04waterDATA uninstall-dist_sampleDATA \
+	uninstall-dist_sampleexecSCRIPTS uninstall-iconsDATA \
 	uninstall-local
 
 .PRECIOUS: Makefile
