@@ -221,7 +221,8 @@ message_handler (GstBus *bus_element, GstMessage *message,
         source = GST_OBJECT_NAME (message->src);
         if (TRACE_MESSAGES)
           {
-            g_print ("Reset time to %ld by %s.\n", running_time, source);
+            g_print ("Reset time to %" G_GUINT64_FORMAT " by %s.\n",
+		     running_time, source);
           }
         break;
       }

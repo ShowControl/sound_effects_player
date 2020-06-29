@@ -1,6 +1,6 @@
 Name:           sound_effects_player
-Version:        0.123
-Release:        2%{?dist}
+Version:        0.124
+Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
 License:        GPLv3+
@@ -218,6 +218,8 @@ example of a musical.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Mon Jun 29 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.124-1 Fix warnings in 32-bit builds.
 * Sun Jun 28 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.123-2 Add -devel.
 * Fri Jun 26 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>

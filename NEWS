@@ -1,3 +1,6 @@
+Version 0.124, June 29, 2020
+  Fix warnings in 32-bit builds.
+  
 Version 0.123, June 26, 2020
   Add example 4.
   

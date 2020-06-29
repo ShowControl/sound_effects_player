@@ -1379,8 +1379,9 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
               old_file_name = sep_get_network_port_filename (app);
               if (old_file_name != NULL)
                 {
-                  g_printerr ("Network port set to %ld in file %s "
-                              "but previously set to %ld in file %s.\n",
+                  g_printerr ("Network port set to %" G_GINT64_FORMAT
+			      " in file %s but previously set to %"
+			      G_GINT64_FORMAT " in file %s.\n",
                               port_number, equipment_file_name,
                               old_port_number, old_file_name);
                 }
@@ -1406,7 +1407,8 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
 	    }
 	  if (TRACE_PARSE_XML)
 	    {
-	      g_print ("Speaker count = %ld.\n", speaker_count);
+	      g_print ("Speaker count = %" G_GINT64_FORMAT ".\n",
+		       speaker_count);
 	    }
           /* Record the new speaker count. */
           old_speaker_count = sep_get_speaker_count (app);
@@ -1416,8 +1418,10 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
               old_file_name = sep_get_speaker_count_filename (app);
               if (old_file_name != NULL)
                 {
-                  g_printerr ("Speaker count is set to %ld in file %s "
-                              "but was previously set to %ld in file %s.\n",
+                  g_printerr ("Speaker count is set to %" G_GINT64_FORMAT
+			      " in file %s "
+                              "but was previously set to %" G_GINT64_FORMAT
+			      " in file %s.\n",
                               speaker_count, equipment_file_name,
                               old_speaker_count, old_file_name);
                 }
@@ -1910,7 +1914,8 @@ parse_component_info (xmlDocPtr configuration_file,
 
           /* We do not permit the port number to be set in the configuration
            * file.  Instead, set it in an equipment file.  */
-          g_printerr ("Do not set the network port to %ld in file %s.\n"
+          g_printerr ("Do not set the network port to %" G_GINT64_FORMAT
+		      " in file %s.\n"
                       "Instead, set it in an equipment file.\n", port_number,
                       configuration_file_name);
           xmlFree (key);

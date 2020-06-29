@@ -136,7 +136,8 @@ initialize_display_data (GApplication *app)
 	    {
 	      if (TRACE_DISPLAY)
 		{
-		  g_print ("Setting the name of channel %ld to \"%s\".\n",
+		  g_print ("Setting the name of channel %" G_GINT64_FORMAT
+			   " to \"%s\".\n",
 			   channel_number, speaker_abbreviation);
 		}
 	      text_label = GTK_LABEL (grandchild_widget);

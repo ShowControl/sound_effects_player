@@ -18,6 +18,7 @@
  */
 
 #include <stdlib.h>
+#include <inttypes.h>
 #include <gst/gst.h>
 #include "sound_subroutines.h"
 #include "sound_structure.h"
@@ -963,7 +964,8 @@ sound_process_speakers (struct sounds_info *sounds_data,
 	    }
 	  if (TRACE_SOUND)
 	    {
-	      g_print ("Channel mask = %016lx.\n", sound_effect->channel_mask);
+	      g_print ("Channel mask = %016" PRIx64 ".\n",
+		       sound_effect->channel_mask);
 	    }
 	}
       sounds_list = sounds_list->next;
@@ -971,7 +973,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
 
   if (TRACE_SOUND)
     {
-      g_print ("Overall channel mask 1 = %016lx.\n", channel_mask);
+      g_print ("Overall channel mask 1 = %016" PRIx64 ".\n", channel_mask);
     }
 
   /* Add more bits to the channel mask based on the speaker names
@@ -1066,7 +1068,7 @@ sound_process_speakers (struct sounds_info *sounds_data,
 
   if (TRACE_SOUND)
     {
-      g_print ("Overall channel mask 2 = %016lx.\n", channel_mask);
+      g_print ("Overall channel mask 2 = %016" PRIx64 ".\n", channel_mask);
     }
 
   /* We will use this global channel mask to route after the sound effects
@@ -1796,7 +1798,7 @@ sound_parse_wav_file_header (const gchar *wav_file_name,
 			     GApplication *app)
 {
   FILE *file_stream;
-  size_t amount_read;
+  gsize amount_read;
   gint stream_status;
   gboolean file_open = FALSE;
   gint channel_count;
@@ -1821,7 +1823,7 @@ sound_parse_wav_file_header (const gchar *wav_file_name,
   if (amount_read != 36)
     {
       g_printerr ("Failed to read the first 36 bytes of file \"%s\"; "
-		  "got %lu bytes.", wav_file_name, amount_read);
+		  "got %" G_GSIZE_FORMAT " bytes.", wav_file_name, amount_read);
       goto common_exit;
     }
 

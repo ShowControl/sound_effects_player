@@ -111,11 +111,12 @@
 
 #include "gstlooper.h"
 
+/* The only formats we need to accept are those which can come from
+ * WAV files. */
+
 #define STATIC_CAPS \
   GST_STATIC_CAPS (GST_AUDIO_CAPS_MAKE \
-		   (" { S8, U8, " GST_AUDIO_NE (S16) "," GST_AUDIO_NE (S24) \
-                   "," GST_AUDIO_NE (S32) \
-		    "," GST_AUDIO_NE (F32) "," GST_AUDIO_NE (F64)" } ") \
+		   (" { U8, S16LE, S24LE, S32LE, F32LE, F64LE } ") \
 		   ", layout = (string) interleaved")
 #define SINK_TEMPLATE \
   GST_STATIC_PAD_TEMPLATE ("sink", GST_PAD_SINK, GST_PAD_ALWAYS, STATIC_CAPS)
@@ -897,7 +898,7 @@ gst_looper_push_data_downstream (GstPad * pad)
           gst_buffer_unmap (buffer, &memory_out_info);
           /* Send the buffer downstream.  */
           GST_DEBUG_OBJECT (self,
-                            "pushing %" G_GUINT64_FORMAT " bytes of silence.",
+                            "pushing %" G_GSIZE_FORMAT " bytes of silence.",
                             data_size);
           /* We must unlock before we push, since pushing can cause a query to 
            * come back upstream on a different task before it completes.  */
@@ -992,7 +993,7 @@ gst_looper_push_data_downstream (GstPad * pad)
     self->local_buffer_drain_level + memory_out_info.size;
 
   GST_DEBUG_OBJECT (self,
-                    "sending %" G_GUINT64_FORMAT " bytes of data downstream"
+                    "sending %" G_GSIZE_FORMAT " bytes of data downstream"
                     " from buffer position %" G_GUINT64_FORMAT ".",
                     memory_out_info.size, self->local_buffer_drain_level);
 
@@ -1731,7 +1732,8 @@ gst_looper_handle_sink_event (GstPad * pad, GstObject * parent,
             {
               /* We now have all our data.  */
               self->data_buffered = TRUE;
-              GST_DEBUG_OBJECT (self, "read %ld bytes from WAV file.",
+              GST_DEBUG_OBJECT (self, "read %" G_GUINT64_FORMAT
+				" bytes from WAV file.",
                                 self->local_buffer_fill_level);
               /* We now know the size of our local buffer.  We may have filled 
                  it beyond max-duration, but if so we will use only the data
@@ -2208,18 +2210,18 @@ static gboolean
 read_wav_file_data (GstLooper * self, guint64 max_position)
 {
   FILE *file_stream;
-  int stream_status;
-  size_t amount_read;
+  gint stream_status;
+  gsize amount_read;
   GstMemory *memory_allocated;
   GstMapInfo buffer_memory_info;
-  int result, seek_success;
+  gint result, seek_success;
   gboolean return_value = FALSE;
   guint32 header[2];
   guint32 chunk_size;
   unsigned int byte_offset;
   guint64 local_buffer_fill_level;
-  char data_byte;
-  char *byte_data_out_pointer;
+  gchar data_byte;
+  gchar *byte_data_out_pointer;
 
   /* This subroutine exits through some common cleanup code at common_exit.
    * The following flags control the extent of its cleanup.  */
@@ -2243,8 +2245,8 @@ read_wav_file_data (GstLooper * self, guint64 max_position)
   amount_read = fread (&header, 1, 8, file_stream);
   if (amount_read != 8)
     {
-      GST_DEBUG_OBJECT (self, "failed to read first 8 bytes: got %lu.",
-                        amount_read);
+      GST_DEBUG_OBJECT (self, "failed to read first 8 bytes: got %"
+			G_GSIZE_FORMAT ".", amount_read);
       goto common_exit;
     }
   if (memcmp (&header[0], "RIFF", 4) != 0)
@@ -2257,14 +2259,15 @@ read_wav_file_data (GstLooper * self, guint64 max_position)
   /* We don't care about the second word of the RIFF header, which is supposed
    * to be the size of the file but is inaccurate if the file is too large
    * for a 32-bit integer or was written in real time by a recording application
-   * that did not know how long the data would be.  */
+   * that did not know how long the data would be and did not go back
+   * to the front of the file to set the length.  */
 
   /* Read and verify bytes 9 through 12 of the file.  */
   amount_read = fread (&header, 1, 4, file_stream);
   if (amount_read != 4)
     {
-      GST_DEBUG_OBJECT (self, "failed to read bytes 9 through 12: got %lu.",
-                        amount_read);
+      GST_DEBUG_OBJECT (self, "failed to read bytes 9 through 12: got %"
+			G_GSIZE_FORMAT ".", amount_read);
       goto common_exit;
     }
   if (memcmp (&header[0], "WAVE", 4) != 0)
