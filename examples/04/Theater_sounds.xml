@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+  <sounds>
+    <version>1.0</version>
+
+    <!--
+	The sound effects operator can play this sound to make sure
+	the speakers are connected correctly.
+    -->
+    
+    <sound>
+      <name>6-channel_ID</name>
+      <wav_file_name>6_Channel_ID.wav</wav_file_name>
+      <loop_from_time>8.0</loop_from_time>
+      <loop_to_time>0.0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>2</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_center</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>3</number>
+	  <speakers>
+	    <speaker>
+	      <name>LFE1</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>4</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>5</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <!--
+	These announcements can be played before the first curtain
+	or, in one case, before the second act.
+    -->
+    
+    <sound>
+      <name>Announcement Evening Long</name>
+      <wav_file_name>announcements/01-Evening_Long.wav</wav_file_name>
+      <start_time>1.95</start_time>
+      <attack_duration_time>0.05</attack_duration_time>
+    </sound>
+
+    <sound>
+      <name>Announcement Evening Short</name>
+      <wav_file_name>announcements/02-Evening_Short.wav</wav_file_name>
+      <start_time>2.00</start_time>
+      <attack_duration_time>0.05</attack_duration_time>
+    </sound>
+    
+    <sound>
+      <name>Announcement Evening Long Humorous</name>
+      <wav_file_name>announcements/03-Evening_Long_Humorous.wav</wav_file_name>
+      <start_time>2.50</start_time>
+      <attack_duration_time>0.05</attack_duration_time>
+    </sound>
+    
+    <sound>
+      <name>Announcement Afternoon Long</name>
+      <wav_file_name>announcements/04-Afternoon_Long.wav</wav_file_name>
+      <start_time>2.10</start_time>
+      <attack_duration_time>0.05</attack_duration_time>
+    </sound>
+    
+    <sound>
+      <name>Announcement Afternoon Short</name>
+      <wav_file_name>announcements/05-Afternoon_Short.wav</wav_file_name>
+      <start_time>1.90</start_time>
+      <attack_duration_time>0.05</attack_duration_time>
+    </sound>
+    
+    <sound>
+      <name>Announcement Afternoon Long Humorous</name>
+      <wav_file_name>announcements/06-Afternoon_Long_Humorous.wav</wav_file_name>
+      <start_time>1.80</start_time>
+      <attack_duration_time>0.05</attack_duration_time>
+    </sound>
+    
+    <sound>
+      <name>Announcement Morning Short</name>
+      <wav_file_name>announcements/07-Morning_Short.wav</wav_file_name>
+      <start_time>1.85</start_time>
+      <attack_duration_time>0.05</attack_duration_time>
+    </sound>
+    
+    <sound>
+      <name>Announcement Intermission Return</name>
+      <wav_file_name>announcements/08-Intermission_Return.wav</wav_file_name>
+      <start_time>1.95</start_time>
+      <attack_duration_time>0.05</attack_duration_time>
+    </sound>
+    
+  </sounds>
+</show_control>

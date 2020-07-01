@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+<!-- The example_01 production uses these sounds. -->
+  <sounds>
+    <version>1.0</version>
+
+    <!-- a sine wave at 440Hz, which is A in octave 6. -->
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>440Hz</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>440Hz.wav</wav_file_name>
+      <!-- volume ramps up from 0 to attack level in attack duration time -->
+      <attack_duration_time>2.000000000</attack_duration_time>
+      <attack_level>1.00</attack_level>
+      <!-- after reaching attack level, volume ramps down to sustain level
+	   in decay time -->
+      <decay_duration_time>1.000000000</decay_duration_time>
+      <sustain_level>0.5</sustain_level>
+      <!-- release starts on external signal or when reaching the
+	   release start time -->
+      <release_start_time>10.000000000</release_start_time>
+      <!-- upon release, volume ramps down to 0 in release duration time -->
+      <release_duration_time>2.000000000</release_duration_time>
+      <!-- sound loops between loop times; from=0 means no looping -->
+      <loop_from_time>1.000000000</loop_from_time>
+      <loop_to_time>0.000000000</loop_to_time>
+      <!-- automatically stop looping after loop_limit loops -->
+      <loop_limit>0</loop_limit>
+      <!-- start at start_time offset in the wave file -->
+      <start_time>0.000000000</start_time>
+      <!-- attenuate the full-volume sound in the WAV file by
+	   designer_volume_level -->
+      <designer_volume_level>1.00</designer_volume_level>
+      <!-- pan mono sound or balance stereo sound by designer_pan -->
+      <designer_pan>0.00</designer_pan>
+      <!-- if no internal sequencer, MIDI program and note numbers to activate
+	   from an external sequencer  -->
+      <MIDI_program_number>0</MIDI_program_number>
+      <MIDI_note_number>69</MIDI_note_number>
+      <!-- if no internal sequencer, OSC name to activate from an external
+	   sequencer  -->
+      <OSC_name></OSC_name>
+      <!-- if no internal sequencer, function key to activate by sound
+	   effects operator -->
+      <function_key></function_key>
+    </sound>
+    
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>1</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>01.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>2</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>02.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>3</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>03.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>4</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>04.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>5</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>05.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>6</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>06.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>7</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>07.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>8</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>08.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>9</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>09.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>10</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>10.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>11</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>11.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>12</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>12.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>13</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>13.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>14</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>14.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>15</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>15.wav</wav_file_name>
+    </sound>
+
+    <sound>
+      <!-- The internal sequencer references sounds by name. -->
+      <name>16</name>
+      <!-- the WAV file contains the waveform for the sound -->
+      <wav_file_name>16.wav</wav_file_name>
+    </sound>
+
+    <routing></routing>
+  </sounds>
+</show_control>

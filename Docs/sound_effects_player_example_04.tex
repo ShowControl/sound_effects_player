@@ -91,11 +91,11 @@
   pdfcontactregion={New Hampshire},
   pdfcontacturl={https://www.systemeyescomputerstore.com},
   pdfcopyright={Copyright {\copyright} 2020 by John Sauter},
-  pdfdate={2020-06-26},
+  pdfdate={2020-07-01},
   pdflicenseurl={https://creativecommons.org/licenses/by-sa/4.0},
   pdfmetalang={en-US}  
 }
-\date{2020-06-26}
+\date{2020-07-01}
 \maketitle
 \begin{abstract}
   How to produce sound effects for live theatrical performances
@@ -228,7 +228,7 @@ at this URL: \url{https://www.mtishows.com/children-of-eden}
 so you can follow along as I go through the script looking for
 places that sound effects can help to tell the story.  When you are
 creating sound effects for your own show you will have a copy of
-the script as part of the right to produce the play.  Be sure to
+your script as part of the right to produce the play.  Be sure to
 talk to the director, in case he has some sound effects in mind.
 
 \subsection{Before the House Opens}
@@ -239,11 +239,52 @@ I have used a track called ``6-channel ID'' which identifies all of the
 speakers in a 5.1 surround sound system.  If your speaker wiring is correct
 You won't hear the front center speaker.
 
+Here is the description of the sound in {\ttfamily Theater\_sound.xml}:
+\inputminted[firstline=11,lastline=73]{xml}{../examples/04/Theater_sounds.xml}
+\embedfile[desc={Sounds commonly used in this theater},
+  mimetype={text/plain}]{../examples/04/Theater_sounds.xml}
+
+Each channel is sent to the speaker corresponding to the name heard
+on the channel.
+
+To allow the sound effects operator to play the sound before the house
+opens we have the following in {\ttfamily Theater\_sound\_sequence.xml}:
+\inputminted[firstline=6,lastline=23]{xml}%
+            {../examples/04/Theater_sound_sequence.xml}
+\embedfile[desc={Sound sequences commonly used in this theater},
+  mimetype={text/plain}]{../examples/04/Theater_sound_sequence.xml}
+The first sequence item tells the sound effects operator that he can
+run the sound ``6-channel ID'' by pushing the Start button on cluster 0,
+and the second, which runs when he pushes that button, plays it.
+The sound runs until the sound effects operator presses Stop on
+cluster 0.
+
+In order to get this to work we must have a starting point for the
+sequence, and a sequence item which causes the above to be executed.
+This is in {\ttfamily Example\_04\_sound\_sequence.xml}:
+\inputminted[firstline=7,lastline=18]{xml}%
+            {../examples/04/Example_04_sound_sequence.xml}
+\embedfile[desc={Sound sequences for this play},
+  mimetype={text/plain}]{../examples/04/Example_04_sound_sequence.xml}
+In the above, ``start\_of\_sequence'' is where the sequence starts.
+The next sequence item is ``offer\_tests'' which is in
+{\ttfamily Theater\_sound\_sequence.xml} as shown above.
+``Offer\_tests'' then branches to ``wait\_for\_house\_to\_open''
+which waits for the sound effects operator to press the Play button.
+During this wait, if the sound effects operator presses Start on
+cluster 0, the 6-channel-ID sound will play.
+
+When the house opens the Sound Effects Operator presses the Play
+button, which stops the 6-channel-ID sound if it is playing
+and takes it off cluster 0 so he can no longer play it.
+
+\inputminted[firstline=20,lastline=32]{xml}%
+            {../examples/04/Example_04_sound_sequence.xml}
 \subsection{House is Open}
 Play a medley of music from the play, perhaps recorded during rehearsal.
-To avoid copyright issues with this paper, I have used a nice public-domain song
+To avoid copyright issues with this paper, I have used a nice public domain song
 in example 4.  You won't have a copyright problem because as part of the right
-to produce your play you have a right to play the music for your audience.
+to produce your play you have a right to play its music for your audience.
 
 \subsection{Almost Ready for Curtain}
 Your theater will probably want to make a safety announcement.

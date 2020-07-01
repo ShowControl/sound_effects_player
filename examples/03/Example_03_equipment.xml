@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+  <!-- This file contains additional information about the theater
+       infrastructure used by Example_03.  Information is
+       merged with the standard equipment file based on the ID of the program.
+  -->
+  <equipment>
+    <version>1.0</version>
+
+    <program id="sound_effects">
+      <sounds href="Example_03_sounds.xml"></sounds>
+      <sound_sequence href="Example_03_sound_sequence.xml"/>
+      <speaker_count>8</speaker_count>
+    </program>
+
+    <program id="lighting">
+    </program>
+
+    <program id="microphones">
+    </program>
+    
+  </equipment>
+</show_control>

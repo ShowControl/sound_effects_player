@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.124
+Version:        0.125
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -213,11 +213,14 @@ example of a musical.
 %defattr(-,root,root)
 %doc %{_docdir}/%{name}/How_to_use_the_Sound_Effects_Player.pdf
 %doc %{_docdir}/%{name}/project_file.pdf
+%exclude %{_docdir}/%{name}/sound_effects_player_example_04.tex
 %doc %{_docdir}/%{name}/sound_effects_player_example_04.pdf
 %doc %{_docdir}/%{name}/sound_effects_player_overview.pdf
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Wed Jul 01 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.125-1 Reorganize the examples.
 * Mon Jun 29 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.124-1 Fix warnings in 32-bit builds.
 * Sun Jun 28 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>

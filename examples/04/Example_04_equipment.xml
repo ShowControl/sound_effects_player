@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+  <equipment>
+    <version>1.0</version>
+    <program id="sound_effects">
+      <sounds href="Example_04_sounds.xml"></sounds>
+      <sound_sequence href="Example_04_sound_sequence.xml"/>
+      <speaker_count>6</speaker_count>
+    </program>
+  </equipment>
+</show_control>

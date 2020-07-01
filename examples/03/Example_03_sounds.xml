@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<show_control>
+
+  <!-- These are the special sounds used by Example_03.  -->
+  <sounds>
+    <version>1.0</version>
+
+    <!-- The background sound is played from curtain open
+	 to curtain close.  -->
+    <sound>
+      <name>background music</name>
+      <wav_file_name>background_music.wav</wav_file_name>
+      <designer_volume_level>0.33</designer_volume_level>
+      <designer_pan>0.00</designer_pan>
+      <channels>	
+	<!-- Channel 0 to speaker rear_left, 1 to rear_right.  -->
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <sound>
+      <name>Automobile</name>
+      <wav_file_name>Automobile.wav</wav_file_name>
+      <loop_from_time>16.578</loop_from_time>
+      <loop_to_time>1.263</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <release_duration_time>3.0</release_duration_time>
+    </sound>
+
+    <sound>
+      <name>Automobile_end</name>
+      <wav_file_name>Automobile.wav</wav_file_name>
+      <start_time>16.578</start_time>
+      <attack_duration_time>0.1</attack_duration_time>
+    </sound>
+
+  </sounds>
+</show_control>
