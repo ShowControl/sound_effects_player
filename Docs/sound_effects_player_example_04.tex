@@ -91,11 +91,11 @@
   pdfcontactregion={New Hampshire},
   pdfcontacturl={https://www.systemeyescomputerstore.com},
   pdfcopyright={Copyright {\copyright} 2020 by John Sauter},
-  pdfdate={2020-07-01},
+  pdfdate={2020-07-03},
   pdflicenseurl={https://creativecommons.org/licenses/by-sa/4.0},
   pdfmetalang={en-US}  
 }
-\date{2020-07-01}
+\date{2020-07-03}
 \maketitle
 \begin{abstract}
   How to produce sound effects for live theatrical performances
@@ -286,6 +286,17 @@ To avoid copyright issues with this paper, I have used a nice public domain song
 in example 4.  You won't have a copyright problem because as part of the right
 to produce your play you have a right to play its music for your audience.
 
+Here is the definition of the sound from {\ttfamily Example\_04\_sounds.xml}:
+\inputminted[firstline=7,lastline=53]{xml}{../examples/04/Example_04_sounds.xml}
+\embedfile[desc={Sounds for this production},
+  mimetype={text/plain}]{../examples/04/Example_04_sounds.xml}
+Notice that it repeats until the sound effects operator stops it.
+Here are the sequence items which control it,
+from {\ttfamily Example\_04\_sound\_sequence.xml}.
+\inputminted[firstline=34,lastline=58]{xml}%
+            {../examples/04/Example_04_sound_sequence.xml}
+This sequence starts the sound, waits for the operator to push the Play
+button, then stops the sound.
 \subsection{Almost Ready for Curtain}
 Your theater will probably want to make a safety announcement.
 This might be done live by the management, but in case it isn't

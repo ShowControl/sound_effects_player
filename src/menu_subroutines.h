@@ -1,7 +1,7 @@
 /*
  * menu_subroutines.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,5 +20,6 @@
 #include <gtk/gtk.h>
 /* Subroutines defined in menu_subroutines.c */
 
-void menu_init (GApplication * app, gchar * file_name);
+void menu_init (GApplication *app, gchar *file_name);
 
+/* End of file menu_subroutines.h  */

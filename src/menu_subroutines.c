@@ -1,7 +1,7 @@
 /*
  * menu_subroutines.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@
 
 /* The user has invoked the preferences dialogue from a menu. */
 static void
-preferences_activated (GSimpleAction * action, GVariant * parameter,
+preferences_activated (GSimpleAction *action, GVariant *parameter,
                        gpointer app)
 {
   GtkBuilder *builder;
@@ -95,7 +95,7 @@ preferences_activated (GSimpleAction * action, GVariant * parameter,
 
 /* Subroutine called when the preferences menu changes the network port. */
 gboolean
-menu_network_port_changed (GtkEntry * port_entry, GtkWidget * dialog_widget)
+menu_network_port_changed (GtkEntry *port_entry, GtkWidget *dialog_widget)
 {
   GApplication *app;
   const gchar *port_text;
@@ -120,8 +120,8 @@ menu_network_port_changed (GtkEntry * port_entry, GtkWidget * dialog_widget)
 
 /* Subroutine called when the preferences dialog is closed. */
 gboolean
-menu_preferences_close_clicked (GtkButton * close_button,
-                                GtkWidget * dialog_widget)
+menu_preferences_close_clicked (GtkButton *close_button,
+                                GtkWidget *dialog_widget)
 {
   gtk_dialog_response (GTK_DIALOG (dialog_widget), 0);
   return FALSE;
@@ -129,7 +129,7 @@ menu_preferences_close_clicked (GtkButton * close_button,
 
 /* Subroutine called when the application's "quit" menu item is selected. */
 static void
-quit_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
+quit_activated (GSimpleAction *action, GVariant *parameter, gpointer app)
 {
   /* Shut down the gstreamer pipeline, then terminate the application.  */
   gstreamer_shutdown (app);
@@ -138,8 +138,8 @@ quit_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 
 /* Subroutine called when the top-level window is closed.  */
 gboolean
-menu_delete_top_window (GtkButton * close_button, GdkEvent * event,
-                        GtkWidget * top_box)
+menu_delete_top_window (GtkButton *close_button, GdkEvent *event,
+                        GtkWidget *top_box)
 {
   GApplication *app;
 
@@ -154,7 +154,7 @@ menu_delete_top_window (GtkButton * close_button, GdkEvent * event,
 
 /* Reset the application to its defaults. */
 static void
-new_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
+new_activated (GSimpleAction *action, GVariant *parameter, gpointer app)
 {
   network_unbind_port (app);
   sep_set_configuration_file (NULL, app);
@@ -167,7 +167,7 @@ new_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 /* Open a configuration file and read its contents.  
  * The file is assumed to be in XML format. */
 static void
-open_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
+open_activated (GSimpleAction *action, GVariant *parameter, gpointer app)
 {
   GtkWidget *dialog;
   GtkFileChooser *chooser;
@@ -214,7 +214,7 @@ save_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 
 /* Write the configuration information to an XML file. */
 static void
-saveas_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
+saveas_activated (GSimpleAction *action, GVariant *parameter, gpointer app)
 {
 
   GtkWidget *dialog;
@@ -268,22 +268,22 @@ saveas_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
 
 
 static void
-copy_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
+copy_activated (GSimpleAction *action, GVariant *parameter, gpointer app)
 {
 }
 
 static void
-cut_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
+cut_activated (GSimpleAction *action, GVariant *parameter, gpointer app)
 {
 }
 
 static void
-paste_activated (GSimpleAction * action, GVariant * parameter, gpointer app)
+paste_activated (GSimpleAction *action, GVariant *parameter, gpointer app)
 {
 }
 
 static void
-helpabout_activated (GSimpleAction * action, GVariant * parameter,
+helpabout_activated (GSimpleAction *action, GVariant *parameter,
                      gpointer app)
 {
   GtkWidget *dialog;
@@ -391,7 +391,7 @@ static GActionEntry app_entries[] = {
 
 /* Initialize the menu. */
 void
-menu_init (GApplication * app, gchar * file_name)
+menu_init (GApplication *app, gchar *file_name)
 {
   GtkBuilder *builder;
   GError *error = NULL;
@@ -428,3 +428,5 @@ menu_init (GApplication * app, gchar * file_name)
 
   return;
 }
+
+/* End of file menu_subroutines.c  */

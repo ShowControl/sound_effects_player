@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.125
+Version:        0.126
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -219,6 +219,8 @@ example of a musical.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Fri Jul 03 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.126-1 Concatenate multiple text_to_display.
 * Wed Jul 01 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.125-1 Reorganize the examples.
 * Mon Jun 29 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>

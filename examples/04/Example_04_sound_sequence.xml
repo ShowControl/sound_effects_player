@@ -13,7 +13,8 @@
     <sequence_item>
       <name>wait_for_house_to_open</name>
       <type>operator_wait</type>
-      <text_to_display>Press Play when the house opens.</text_to_display>
+      <text_to_display>Press Play</text_to_display>
+      <text_to_display> when the house opens.</text_to_display>
       <next_play>stop_tests_1</next_play>
     </sequence_item>
 
@@ -46,7 +47,8 @@
     <sequence_item>
       <name>wait_for_announcement</name>
       <type>operator_wait</type>
-      <text_to_display>Press Play when it is time for a safety announcement.</text_to_display>
+      <text_to_display>Press Play when it is time for</text_to_display>
+      <text_to_display> a safety announcement.</text_to_display>
       <next_play>house_quiet_1</next_play>
     </sequence_item>
 
@@ -54,16 +56,9 @@
       <name>house_quiet_1</name>
       <type>stop_sound</type>
       <tag>pre-show music</tag>
-      <next>house_quiet_2</next>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>house_quiet_2</name>
-      <type>cease_offering_sound</type>
-      <tag>pre-show music</tag>
       <next>offer_announcements</next>
     </sequence_item>
-
+    
     <!-- Almost Ready for Curtain -->
     
     <sequence_item>

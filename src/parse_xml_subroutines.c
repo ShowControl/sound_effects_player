@@ -681,6 +681,7 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
 {
   const xmlChar *name;
   xmlChar *name_data;
+  gchar *text_data;
   gdouble double_data;
   gint64 long_data;
   xmlNodePtr sequence_item_loc;
@@ -1142,15 +1143,30 @@ parse_sequence_info (xmlDocPtr sequence_file, gchar * sequence_file_name,
               if (xmlStrEqual (name, (const xmlChar *) "text_to_display"))
                 {
                   /* The text to display to the sound effects operator when
-                   * this sound is playing.  */
+                   * this sound is playing.  If this element appears more
+		   * than once, concatenate the strings.  */
                   name_data =
                     xmlNodeListGetString (sequence_file,
                                           sequence_item_loc->xmlChildrenNode,
                                           1);
-                  sequence_item_data->text_to_display =
-                    g_strdup ((gchar *) name_data);
-                  xmlFree (name_data);
-                  name_data = NULL;
+		  if (sequence_item_data->text_to_display != NULL)
+		    {
+		      text_data =
+			g_strconcat (sequence_item_data->text_to_display,
+				     (gchar *) name_data, NULL);
+		      g_free (sequence_item_data->text_to_display);
+		      sequence_item_data->text_to_display = NULL;
+		      xmlFree (name_data);
+		      name_data = NULL;
+		    }
+		  else
+		    {
+		      text_data = g_strdup ((gchar *) name_data);
+		      xmlFree (name_data);
+		      name_data = NULL;
+		    }
+                  sequence_item_data->text_to_display = text_data;
+                  text_data = NULL;
                 }
 
               if (xmlStrEqual (name, (const xmlChar *) "next"))
