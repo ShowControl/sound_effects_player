@@ -2,7 +2,7 @@
  * gstlooper.h, a file in sound_effects_player, a component of show_control, 
  * which is a GStreamer application.
  *
- * Copyright © 2017 John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -46,7 +46,6 @@ struct _GstLooper
 {
   GstElement element;
 
-
   /* Parameters */
   gboolean silent;
   guint64 loop_from;
@@ -54,6 +53,7 @@ struct _GstLooper
   guint64 max_duration;
   guint64 start_time;
   gchar *file_location;
+  guint64 release_duration_time;
   guint loop_limit;
   gboolean autostart;
 
@@ -85,6 +85,7 @@ struct _GstLooper
   guint64 data_rate;            /* the data rate, in frames per second.  */
   guint64 gap_time;             /* The time after which we can use gaps
                                  * to represent silence.  */
+  guint64 release_start_time;   /* The time the release started.  */
   GstPadMode src_pad_mode;      /* The mode of the source pad: push or pull. */
   GstPadMode sink_pad_mode;     /* The mode of the sink pad: push or pull.  */
   gboolean started;             /* We have received a Start signal.  */

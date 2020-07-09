@@ -1,7 +1,7 @@
 /*
  * network_subroutines.c
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ struct network_info
 /* Receive incoming data. This is called from the main loop whenever
  * there is data or a disconnect on a port. */
 static gboolean
-receive_data_callback (GSocket * socket, GIOCondition condition,
+receive_data_callback (GSocket *socket, GIOCondition condition,
                        gpointer user_data)
 {
   struct network_info *network_data;
@@ -83,7 +83,7 @@ receive_data_callback (GSocket * socket, GIOCondition condition,
 /* Initialize the network subroutines.  The return value is the 
  * persistent data.  */
 void *
-network_init (GApplication * app)
+network_init (GApplication *app)
 {
   gchar *network_buffer;
   struct network_info *network_data;
@@ -106,7 +106,7 @@ network_init (GApplication * app)
 
 /* Subroutine to bind the network port so we can listen on it.  */
 void
-network_bind_port (GApplication * app)
+network_bind_port (GApplication *app)
 {
   GError *error = NULL;
   GSocket *socket_IPv4, *socket_IPv6;
@@ -192,7 +192,7 @@ network_bind_port (GApplication * app)
 
 /* Set the network port number. */
 void
-network_set_port (int port_number, GApplication * app)
+network_set_port (int port_number, GApplication *app)
 {
   struct network_info *network_data;
 
@@ -204,7 +204,7 @@ network_set_port (int port_number, GApplication * app)
 
 /* Unbind from the network port.  */
 void
-network_unbind_port (GApplication * app)
+network_unbind_port (GApplication *app)
 {
   GError *error = NULL;
   struct network_info *network_data;
@@ -251,7 +251,7 @@ network_unbind_port (GApplication * app)
 
 /* Find the network port number. */
 gint
-network_get_port (GApplication * app)
+network_get_port (GApplication *app)
 {
   struct network_info *network_data;
   gint port_number;
@@ -260,3 +260,5 @@ network_get_port (GApplication * app)
   port_number = network_data->port_number;
   return (port_number);
 }
+
+/* End of file network_subroutines.c  */

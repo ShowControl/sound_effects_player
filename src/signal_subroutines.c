@@ -1,7 +1,7 @@
 /*
  * signal_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ static gboolean signal_hup (gpointer user_data);
 
 /* Initialize the signal handler.  */
 void *
-signal_init (GApplication * app)
+signal_init (GApplication *app)
 {
   struct signal_info *signal_data;
 
@@ -94,7 +94,7 @@ signal_hup (gpointer user_data)
 
 /* Shut down the signal handler.  */
 void
-signal_finalize (GApplication * app)
+signal_finalize (GApplication *app)
 {
   struct signal_info *signal_data;
   struct sigaction new_action;
@@ -112,3 +112,5 @@ signal_finalize (GApplication * app)
   signal_data = NULL;
   return;
 }
+
+/* End of file signal_subroutines.c  */

@@ -1,7 +1,7 @@
 /*
  * parse_net_subroutines.h
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,9 @@
 /* Subroutines defined in parse_net_subroutines.c */
 
 /* Initialize the parser. */
-void *parse_net_init (GApplication * app);
+void *parse_net_init (GApplication *app);
 
 /* Process a received datagram.  */
-void parse_net_text (guint nread, gchar * text, GApplication * app);
+void parse_net_text (guint nread, gchar *text, GApplication *app);
+
+/* End of file parse_net_subroutines.h  */

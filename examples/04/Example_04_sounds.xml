@@ -111,6 +111,15 @@
     </sound>
 
     <!--
+	Page 015: More animals start to arrive.
+	Page 019: The animals dance about Adam and Eve.
+    -->
+    <sound>
+      <name>Animal Medley</name>
+      <wav_file_name>Steve_Devino/08-Animal_medley.wav</wav_file_name>
+    </sound>
+    
+    <!--
 	These four sounds together constitute running water.
 	They are independent stereo recordings played in
 	adjacent pairs of speakers.
@@ -241,14 +250,6 @@
     </sound>
 
     <!--
-	Page 019: The animals dance about Adam and Eve.
-    -->
-    <sound>
-      <name>Animal Medley</name>
-      <wav_file_name>Steve_Devino/08-Animal_medley.wav</wav_file_name>
-    </sound>
-    
-    <!--
 	Pages 033 and 040: Adam and Eve bite the apple.
     -->
     <sound>
@@ -257,8 +258,8 @@
     </sound>
 
     <!--
-	Page 042: The lightning strike and consequent thunder when Father
-	destroys the tree.
+	Page 042: The lightning strike and consequent thunder when
+	Father destroys the tree.
     -->
     <sound>
       <name>lightning_crash</name>
@@ -420,6 +421,65 @@
       </channels>
     </sound>
 
+    <!--
+	Page 065: distant rumble of thunder.
+    -->
+    <sound>
+      <name>thunder_065</name>
+      <wav_file_name>Weather/thunder_072.wav</wav_file_name>
+      <designer_volume_level>0.25</designer_volume_level>
+      <default_volume_level>0.5</default_volume_level>
+      <release_start_time>25.0</release_start_time>
+      <release_duration_time>5.0</release_duration_time>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>0.1</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>0.1</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>2</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>3</number>
+	  <speakers>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>4</number>
+	  <speakers>
+	    <speaker>
+	      <name>LFE1</name>
+	      <volume_level>0.2</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+    
     <!-- 
 	 Page 069: Adam slaps Cain.
     -->
@@ -520,47 +580,7 @@
 	</channel>
       </channels>
     </sound>
-    
-    <sound>
-      <name>rain_02</name>
-      <wav_file_name>Weather/rain.wav</wav_file_name>
-      <designer_volume_level>0.3</designer_volume_level>
-      <default_volume_level>0.5</default_volume_level>
-      <attack_duration_time>5</attack_duration_time>
-      <release_duration_time>15</release_duration_time>
-      <loop_from_time>60</loop_from_time>
-      <loop_to_time>0</loop_to_time>
-      <loop_limit>0</loop_limit>
-      <channels>
-	<channel>
-	  <number>0</number>
-	  <speakers>
-	    <speaker>
-	      <name>front_left</name>
-	      <volume_level>1.0</volume_level>
-	    </speaker>
-	    <speaker>
-	      <name>rear_right</name>
-	      <volume_level>0.75</volume_level>
-	    </speaker>
-	  </speakers>
-	</channel>
-	<channel>
-	  <number>1</number>
-	  <speakers>
-	    <speaker>
-	      <name>front_right</name>
-	      <volume_level>1.0</volume_level>
-	    </speaker>
-	    <speaker>
-	      <name>rear_left</name>
-	      <volume_level>0.75</volume_level>
-	    </speaker>
-	  </speakers>
-	</channel>
-      </channels>
-    </sound>
-    
+        
     <sound>
       <name>thunder_072</name>
       <wav_file_name>Weather/thunder_072.wav</wav_file_name>
@@ -1018,6 +1038,49 @@
 	    <speaker>
 	      <name>rear_right</name>
 	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
+    </sound>
+
+    <!-- 
+	 Page 108: rain.
+    -->
+    <sound>
+      <name>rain_02</name>
+      <wav_file_name>Weather/rain.wav</wav_file_name>
+      <designer_volume_level>0.3</designer_volume_level>
+      <default_volume_level>0.5</default_volume_level>
+      <attack_duration_time>5</attack_duration_time>
+      <release_duration_time>15</release_duration_time>
+      <loop_from_time>60</loop_from_time>
+      <loop_to_time>0</loop_to_time>
+      <loop_limit>0</loop_limit>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_left</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_right</name>
+	      <volume_level>0.75</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+	<channel>
+	  <number>1</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	    <speaker>
+	      <name>rear_left</name>
+	      <volume_level>0.75</volume_level>
 	    </speaker>
 	  </speakers>
 	</channel>

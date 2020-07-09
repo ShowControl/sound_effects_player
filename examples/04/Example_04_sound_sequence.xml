@@ -87,7 +87,8 @@
     <sequence_item>
       <name>Act 01 Scene 01 Page 001</name>
       <type>operator_wait</type>
-      <text_to_display>Press Play when the Garden of Eden is created.</text_to_display>
+      <text_to_display>Press Play when the </text_to_display>
+      <text_to_display>Garden of Eden is created.</text_to_display>
       <next_play>Act 01 Scene 02 Page 007_1</next_play>
     </sequence_item>
 
@@ -125,29 +126,11 @@
     <sequence_item>
       <name>Act 01 Scene 02 Page 007_3</name>
       <type>offer_sound</type>
-      <next_to_start>Apple_1</next_to_start>
-      <tag>apple</tag>
-      <text_to_display>Apple</text_to_display>
-      <cluster_number>1</cluster_number>
-      <next>Act 01 Scene 02 Page 007_4</next>
-    </sequence_item>
-
-    <sequence_item>
-      <name>Apple_1</name>
-      <type>start_sound</type>
-      <sound_name>Apple</sound_name>
-      <cluster_number>1</cluster_number>
-      <text_to_display>Apple</text_to_display>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>Act 01 Scene 02 Page 007_4</name>
-      <type>offer_sound</type>
       <next_to_start>Water_1</next_to_start>
       <tag>water</tag>
       <text_to_display>Water</text_to_display>
       <cluster_number>9</cluster_number>
-      <next>Act 01 Scene 02 Page 007_5</next>
+      <next>Act 01 Scene 02 Page 007_4</next>
     </sequence_item>
 
     <sequence_item>
@@ -204,6 +187,24 @@
     </sequence_item>
     
     <sequence_item>
+      <name>Act 01 Scene 02 Page 007_4</name>
+      <type>offer_sound</type>
+      <next_to_start>Apple_1</next_to_start>
+      <tag>apple</tag>
+      <text_to_display>Apple</text_to_display>
+      <cluster_number>1</cluster_number>
+      <next>Act 01 Scene 02 Page 007_5</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Apple_1</name>
+      <type>start_sound</type>
+      <sound_name>Apple</sound_name>
+      <cluster_number>1</cluster_number>
+      <text_to_display>Apple</text_to_display>
+    </sequence_item>
+    
+    <sequence_item>
       <name>Act 01 Scene 02 Page 007_5</name>
       <type>offer_sound</type>
       <next_to_start>lightning_crash</next_to_start>
@@ -226,7 +227,8 @@
     <sequence_item>
       <name>wait_for_end_of_act_1_scene_2</name>
       <type>operator_wait</type>
-      <text_to_display>Press Play when Adam and Eve leave the garden.</text_to_display>
+      <text_to_display>Press Play when Adam and Eve</text_to_display>
+      <text_to_display> leave the garden.</text_to_display>
       <next_play>end_act_01_scene_02_1</next_play>
     </sequence_item>
 
@@ -337,11 +339,31 @@
     <sequence_item>
       <name>Act 01 Scene 03 Page 043_5</name>
       <type>offer_sound</type>
+      <next_to_start>distant_thunder</next_to_start>
+      <text_to_display>Distant Thunder</text_to_display>
+      <tag>weather</tag>
+      <cluster_number>10</cluster_number>
+      <next>Act 01 Scene 03 Page 043_6</next>
+    </sequence_item>
+
+    <sequence_item>
+      <name>distant_thunder</name>
+      <type>start_sound</type>
+      <sound_name>thunder_065</sound_name>
+      <text_to_display>Distant Thunder</text_to_display>
+      <cluster_number>10</cluster_number>
+      <importance>2</importance>
+      <tag>weather</tag>
+    </sequence_item>
+
+    <sequence_item>
+      <name>Act 01 Scene 03 Page 043_6</name>
+      <type>offer_sound</type>
       <next_to_start>slap_Cain</next_to_start>
       <cluster_number>3</cluster_number>
       <text_to_display>slap Cain</text_to_display>
       <tag>slap</tag>
-      <next>Act 01 Scene 03 Page 043_6</next>
+      <next>Act 01 Scene 03 Page 043_7</next>
     </sequence_item>
     
     <sequence_item>
@@ -354,13 +376,13 @@
     </sequence_item>
 
     <sequence_item>
-      <name>Act 01 Scene 03 Page 043_6</name>
+      <name>Act 01 Scene 03 Page 043_7</name>
       <type>offer_sound</type>
       <next_to_start>beat_Abel</next_to_start>
       <cluster_number>4</cluster_number>
       <text_to_display>Cain beats Abel</text_to_display>
       <tag>beat</tag>
-      <next>Act 01 Scene 03 Page 043_7</next>
+      <next>Act 01 Scene 03 Page 043_8</next>
     </sequence_item>
     
     <sequence_item>
@@ -373,13 +395,13 @@
     </sequence_item>
 
     <sequence_item>
-      <name>Act 01 Scene 03 Page 043_7</name>
+      <name>Act 01 Scene 03 Page 043_8</name>
       <type>offer_sound</type>
       <next_to_start>wind_01</next_to_start>
       <cluster_number>5</cluster_number>
       <text_to_display>Wind</text_to_display>
       <tag>weather</tag>
-      <next>Act 01 Scene 03 Page 043_8</next>
+      <next>Act 01 Scene 03 Page 043_9</next>
     </sequence_item>
     
     <sequence_item>
@@ -393,13 +415,13 @@
     </sequence_item>
 
     <sequence_item>
-      <name>Act 01 Scene 03 Page 043_8</name>
+      <name>Act 01 Scene 03 Page 043_9</name>
       <type>offer_sound</type>
       <next_to_start>rain_01</next_to_start>
       <cluster_number>6</cluster_number>
       <text_to_display>Rain</text_to_display>
       <tag>weather</tag>
-      <next>Act 01 Scene 03 Page 043_9</next>
+      <next>Act 01 Scene 03 Page 043_10</next>
     </sequence_item>
     
     <sequence_item>
@@ -413,13 +435,13 @@
     </sequence_item>
 
     <sequence_item>
-      <name>Act 01 Scene 03 Page 043_9</name>
+      <name>Act 01 Scene 03 Page 043_10</name>
       <type>offer_sound</type>
       <next_to_start>thunder_072</next_to_start>
       <cluster_number>7</cluster_number>
       <text_to_display>Thunder</text_to_display>
       <tag>weather</tag>
-      <next>Act 01 Scene 03 Page 043_10</next>
+      <next>Act 01 Scene 03 Page 043_11</next>
     </sequence_item>
     
     <sequence_item>
@@ -433,13 +455,13 @@
     </sequence_item>
 
     <sequence_item>
-      <name>Act 01 Scene 03 Page 043_10</name>
+      <name>Act 01 Scene 03 Page 043_11</name>
       <type>offer_sound</type>
       <next_to_start>mark_of_cain</next_to_start>
       <cluster_number>8</cluster_number>
       <text_to_display>"must ever bear this mark"</text_to_display>
       <tag>weather</tag>
-      <next>Act 01 Scene 03 Page 043_11</next>
+      <next>Act 01 Scene 03 Page 043_12</next>
     </sequence_item>
     
     <sequence_item>
@@ -452,10 +474,8 @@
       <tag>weather</tag>
     </sequence_item>
 
-
-    
     <sequence_item>
-      <name>Act 01 Scene 03 Page 043_11</name>
+      <name>Act 01 Scene 03 Page 043_12</name>
       <type>operator_wait</type>
       <text_to_display>Press Play when Act 1 is complete</text_to_display>
       <next_play>end_act_1_1</next_play>

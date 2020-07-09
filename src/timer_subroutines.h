@@ -1,7 +1,7 @@
 /*
  * timer_subroutines.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,14 +23,14 @@
 /* Subroutines defined in timer_subroutines.c */
 
 /* Initialize the timer */
-void *timer_init (GApplication * app);
+void *timer_init (GApplication *app);
 
 /* Terminate the timer */
-void timer_finalize (GApplication * app);
+void timer_finalize (GApplication *app);
 
 /* Add an entry to the timer list.  */
 void timer_create_entry (void (*subroutine) (void *, GApplication *),
                          gdouble interval, gpointer user_data,
-                         GApplication * app);
+                         GApplication *app);
 
 /* End of file timer_subroutines.h */

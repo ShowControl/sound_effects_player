@@ -1,7 +1,7 @@
 /*
  * timer_subroutines.c
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ static gboolean timer_tick (gpointer user_data);
 
 /* Initialize the timer.  */
 void *
-timer_init (GApplication * app)
+timer_init (GApplication *app)
 {
   struct timer_info *timer_data;
 
@@ -75,7 +75,7 @@ timer_init (GApplication * app)
 
 /* Shut down the timer.  */
 void
-timer_finalize (GApplication * app)
+timer_finalize (GApplication *app)
 {
   GList *timer_entry_list;
   struct timer_entry_info *timer_entry_data;
@@ -106,7 +106,7 @@ timer_finalize (GApplication * app)
 /* Arrange to call back after a specified interval, or slightly later.  */
 void
 timer_create_entry (void (*subroutine) (void *, GApplication *),
-                    gdouble interval, gpointer user_data, GApplication * app)
+                    gdouble interval, gpointer user_data, GApplication *app)
 {
   struct timer_info *timer_data;
   struct timer_entry_info *timer_entry_data;
@@ -187,3 +187,5 @@ timer_tick (gpointer user_data)
 
   return G_SOURCE_CONTINUE;
 }
+
+/* End of file timer_subroutines.c  */

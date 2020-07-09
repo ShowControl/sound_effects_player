@@ -1,7 +1,7 @@
 /*
  * signal_subroutines.h
  *
- * Copyright © 2016 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 /* Subroutines defined in signal_subroutines.c */
 
 /* Initialize the signal handler */
-void *signal_init (GApplication * app);
+void *signal_init (GApplication *app);
 
 /* Terminate the signal handler */
-void signal_finalize (GApplication * app);
+void signal_finalize (GApplication *app);
 
 /* End of file signal_subroutines.h */

@@ -637,6 +637,16 @@ gstreamer_create_bin (struct sound_info *sound_data, gint sound_number,
   g_object_set (looper_element, "max-duration", sound_data->max_duration_time,
                 NULL);
   g_object_set (looper_element, "start-time", sound_data->start_time, NULL);
+  if (sound_data->release_duration_infinite)
+    {
+      g_object_set (looper_element, "release-duration-time",
+		    G_MAXUINT64, NULL);
+    }
+  else
+    {
+      g_object_set (looper_element, "release-duration-time",
+		    sound_data->release_duration_time, NULL);
+    }
   
   g_object_set (envelope_element, "attack-duration-time",
                 sound_data->attack_duration_time, NULL);

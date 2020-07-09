@@ -1,7 +1,7 @@
 /*
  * trace_subroutines.h
  *
- * Copyright © 2017 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,12 +23,12 @@
 
 /* Subroutines defined in trace_subroutines.c */
 
-void *trace_init (GApplication * app);
+void *trace_init (GApplication *app);
 
-void trace_finalize (GApplication * app);
+void trace_finalize (GApplication *app);
 
-gint trace_sequencer_level (GApplication * app);
+gint trace_sequencer_level (GApplication *app);
 
-void trace_sequencer_write (gchar * line, GApplication * app);
+void trace_sequencer_write (gchar *line, GApplication *app);
 
 /* End of file trace_subroutines.h */

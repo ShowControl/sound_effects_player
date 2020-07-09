@@ -74,6 +74,10 @@
  * must be a WAV file.  Default is that file-location is not specified, so
  * no file is read.
  *
+ * #GstLooper:release-duration-time.  The number of nanoseconds that the
+ * sound will play after it is released.  G_MAXUINT64 means no limit.
+ * This value is only used to report the remaining time.
+ *
  * #GstLooper:elapsed-time.  The number of nanoseconds since the sound was
  * last started.  This is a read-only parameter.
  *
@@ -147,6 +151,7 @@ enum
   PROP_START_TIME,
   PROP_AUTOSTART,
   PROP_FILE_LOCATION,
+  PROP_RELEASE_DURATION_TIME,
   PROP_ELAPSED_TIME,
   PROP_REMAINING_TIME
 };
@@ -160,73 +165,73 @@ G_DEFINE_TYPE_WITH_CODE (GstLooper, gst_looper, GST_TYPE_ELEMENT, DEBUG_INIT);
 /* Forward declarations  */
 
 /* deallocate */
-static void gst_looper_finalize (GObject * object);
+static void gst_looper_finalize (GObject *object);
 
 /* set the value of a property */
-static void gst_looper_set_property (GObject * object, guint prop_id,
-                                     const GValue * value,
-                                     GParamSpec * pspec);
+static void gst_looper_set_property (GObject *object, guint prop_id,
+                                     const GValue *value,
+                                     GParamSpec *pspec);
 /* Compute the remaining running time of the sound.  */
-static guint64 compute_remaining_time (GstLooper * object);
+static guint64 compute_remaining_time (GstLooper *object);
 /* fetch the value of a property */
-static void gst_looper_get_property (GObject * object, guint prop_id,
-                                     GValue * value, GParamSpec * pspec);
+static void gst_looper_get_property (GObject *object, guint prop_id,
+                                     GValue *value, GParamSpec *pspec);
 /* process incoming data from the sink pad */
-static void gst_looper_pull_data_from_upstream (GstPad * pad);
-static GstFlowReturn gst_looper_chain (GstPad * pad, GstObject * parent,
-                                       GstBuffer * buffer);
+static void gst_looper_pull_data_from_upstream (GstPad *pad);
+static GstFlowReturn gst_looper_chain (GstPad *pad, GstObject *parent,
+                                       GstBuffer *buffer);
 /* send outgoing data to the source pad */
-static void gst_looper_push_data_downstream (GstPad * pad);
+static void gst_looper_push_data_downstream (GstPad *pad);
 /* process events and querys on the sink and source pads */
-static gboolean gst_looper_handle_sink_event (GstPad * pad,
-                                              GstObject * parent,
-                                              GstEvent * event);
-static gboolean gst_looper_handle_sink_query (GstPad * pad,
-                                              GstObject * parent,
-                                              GstQuery * query);
-static gboolean gst_looper_handle_src_event (GstPad * pad, GstObject * parent,
-                                             GstEvent * event);
-static gboolean gst_looper_handle_src_query (GstPad * pad, GstObject * parent,
-                                             GstQuery * query);
+static gboolean gst_looper_handle_sink_event (GstPad *pad,
+                                              GstObject *parent,
+                                              GstEvent *event);
+static gboolean gst_looper_handle_sink_query (GstPad *pad,
+                                              GstObject *parent,
+                                              GstQuery *query);
+static gboolean gst_looper_handle_src_event (GstPad *pad, GstObject *parent,
+                                             GstEvent *event);
+static gboolean gst_looper_handle_src_query (GstPad *pad, GstObject *parent,
+                                             GstQuery *query);
 /* process querys directed to the element itself */
-static gboolean gst_looper_handle_query (GstElement * element,
-                                         GstQuery * query);
+static gboolean gst_looper_handle_query (GstElement *element,
+                                         GstQuery *query);
 /* send data downstream in pull mode */
-static GstFlowReturn gst_looper_get_range (GstPad * pad, GstObject * parent,
+static GstFlowReturn gst_looper_get_range (GstPad *pad, GstObject *parent,
                                            guint64 offset, guint length,
-                                           GstBuffer ** buffer);
+                                           GstBuffer **buffer);
 /* activate and deactivate the source and sink pads */
-static gboolean gst_looper_activate_sink_pad (GstPad * pad,
-                                              GstObject * parent);
-static gboolean gst_looper_src_activate_mode (GstPad * pad,
-                                              GstObject * parent,
+static gboolean gst_looper_activate_sink_pad (GstPad *pad,
+                                              GstObject *parent);
+static gboolean gst_looper_src_activate_mode (GstPad *pad,
+                                              GstObject *parent,
                                               GstPadMode mode,
                                               gboolean active);
-static gboolean gst_looper_sink_activate_mode (GstPad * pad,
-                                               GstObject * parent,
+static gboolean gst_looper_sink_activate_mode (GstPad *pad,
+                                               GstObject *parent,
                                                GstPadMode mode,
                                                gboolean active);
 /* process a state change */
-static GstStateChangeReturn gst_looper_change_state (GstElement * element,
+static GstStateChangeReturn gst_looper_change_state (GstElement *element,
                                                      GstStateChange
                                                      transition);
 
 /* local subroutines */
 
 /* convert a time in nanoseconds into a position in the buffer */
-static guint64 round_up_to_position (GstLooper * self,
+static guint64 round_up_to_position (GstLooper *self,
                                      guint64 specified_time);
-static guint64 round_down_to_position (GstLooper * self,
+static guint64 round_down_to_position (GstLooper *self,
                                        guint64 specified_time);
 
 /* Read the data chunks from a WAV file into the local buffer.  */
-static gboolean read_wav_file_data (GstLooper * self, guint64 max_position);
+static gboolean read_wav_file_data (GstLooper *self, guint64 max_position);
 
 /* GObject vmethod implementations */
 
 /* initialize the looper's class */
 static void
-gst_looper_class_init (GstLooperClass * klass)
+gst_looper_class_init (GstLooperClass *klass)
 {
   GObjectClass *gobject_class;
   GstElementClass *gstelement_class;
@@ -291,6 +296,13 @@ gst_looper_class_init (GstLooperClass * klass)
                                    param_spec);
 
   param_spec =
+    g_param_spec_uint64 ("release-duration-time", "release_duration_time",
+                         "Time in nanoseconds for the sound to release.", 0,
+                         G_MAXUINT64, 0, G_PARAM_READWRITE);
+  g_object_class_install_property (gobject_class, PROP_RELEASE_DURATION_TIME,
+                                   param_spec);
+
+  param_spec =
     g_param_spec_uint64 ("elapsed-time", "elapsed_time",
                          "Time in nanoseconds since the sound was started", 0,
                          G_MAXUINT64, 0, G_PARAM_READABLE);
@@ -329,7 +341,7 @@ gst_looper_class_init (GstLooperClass * klass)
  * initialize instance structure
  */
 static void
-gst_looper_init (GstLooper * self)
+gst_looper_init (GstLooper *self)
 {
 
   self->silent = FALSE;
@@ -346,6 +358,7 @@ gst_looper_init (GstLooper * self)
   self->paused = FALSE;
   self->continued = FALSE;
   self->released = FALSE;
+  self->release_start_time = 0;
   self->data_buffered = FALSE;
   self->local_buffer = gst_buffer_new ();
   self->local_buffer_fill_level = 0;
@@ -413,7 +426,7 @@ gst_looper_init (GstLooper * self)
 
 /* Deallocate everything */
 static void
-gst_looper_finalize (GObject * object)
+gst_looper_finalize (GObject *object)
 {
   GstLooper *self = GST_LOOPER (object);
 
@@ -441,7 +454,7 @@ gst_looper_finalize (GObject * object)
 /* Process a state change.  The state either climbs up from NULL to READY
  * to PAUSED to RUNNING, or down from RUNNING to PAUSED to READY to NULL.   */
 static GstStateChangeReturn
-gst_looper_change_state (GstElement * element, GstStateChange transition)
+gst_looper_change_state (GstElement *element, GstStateChange transition)
 {
   GstLooper *self;
   GstStateChangeReturn result = GST_STATE_CHANGE_SUCCESS;
@@ -459,6 +472,7 @@ gst_looper_change_state (GstElement * element, GstStateChange transition)
       self->started = FALSE;
       self->completion_sent = FALSE;
       self->released = FALSE;
+      self->release_start_time = 0;
       self->paused = FALSE;
       self->continued = FALSE;
       self->data_buffered = FALSE;
@@ -547,6 +561,7 @@ gst_looper_change_state (GstElement * element, GstStateChange transition)
       self->paused = FALSE;
       self->continued = FALSE;
       self->released = FALSE;
+      self->release_start_time = 0;
       GST_DEBUG_OBJECT (self, "state changed from paused to ready");
       g_rec_mutex_unlock (&self->interlock);
       break;
@@ -565,7 +580,7 @@ gst_looper_change_state (GstElement * element, GstStateChange transition)
 /* Activate function for the sink pad.  See if pull mode is supported, use push 
  * mode if it isn't.  */
 static gboolean
-gst_looper_activate_sink_pad (GstPad * pad, GstObject * parent)
+gst_looper_activate_sink_pad (GstPad *pad, GstObject *parent)
 {
   GstLooper *self = GST_LOOPER (parent);
   GstQuery *query;
@@ -607,7 +622,7 @@ gst_looper_activate_sink_pad (GstPad * pad, GstObject * parent)
 /* Activate or deactivate the source pad in either push or pull mode.  Note
  * that pull mode is not fully implemented.  */
 static gboolean
-gst_looper_src_activate_mode (GstPad * pad, GstObject * parent,
+gst_looper_src_activate_mode (GstPad *pad, GstObject *parent,
                               GstPadMode mode, gboolean active)
 {
   GstLooper *self = GST_LOOPER (parent);
@@ -689,7 +704,7 @@ gst_looper_src_activate_mode (GstPad * pad, GstObject * parent,
 /* Called repeatedly with @pad as the source pad.  This function pushes out
  * data to the downstream peer element.  */
 static void
-gst_looper_push_data_downstream (GstPad * pad)
+gst_looper_push_data_downstream (GstPad *pad)
 {
   GstLooper *self = GST_LOOPER (GST_PAD_PARENT (pad));
   GstBuffer *buffer;
@@ -815,6 +830,7 @@ gst_looper_push_data_downstream (GstPad * pad)
       GST_DEBUG_OBJECT (self, "pushing a completion event");
       self->started = FALSE;
       self->released = FALSE;
+      self->release_start_time = 0;
       structure = gst_structure_new_empty ((gchar *) "complete");
       event = gst_event_new_custom (GST_EVENT_CUSTOM_DOWNSTREAM, structure);
       result = gst_pad_push_event (self->srcpad, event);
@@ -914,7 +930,6 @@ gst_looper_push_data_downstream (GstPad * pad)
           GST_DEBUG_OBJECT (self, "push of silence completed");
           return;
         }
-
     }
 
   /* There is more data to send.  Allocate a new buffer to send downstream, 
@@ -1018,12 +1033,11 @@ gst_looper_push_data_downstream (GstPad * pad)
   GST_DEBUG_OBJECT (self, "completed push of data");
 
   return;
-
 }
 
 /* Activate or deactivate the sink pad.  */
 static gboolean
-gst_looper_sink_activate_mode (GstPad * pad, GstObject * parent,
+gst_looper_sink_activate_mode (GstPad *pad, GstObject *parent,
                                GstPadMode mode, gboolean active)
 {
   gboolean result;
@@ -1106,7 +1120,7 @@ gst_looper_sink_activate_mode (GstPad * pad, GstObject * parent,
 /* Pull sound data from upstream.  Called repeatedly with @pad as the sink pad.
  */
 static void
-gst_looper_pull_data_from_upstream (GstPad * pad)
+gst_looper_pull_data_from_upstream (GstPad *pad)
 {
   GstLooper *self = GST_LOOPER (GST_PAD_PARENT (pad));
   GstMemory *memory_allocated;
@@ -1311,7 +1325,7 @@ gst_looper_pull_data_from_upstream (GstPad * pad)
 /* Accept data from upstream if the source pad is in push mode.  We must do this
  * if upstream won't let us pull.  */
 static GstFlowReturn
-gst_looper_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
+gst_looper_chain (GstPad * pad, GstObject *parent, GstBuffer *buffer)
 {
   GstLooper *self = GST_LOOPER (parent);
   GstMemory *memory_allocated;
@@ -1472,8 +1486,8 @@ gst_looper_chain (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 * so this subroutine will never be called.  It is left here in case we decide
 * to implement pull mode on the source pad in the future.  */
 static GstFlowReturn
-gst_looper_get_range (GstPad * pad, GstObject * parent, guint64 offset,
-                      guint length, GstBuffer ** buffer)
+gst_looper_get_range (GstPad *pad, GstObject *parent, guint64 offset,
+                      guint length, GstBuffer **buffer)
 {
   GstLooper *self = GST_LOOPER (parent);
   GstFlowReturn result = GST_FLOW_OK;
@@ -1532,8 +1546,8 @@ gst_looper_get_range (GstPad * pad, GstObject * parent, guint64 offset,
 
 /* Handle an event arriving at the sink pad.  */
 static gboolean
-gst_looper_handle_sink_event (GstPad * pad, GstObject * parent,
-                              GstEvent * event)
+gst_looper_handle_sink_event (GstPad *pad, GstObject *parent,
+                              GstEvent *event)
 {
   gboolean result = TRUE;
   GstLooper *self = GST_LOOPER (parent);
@@ -1830,14 +1844,16 @@ gst_looper_handle_sink_event (GstPad * pad, GstObject * parent,
 
 /* Handle an event from the source pad.  */
 static gboolean
-gst_looper_handle_src_event (GstPad * pad, GstObject * parent,
-                             GstEvent * event)
+gst_looper_handle_src_event (GstPad *pad, GstObject *parent,
+                             GstEvent *event)
 {
   gboolean result = TRUE;
   GstLooper *self = GST_LOOPER (parent);
   const GstStructure *event_structure;
   const gchar *structure_name;
   guint64 start_position;
+  gdouble current_time;
+  guint64 current_time_int;
 
   GST_DEBUG_OBJECT (self, "received an event on the source pad.");
   g_rec_mutex_lock (&self->interlock);
@@ -1892,7 +1908,8 @@ gst_looper_handle_src_event (GstPad * pad, GstObject * parent,
       /* We use five custom upstream events: start, pause, continue, release
        * and shutdown.
        * The release event is processed mostly in the envelope plugin,
-       * but we also use it here to terminate looping.
+       * but we also use it here to terminate looping and compute
+       * the remaining time.
        *
        * The start event causes the buffered data to be transmitted
        * from its beginning.
@@ -1911,12 +1928,13 @@ gst_looper_handle_src_event (GstPad * pad, GstObject * parent,
         {
           /* This is a start event, which might be caused by receipt
            * of a Note On MIDI message, or by an operator pushing a
-           * start button.  Start pushing our local buffer downstream.
+           * start button.  Begin pushing our local buffer downstream.
            */
           GST_INFO_OBJECT (self, "received custom start event");
           self->started = TRUE;
           self->completion_sent = FALSE;
 	  self->released = FALSE;
+	  self->release_start_time = 0;
           start_position = round_down_to_position (self, self->start_time);
           self->local_buffer_drain_level = start_position;
           self->elapsed_time = 0;
@@ -1946,6 +1964,10 @@ gst_looper_handle_src_event (GstPad * pad, GstObject * parent,
            * Terminate any looping.  */
           GST_INFO_OBJECT (self, "received custom release event");
           self->released = TRUE;
+	  current_time =
+	    (gdouble) self->local_buffer_drain_level / self->bytes_per_ns;
+	  current_time_int = (guint64) current_time;
+	  self->release_start_time = current_time_int;
         }
 
       if (g_strcmp0 (structure_name, (gchar *) "shutdown") == 0)
@@ -1973,7 +1995,7 @@ gst_looper_handle_src_event (GstPad * pad, GstObject * parent,
 
 /* Handle a query on the element.  */
 static gboolean
-gst_looper_handle_query (GstElement * element, GstQuery * query)
+gst_looper_handle_query (GstElement *element, GstQuery *query)
 {
   GstLooper *self = GST_LOOPER (element);
 
@@ -1984,8 +2006,8 @@ gst_looper_handle_query (GstElement * element, GstQuery * query)
 
 /* Handle a query on the source pad or element.  */
 static gboolean
-gst_looper_handle_src_query (GstPad * pad, GstObject * parent,
-                             GstQuery * query)
+gst_looper_handle_src_query (GstPad *pad, GstObject *parent,
+                             GstQuery *query)
 {
   GstLooper *self = GST_LOOPER (parent);
   GstFormat format;
@@ -2075,8 +2097,8 @@ gst_looper_handle_src_query (GstPad * pad, GstObject * parent,
 
 /* Handle a query to the sink pad.  */
 static gboolean
-gst_looper_handle_sink_query (GstPad * pad, GstObject * parent,
-                              GstQuery * query)
+gst_looper_handle_sink_query (GstPad *pad, GstObject *parent,
+                              GstQuery *query)
 {
   GstLooper *self = GST_LOOPER (parent);
   gboolean result;
@@ -2108,7 +2130,7 @@ gst_looper_handle_sink_query (GstPad * pad, GstObject * parent,
 /* Round a time to the next higher buffer position from which we can start
  * a frame.  */
 static guint64
-round_up_to_position (GstLooper * self, guint64 specified_time)
+round_up_to_position (GstLooper *self, guint64 specified_time)
 {
   guint64 position;             /* unrounded buffer position corresponding to
                                  * the specified time.  */
@@ -2158,7 +2180,7 @@ round_up_to_position (GstLooper * self, guint64 specified_time)
 /* Round a time to the next lower buffer position from which we can start
  * a frame.  */
 static guint64
-round_down_to_position (GstLooper * self, guint64 specified_time)
+round_down_to_position (GstLooper *self, guint64 specified_time)
 {
   guint64 position;             /* unrounded buffer position corresponding to
                                  * the specified time.  */
@@ -2207,7 +2229,7 @@ round_down_to_position (GstLooper * self, guint64 specified_time)
  * the metadata is done by upstream.  The return value is TRUE if data was
  * read successfully, FALSE if not.  */
 static gboolean
-read_wav_file_data (GstLooper * self, guint64 max_position)
+read_wav_file_data (GstLooper *self, guint64 max_position)
 {
   FILE *file_stream;
   gint stream_status;
@@ -2402,8 +2424,8 @@ common_exit:
 
 /* Set the value of a property.  */
 static void
-gst_looper_set_property (GObject * object, guint prop_id,
-                         const GValue * value, GParamSpec * pspec)
+gst_looper_set_property (GObject *object, guint prop_id,
+                         const GValue *value, GParamSpec *pspec)
 {
   GstLooper *self = GST_LOOPER (object);
 
@@ -2473,6 +2495,14 @@ gst_looper_set_property (GObject * object, guint prop_id,
       GST_OBJECT_UNLOCK (self);
       break;
 
+    case PROP_RELEASE_DURATION_TIME:
+      GST_OBJECT_LOCK (self);
+      self->release_duration_time = g_value_get_uint64 (value);
+      GST_INFO_OBJECT (self, "release-duration-time: %" G_GUINT64_FORMAT ".",
+                       self->release_duration_time);
+      GST_OBJECT_UNLOCK (self);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
       break;
@@ -2483,27 +2513,33 @@ gst_looper_set_property (GObject * object, guint prop_id,
 /* Compute the remaining run time of the sound, in nanoseconds.  
  * G_MAXUNIT64 means infinity.  */
 static guint64
-compute_remaining_time (GstLooper * object)
+compute_remaining_time (GstLooper *object)
 {
   GstLooper *self = GST_LOOPER (object);
   guint64 time_inside_loop;
   gdouble total_time;
-  gdouble current_time;
-  gdouble current_time_int;
   guint64 total_time_int;
-
-  /* Compute the total time of the sound assuming no looping and
-     start_time = 0.  */
+  gdouble current_time;
+  guint64 current_time_int;
+  guint64 release_time_remaining;
+  guint64 buffer_time_remaining;
+  
+  /* Compute the total time of the sound assuming no looping, not released
+   *  and start_time = 0.  */
   total_time = (gdouble) self->local_buffer_size / self->bytes_per_ns;
   total_time_int = (guint64) total_time;
 
-  if (self->loop_from == 0)
+  /* Allow for a non-zero start time.  */
+  total_time_int = total_time_int - self->start_time;
+  
+  if ((self->loop_from == 0) && (!self->released))
     {
-      /* There is no looping, so the time is simple to compute.  */
-      return (total_time_int - self->start_time - self->elapsed_time);
+      /* There is no looping and we are not released, so the time is 
+       * simple to compute.  */
+      return (total_time_int - self->elapsed_time);
     }
 
-  if ((self->loop_limit == 0) && (!self->released))
+  if ((self->loop_from != 0) && (self->loop_limit == 0) && (!self->released))
     {
       /* We will loop forever, so the time is infinite.  */
       return G_MAXUINT64;
@@ -2511,13 +2547,21 @@ compute_remaining_time (GstLooper * object)
 
   if (self->released)
     {
-      /* We are looping, possibly forever, but we have received 
+      /* We may be looping, possibly forever, but we have received 
        * a release message, so looping has stopped.  We will run from 
-       * the current position to the end of the buffer.  */
+       * the current position to the end of the buffer or from
+       * the release start time for the release duration time,
+       * whichever is shorter.  */
       current_time =
         (gdouble) self->local_buffer_drain_level / self->bytes_per_ns;
       current_time_int = (guint64) current_time;
-      return (total_time_int - current_time_int);
+      release_time_remaining = self->release_duration_time -
+	(current_time_int - self->release_start_time);
+      buffer_time_remaining = total_time_int - current_time_int;
+      if (release_time_remaining < buffer_time_remaining)
+	return (release_time_remaining);
+      else
+	return (buffer_time_remaining);
     }
 
   /* We are looping a definite number of times, and have not received
@@ -2528,13 +2572,13 @@ compute_remaining_time (GstLooper * object)
   total_time_int = total_time_int + time_inside_loop;
 
   /* Now we can compute the remaining time without concern for looping.  */
-  return (total_time_int - self->start_time - self->elapsed_time);
+  return (total_time_int - self->elapsed_time);
 }
 
 /* Return the value of a property.  */
 static void
-gst_looper_get_property (GObject * object, guint prop_id, GValue * value,
-                         GParamSpec * pspec)
+gst_looper_get_property (GObject *object, guint prop_id, GValue *value,
+                         GParamSpec *pspec)
 {
   GstLooper *self = GST_LOOPER (object);
   guint64 remaining_time;
@@ -2590,6 +2634,12 @@ gst_looper_get_property (GObject * object, guint prop_id, GValue * value,
       GST_OBJECT_UNLOCK (self);
       break;
 
+    case PROP_RELEASE_DURATION_TIME:
+      GST_OBJECT_LOCK (self);
+      g_value_set_uint64 (value, self->release_duration_time);
+      GST_OBJECT_UNLOCK (self);
+      break;
+
     case PROP_ELAPSED_TIME:
       GST_OBJECT_LOCK (self);
       g_value_set_uint64 (value, self->elapsed_time);
@@ -2616,7 +2666,7 @@ gst_looper_get_property (GObject * object, guint prop_id, GValue * value,
  * register the element factories and other features
  */
 static gboolean
-looper_init (GstPlugin * looper)
+looper_init (GstPlugin *looper)
 {
   return gst_element_register (looper, "looper", GST_RANK_NONE,
                                GST_TYPE_LOOPER);
@@ -2625,3 +2675,5 @@ looper_init (GstPlugin * looper)
 GST_PLUGIN_DEFINE (GST_VERSION_MAJOR, GST_VERSION_MINOR, looper,
                    "Repeat a section of the input stream", looper_init,
                    VERSION, "LGPL", "GStreamer", "http://gstreamer.net/")
+
+/* End of file gstlooper.c  */
