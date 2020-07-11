@@ -201,6 +201,7 @@
       <type>start_sound</type>
       <sound_name>Apple</sound_name>
       <cluster_number>1</cluster_number>
+      <importance>2</importance>
       <text_to_display>Apple</text_to_display>
     </sequence_item>
     
@@ -567,8 +568,7 @@
       <sound_name>Announcement Intermission Return</sound_name>
       <text_to_display>Intermission Return announcement</text_to_display>
     </sequence_item>
-
-    
+ 
     <sequence_item>
       <name>end_act_1_12</name>
       <type>operator_wait</type>
@@ -1040,6 +1040,29 @@
       <next>thunder_107b_3</next>
     </sequence_item>
 
+    <!--
+	Page 108: rain.
+    -->
+    <sequence_item>
+      <name>Act 02 Scene 01 Page 081_4</name>
+      <type>offer_sound</type>
+      <next_to_start>rain_02</next_to_start>
+      <cluster_number>6</cluster_number>
+      <text_to_display>Rain</text_to_display>
+      <tag>weather</tag>
+      <next>Act 02 Scene 01 Page 081_5</next>
+    </sequence_item>
+    
+    <sequence_item>
+      <name>rain_02</name>
+      <type>start_sound</type>
+      <sound_name>rain_02</sound_name>
+      <text_to_display>Rain</text_to_display>
+      <cluster_number>6</cluster_number>
+      <importance>2</importance>
+      <tag>weather</tag>
+    </sequence_item>
+    
     <sequence_item>
       <name>thunder_107b_3</name>
       <type>offer_sound</type>
@@ -1067,29 +1090,6 @@
       <tag>thunder</tag>
     </sequence_item>
 
-    <!--
-	Page 108: rain.
-    -->
-    <sequence_item>
-      <name>Act 02 Scene 01 Page 081_4</name>
-      <type>offer_sound</type>
-      <next_to_start>rain_02</next_to_start>
-      <cluster_number>6</cluster_number>
-      <text_to_display>Rain</text_to_display>
-      <tag>weather</tag>
-      <next>Act 02 Scene 01 Page 081_5</next>
-    </sequence_item>
-    
-    <sequence_item>
-      <name>rain_02</name>
-      <type>start_sound</type>
-      <sound_name>rain_02</sound_name>
-      <text_to_display>Rain</text_to_display>
-      <cluster_number>6</cluster_number>
-      <importance>2</importance>
-      <tag>weather</tag>
-    </sequence_item>
-    
     <sequence_item>
       <name>Act 02 Scene 01 Page 081_5</name>
       <type>offer_sound</type>
@@ -1174,7 +1174,8 @@
     <sequence_item>
       <name>Act 02 Scene 01 Page 081_9</name>
       <type>operator_wait</type>
-      <text_to_display>Press Play when the scene shifts to Mount Ararat.</text_to_display>
+      <text_to_display>Press Play when the scene shifts</text_to_display>
+      <text_to_display> to Mount Ararat.</text_to_display>
       <next_play>Act 02 Scene 01 done_01</next_play>
     </sequence_item>
 
@@ -1257,7 +1258,8 @@
     <sequence_item>
       <name>Act 02 Scene 04 Page 130 done_03</name>
       <type>operator_wait</type>
-      <text_to_display>Press Play when the audience has left the theater.</text_to_display>
+      <text_to_display>Press Play when the audience</text_to_display>
+      <text_to_display> has left the theater.</text_to_display>
       <next_play>Act 02 Scene 04 Page 130 done_04</next_play>
     </sequence_item>
 

@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.127
+Version:        0.128
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -219,6 +219,8 @@ example of a musical.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Sat Jul 11 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.128-1 Continue work on example 4 and the documentation.
 * Wed Jul 08 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.127-1 Fix a problem displaying the remaining time of a released sound.
 * Fri Jul 03 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>

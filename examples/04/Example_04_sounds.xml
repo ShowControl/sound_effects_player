@@ -1137,6 +1137,17 @@
     <sound>
       <name>Dove</name>
       <wav_file_name>Steve_Devino/07-Dove_cooing.wav</wav_file_name>
+      <channels>
+	<channel>
+	  <number>0</number>
+	  <speakers>
+	    <speaker>
+	      <name>front_right</name>
+	      <volume_level>1.0</volume_level>
+	    </speaker>
+	  </speakers>
+	</channel>
+      </channels>
     </sound>
     
   </sounds>
