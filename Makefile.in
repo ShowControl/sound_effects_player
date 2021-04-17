@@ -14,9 +14,9 @@
 
 @SET_MAKE@
 
-# File: Makefile.am, author: John Sauter, date: Juky 1, 2020.
+# File: Makefile.am, author: John Sauter, date: April 17, 2021.
 
-#   Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+#   Copyright © 2021 by John Sauter <John_Sauter@systemeyescomputerstore.com>
 
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -455,6 +455,7 @@ EXTRA_DIST = \
 	sound_effects_player.spec \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
+	John_Sauter_public_key.asc \
 	$(INTLTOOL_FILES)
 
 iconsdir = ${datadir}/icons/hicolor/48x48/apps
@@ -913,7 +914,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-recursive
 
-clean-am: clean-generic clean-libtool mostlyclean-am
+clean-am: clean-generic clean-libtool clean-local mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
@@ -987,9 +988,9 @@ uninstall-am: uninstall-dist_docDATA uninstall-iconsDATA \
 
 .PHONY: $(am__recursive_targets) CTAGS GTAGS TAGS all all-am \
 	am--refresh check check-am clean clean-cscope clean-generic \
-	clean-libtool cscope cscopelist-am ctags ctags-am dist \
-	dist-all dist-bzip2 dist-gzip dist-lzip dist-shar dist-tarZ \
-	dist-xz dist-zip dist-zstd distcheck distclean \
+	clean-libtool clean-local cscope cscopelist-am ctags ctags-am \
+	dist dist-all dist-bzip2 dist-gzip dist-lzip dist-shar \
+	dist-tarZ dist-xz dist-zip dist-zstd distcheck distclean \
 	distclean-generic distclean-hdr distclean-libtool \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
@@ -1030,10 +1031,22 @@ ${applicationsdir}/sound_effects_player.desktop
 RPMs:
 	bash build_RPMs.sh
 
+# Include the signature file in the repository
+signature : ${PACKAGE}-${VERSION}.tar.gz.asc
+.PHONEY: signature
+
+${PACKAGE}-${VERSION}.tar.gz.asc : ${PACKAGE}-${VERSION}.tar.gz
+	rm -f ${PACKAGE}-*.tar.gz.asc
+	gpg2 --detach-sign --armor ${PACKAGE}-${VERSION}.tar.gz
+
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(docdir)
 	rm -f ${applicationsdir}/sound_effects_player.desktop
+
+clean-local:
+	rm -rf autom4te.cache
+	rm -f *~
 
 # End of file Makefile.am
 

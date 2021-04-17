@@ -1,6 +1,6 @@
-# File: Makefile.am, author: John Sauter, date: Juky 1, 2020.
+# File: Makefile.am, author: John Sauter, date: April 17, 2021.
 
-#   Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+#   Copyright © 2021 by John Sauter <John_Sauter@systemeyescomputerstore.com>
 
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -52,6 +52,7 @@ EXTRA_DIST = \
 	sound_effects_player.spec \
 	icons/sound_effects_player_icon.png \
 	icons/sound_effects_player_icon_hires.png \
+	John_Sauter_public_key.asc \
 	$(INTLTOOL_FILES)
 
 iconsdir=${datadir}/icons/hicolor/48x48/apps
@@ -86,10 +87,21 @@ DISTCLEANFILES = intltool-extract \
 	intltool-update \
 	po/.intltool-merge-cache
 
+# Include the signature file in the repository
+signature : ${PACKAGE}-${VERSION}.tar.gz.asc
+.PHONEY: signature
+
+${PACKAGE}-${VERSION}.tar.gz.asc : ${PACKAGE}-${VERSION}.tar.gz
+	rm -f ${PACKAGE}-*.tar.gz.asc
+	gpg2 --detach-sign --armor ${PACKAGE}-${VERSION}.tar.gz
 
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(docdir)
 	rm -f ${applicationsdir}/sound_effects_player.desktop
+
+clean-local:
+	rm -rf autom4te.cache
+	rm -f *~
 
 # End of file Makefile.am
