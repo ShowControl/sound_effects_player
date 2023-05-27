@@ -1,3 +1,8 @@
+Version 0.130, May 27, 2023
+  Use gst_element_request_pad_simple instead of gst_element_request_pad
+  to avoid a compile-time warning.  Remove two unneeded files from
+  the spec file.
+  
 Version 0.129, April 17, 2021
   Improve the cleanup after the build.  Add a pgp signature of the tarball
   to the repository.

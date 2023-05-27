@@ -1,7 +1,7 @@
 /*
  * gstreamer_subroutines.c
  *
- * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2023 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -278,7 +278,7 @@ gstreamer_init (int sound_count, GApplication *app)
    * Create enough sinks for each sound effect.  */
   for (i = 0; i < sound_count; i++)
     {
-      sink_pad = gst_element_get_request_pad (audiomixer_element, "sink_%u");
+      sink_pad = gst_element_request_pad_simple (audiomixer_element, "sink_%u");
       pad_name = g_strdup_printf ("sink %d", i);
       gst_element_add_pad (final_bin_element,
                            gst_ghost_pad_new (pad_name, sink_pad));

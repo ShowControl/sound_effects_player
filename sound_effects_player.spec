@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.129
+Version:        0.130
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -13,10 +13,15 @@ BuildRequires:  python3 >= 3.5
 BuildRequires:  git
 BuildRequires:  libtime-devel
 BuildRequires:  intltool
-BuildRequires:  gstreamer1-devel
+BuildRequires:  gstreamer1-devel >= 1.20
 BuildRequires:  gstreamer1-plugins-base-devel
 BuildRequires:  gtk3-devel
 BuildRequires:  gtk-doc
+
+Requires: libtime
+Requires: gstreamer1 >= 1.20
+Requires: gstreamer1-plugins-base
+Requires: gtk3
 
 %global _hardened_build 1
 
@@ -62,9 +67,7 @@ example of a musical.
 %files
 %defattr(-,root,root)
 %{_bindir}/sound_effects_player
-%{_libdir}/gstreamer-1.0/libgstenvelope.la
 %{_libdir}/gstreamer-1.0/libgstenvelope.so
-%{_libdir}/gstreamer-1.0/libgstlooper.la
 %{_libdir}/gstreamer-1.0/libgstlooper.so
 %{_datadir}/applications/sound_effects_player.desktop
 %exclude %{_docdir}/sound_effects_player/code.pdf
@@ -219,6 +222,8 @@ example of a musical.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Sat May 27 2023 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.130-1 Fix a warning and remove two unneeded files.
 * Sat Apr 17 2021 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.129-1 Improve the build process.
 * Sat Jul 11 2020 John Sauter <John_Sauter@sytemeyescomputerstore.com>
