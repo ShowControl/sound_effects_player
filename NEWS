@@ -1,3 +1,7 @@
+Version 0.131, May 25, 2025
+  Adapt to the updated XML parsing library, which depreciated some entry
+  points.
+  
 Version 0.130, May 27, 2023
   Use gst_element_request_pad_simple instead of gst_element_request_pad
   to avoid a compile-time warning.  Remove two unneeded files from

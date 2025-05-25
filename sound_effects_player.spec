@@ -1,5 +1,5 @@
 Name:           sound_effects_player
-Version:        0.130
+Version:        0.131
 Release:        1%{?dist}
 Summary:        Play sounds for live theatre
 
@@ -222,6 +222,8 @@ example of a musical.
 %doc %{_docdir}/%{name}/the_big_picture.pdf
 
 %changelog
+* Sun May 25 2025 John Sauter <John_Sauter@sytemeyescomputerstore.com>
+- 0.131-1 Don't use depreciated XML parsing entry points.
 * Sat May 27 2023 John Sauter <John_Sauter@sytemeyescomputerstore.com>
 - 0.130-1 Fix a warning and remove two unneeded files.
 * Sat Apr 17 2021 John Sauter <John_Sauter@sytemeyescomputerstore.com>

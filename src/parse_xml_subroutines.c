@@ -1,7 +1,7 @@
 /*
  * parse_xml_subroutines.c
  *
- * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2025 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1483,10 +1483,7 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
               file_name = NULL;
 
               /* Read the specified file as an XML file. */
-              xmlLineNumbersDefault (1);
-              xmlThrDefIndentTreeOutput (1);
               xmlKeepBlanksDefault (0);
-              xmlThrDefTreeIndentString ("    ");
 	      if (TRACE_PARSE_XML)
 		{
 		  g_print ("Parsing %s.\n", absolute_file_name);
@@ -1591,10 +1588,7 @@ parse_program_info (xmlDocPtr equipment_file, gchar * equipment_file_name,
               file_name = NULL;
 
               /* Read the specified file as an XML file. */
-              xmlLineNumbersDefault (1);
-              xmlThrDefIndentTreeOutput (1);
               xmlKeepBlanksDefault (0);
-              xmlThrDefTreeIndentString ("    ");
 	      if (TRACE_PARSE_XML)
 		{
 		  g_print ("Parsing %s.\n", absolute_file_name);
@@ -1813,10 +1807,7 @@ parse_project_info (xmlDocPtr project_file, gchar * project_file_name,
               file_name = NULL;
 
               /* Read the specified file as an XML file. */
-              xmlLineNumbersDefault (1);
-              xmlThrDefIndentTreeOutput (1);
               xmlKeepBlanksDefault (0);
-              xmlThrDefTreeIndentString ("    ");
 	      if (TRACE_PARSE_XML)
 		{
 		  g_print ("Parsing %s.\n", absolute_file_name);
@@ -2095,10 +2086,7 @@ parse_xml_read_configuration_file (gchar * configuration_file_name,
   gboolean configuration_section_parsed;
 
   /* Read the file as an XML file. */
-  xmlLineNumbersDefault (1);
-  xmlThrDefIndentTreeOutput (1);
   xmlKeepBlanksDefault (0);
-  xmlThrDefTreeIndentString ("    ");
   if (TRACE_PARSE_XML)
     {
       g_print ("Parsing configuration file %s.\n", configuration_file_name);
@@ -2186,10 +2174,7 @@ parse_xml_write_configuration_file (gchar * configuration_file_name,
   if (configuration_file == NULL)
     {
       /* We don't have a configuration file--create one. */
-      xmlLineNumbersDefault (1);
-      xmlThrDefIndentTreeOutput (1);
       xmlKeepBlanksDefault (0);
-      xmlThrDefTreeIndentString ("    ");
       configuration_file =
         xmlParseDoc ((xmlChar *) "<?xml version=\"1.0\" "
                      "encoding=\"utf-8\"?> <show_control> <configuration>"
@@ -2284,10 +2269,7 @@ parse_xml_read_project_file (gchar * project_folder_name,
   gchar *full_file_name;
 
   /* Read the file as an XML file. */
-  xmlLineNumbersDefault (1);
-  xmlThrDefIndentTreeOutput (1);
   xmlKeepBlanksDefault (0);
-  xmlThrDefTreeIndentString ("    ");
   full_file_name =
     g_build_filename (project_folder_name, project_file_name, NULL);
   if (TRACE_PARSE_XML)

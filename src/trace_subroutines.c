@@ -1,7 +1,7 @@
 /*
  * trace_subroutines.c
  *
- * Copyright © 2020 by John Sauter <John_Sauter@systemeyescomputerstore.com>
+ * Copyright © 2025 by John Sauter <John_Sauter@systemeyescomputerstore.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,8 +46,8 @@ trace_init (GApplication * app)
   struct trace_info *trace_data;
 
   trace_data = g_malloc (sizeof (struct trace_info));
-  trace_data->sequencer_level = main_get_trace_sequencer_level (app);
-  trace_data->file_name = main_get_trace_file_name (app);
+  trace_data->sequencer_level = main_get_trace_sequencer_level ();
+  trace_data->file_name = main_get_trace_file_name ();
   trace_data->file_open = 0;
   
   if ((trace_data->file_name != NULL) && (trace_data->sequencer_level > 0))
